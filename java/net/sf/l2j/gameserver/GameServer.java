@@ -196,7 +196,6 @@ import net.sf.l2j.gameserver.handler.usercommandhandlers.Mount;
 import net.sf.l2j.gameserver.handler.usercommandhandlers.OlympiadStat;
 import net.sf.l2j.gameserver.handler.usercommandhandlers.PartyInfo;
 import net.sf.l2j.gameserver.handler.usercommandhandlers.Time;
-import net.sf.l2j.gameserver.handler.voicedcommandhandlers.Wedding;
 import net.sf.l2j.gameserver.handler.voicedcommandhandlers.stats;
 import net.sf.l2j.gameserver.idfactory.IdFactory;
 import net.sf.l2j.gameserver.instancemanager.AuctionManager;
@@ -204,7 +203,6 @@ import net.sf.l2j.gameserver.instancemanager.BoatManager;
 import net.sf.l2j.gameserver.instancemanager.CastleManager;
 import net.sf.l2j.gameserver.instancemanager.CastleManorManager;
 import net.sf.l2j.gameserver.instancemanager.ClanHallManager;
-import net.sf.l2j.gameserver.instancemanager.CoupleManager;
 import net.sf.l2j.gameserver.instancemanager.CursedWeaponsManager;
 import net.sf.l2j.gameserver.instancemanager.DayNightSpawnManager;
 import net.sf.l2j.gameserver.instancemanager.ItemsOnGroundManager;
@@ -560,15 +558,7 @@ public class GameServer {
     _voicedCommandHandler = VoicedCommandHandler.getInstance();
     _voicedCommandHandler.registerVoicedCommandHandler(new stats());
 
-    if(Config.L2JMOD_ALLOW_WEDDING) {
-      _voicedCommandHandler.registerVoicedCommandHandler(new Wedding());
-    }
-
     _log.config("VoicedCommandHandler: Loaded " + _voicedCommandHandler.size() + " handlers.");
-
-    if(Config.L2JMOD_ALLOW_WEDDING) {
-      CoupleManager.getInstance();
-    }
 
     TaskManager.getInstance();
 

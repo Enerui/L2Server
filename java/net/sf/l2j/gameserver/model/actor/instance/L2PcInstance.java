@@ -71,7 +71,6 @@ import net.sf.l2j.gameserver.handler.skillhandlers.SiegeFlag;
 import net.sf.l2j.gameserver.handler.skillhandlers.StrSiegeAssault;
 import net.sf.l2j.gameserver.handler.skillhandlers.TakeCastle;
 import net.sf.l2j.gameserver.instancemanager.CastleManager;
-import net.sf.l2j.gameserver.instancemanager.CoupleManager;
 import net.sf.l2j.gameserver.instancemanager.CursedWeaponsManager;
 import net.sf.l2j.gameserver.instancemanager.DuelManager;
 import net.sf.l2j.gameserver.instancemanager.ItemsOnGroundManager;
@@ -1092,11 +1091,6 @@ public final class L2PcInstance extends L2PlayableInstance {
   private SkillDat _queuedSkill;
 
   /**
-   * Flag to disable equipment/skills while wearing formal wear
-   */
-  private boolean _IsWearingFormalWear = false;
-
-  /**
    * The _cursed weapon equipped id.
    */
   private int _cursedWeaponEquipedId = 0;
@@ -1208,42 +1202,6 @@ public final class L2PcInstance extends L2PlayableInstance {
       }
     }
   }
-
-  // L2JMOD Wedding
-  /**
-   * The _married.
-   */
-  private boolean _married = false;
-
-  /**
-   * The _partner id.
-   */
-  private int _partnerId = 0;
-
-  /**
-   * The _couple id.
-   */
-  private int _coupleId = 0;
-
-  /**
-   * The _engagerequest.
-   */
-  private boolean _engagerequest = false;
-
-  /**
-   * The _engageid.
-   */
-  private int _engageid = 0;
-
-  /**
-   * The _marryrequest.
-   */
-  private boolean _marryrequest = false;
-
-  /**
-   * The _marryaccepted.
-   */
-  private boolean _marryaccepted = false;
 
   // Current force buff this caster is casting to a target
   /**
@@ -4739,167 +4697,6 @@ public final class L2PcInstance extends L2PlayableInstance {
   }
 
   /**
-   * Checks if is wearing formal wear.
-   *
-   * @return true, if is wearing formal wear
-   */
-  public boolean isWearingFormalWear() {
-    return _IsWearingFormalWear;
-  }
-
-  /**
-   * Sets the checks if is wearing formal wear.
-   *
-   * @param value the new checks if is wearing formal wear
-   */
-  public void setIsWearingFormalWear(boolean value) {
-    _IsWearingFormalWear = value;
-  }
-
-  /**
-   * Checks if is married.
-   *
-   * @return true, if is married
-   */
-  public boolean isMarried() {
-    return _married;
-  }
-
-  /**
-   * Sets the married.
-   *
-   * @param state the new married
-   */
-  public void setMarried(boolean state) {
-    _married = state;
-  }
-
-  /**
-   * Checks if is engage request.
-   *
-   * @return true, if is engage request
-   */
-  public boolean isEngageRequest() {
-    return _engagerequest;
-  }
-
-  /**
-   * Sets the engage request.
-   *
-   * @param state    the state
-   * @param playerid the playerid
-   */
-  public void setEngageRequest(boolean state, int playerid) {
-    _engagerequest = state;
-    _engageid = playerid;
-  }
-
-  /**
-   * Sets the mary request.
-   *
-   * @param state the new mary request
-   */
-  public void setMaryRequest(boolean state) {
-    _marryrequest = state;
-  }
-
-  /**
-   * Checks if is mary request.
-   *
-   * @return true, if is mary request
-   */
-  public boolean isMaryRequest() {
-    return _marryrequest;
-  }
-
-  /**
-   * Sets the marry accepted.
-   *
-   * @param state the new marry accepted
-   */
-  public void setMarryAccepted(boolean state) {
-    _marryaccepted = state;
-  }
-
-  /**
-   * Checks if is marry accepted.
-   *
-   * @return true, if is marry accepted
-   */
-  public boolean isMarryAccepted() {
-    return _marryaccepted;
-  }
-
-  /**
-   * Gets the engage id.
-   *
-   * @return the engage id
-   */
-  public int getEngageId() {
-    return _engageid;
-  }
-
-  /**
-   * Gets the partner id.
-   *
-   * @return the partner id
-   */
-  public int getPartnerId() {
-    return _partnerId;
-  }
-
-  /**
-   * Sets the partner id.
-   *
-   * @param partnerid the new partner id
-   */
-  public void setPartnerId(int partnerid) {
-    _partnerId = partnerid;
-  }
-
-  /**
-   * Gets the couple id.
-   *
-   * @return the couple id
-   */
-  public int getCoupleId() {
-    return _coupleId;
-  }
-
-  /**
-   * Sets the couple id.
-   *
-   * @param coupleId the new couple id
-   */
-  public void setCoupleId(int coupleId) {
-    _coupleId = coupleId;
-  }
-
-  /**
-   * Engage answer.
-   *
-   * @param answer the answer
-   */
-  public void EngageAnswer(int answer) {
-    if(_engagerequest == false) {
-      return;
-    } else if(_engageid == 0) {
-      return;
-    } else {
-      L2PcInstance ptarget = (L2PcInstance) L2World.getInstance().findObject(_engageid);
-      setEngageRequest(false, 0);
-      if(ptarget != null) {
-        if(answer == 1) {
-          CoupleManager.getInstance().createCouple(ptarget, L2PcInstance.this);
-          ptarget.sendMessage("Request to Engage has been >ACCEPTED<");
-        } else {
-          ptarget.sendMessage("Request to Engage has been >DENIED<!");
-        }
-      }
-    }
-  }
-
-  /**
    * Return the secondary weapon instance (always equiped in the left hand).
    *
    * @return the secondary weapon instance
@@ -7792,9 +7589,7 @@ public final class L2PcInstance extends L2PlayableInstance {
       return;
     }
 
-    /*
-     * if (isWearingFormalWear() && !skill.isPotion()) { sendPacket(new SystemMessage(SystemMessageId.CANNOT_USE_ITEMS_SKILLS_WITH_FORMALWEAR)); sendPacket(new ActionFailed()); abortCast(); return; }
-     */
+
     if(inObserverMode()) {
       sendPacket(new SystemMessage(SystemMessageId.OBSERVERS_CANNOT_PARTICIPATE));
       abortCast();
