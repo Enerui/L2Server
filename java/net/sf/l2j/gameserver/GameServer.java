@@ -117,7 +117,6 @@ import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminSpawn;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminTarget;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminTeleport;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminTest;
-import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminTvTEvent;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminUnblockIp;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminZone;
 import net.sf.l2j.gameserver.handler.itemhandlers.BeastSoulShot;
@@ -217,7 +216,6 @@ import net.sf.l2j.gameserver.model.L2Manor;
 import net.sf.l2j.gameserver.model.L2PetDataTable;
 import net.sf.l2j.gameserver.model.L2World;
 import net.sf.l2j.gameserver.model.entity.Hero;
-import net.sf.l2j.gameserver.model.entity.TvTManager;
 import net.sf.l2j.gameserver.network.L2GameClient;
 import net.sf.l2j.gameserver.network.L2GamePacketHandler;
 import net.sf.l2j.gameserver.pathfinding.geonodes.GeoPathFinding;
@@ -535,8 +533,6 @@ public class GameServer {
     _adminCommandHandler.registerAdminCommandHandler(new AdminGeodata());
     _adminCommandHandler.registerAdminCommandHandler(new AdminGeoEditor());
     _adminCommandHandler.registerAdminCommandHandler(new AdminManor());
-    _adminCommandHandler.registerAdminCommandHandler(new AdminTvTEvent());
-    // _adminCommandHandler.registerAdminCommandHandler(new AdminRadar());
     _log.config("AdminCommandHandler: Loaded " + _adminCommandHandler.size() + " handlers.");
 
     _userCommandHandler = UserCommandHandler.getInstance();
@@ -606,7 +602,6 @@ public class GameServer {
     }
 
     FloodProtector.getInstance();
-    TvTManager.getInstance();
     System.gc();
     // maxMemory is the upper limit the jvm can use, totalMemory the size of the current allocation pool, freeMemory the unused memory in the allocation pool
     long freeMem = ((Runtime.getRuntime().maxMemory() - Runtime.getRuntime().totalMemory()) + Runtime.getRuntime().freeMemory()) / 1048576; // 1024 * 1024 = 1048576;

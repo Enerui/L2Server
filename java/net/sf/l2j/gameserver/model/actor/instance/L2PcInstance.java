@@ -125,7 +125,6 @@ import net.sf.l2j.gameserver.model.entity.Castle;
 import net.sf.l2j.gameserver.model.entity.Duel;
 import net.sf.l2j.gameserver.model.entity.L2Event;
 import net.sf.l2j.gameserver.model.entity.Siege;
-import net.sf.l2j.gameserver.model.entity.TvTEvent;
 import net.sf.l2j.gameserver.model.quest.Quest;
 import net.sf.l2j.gameserver.model.quest.QuestState;
 import net.sf.l2j.gameserver.network.L2GameClient;
@@ -4101,12 +4100,6 @@ public final class L2PcInstance extends L2PlayableInstance {
    */
   @Override
   public void onAction(L2PcInstance player) {
-    // See description in TvTEvent.java
-    if(!TvTEvent.onAction(player.getName(), getName())) {
-      player.sendPacket(new ActionFailed());
-      return;
-    }
-
     // Check if the L2PcInstance is confused
     if(player.isOutOfControl()) {
       // Send a Server->Client packet ActionFailed to the player
@@ -4749,8 +4742,6 @@ public final class L2PcInstance extends L2PlayableInstance {
       if(killer instanceof L2PcInstance) {
         pk = (L2PcInstance) killer;
       }
-
-      TvTEvent.onKill(killer, this);
 
       if(atEvent && (pk != null)) {
         pk.kills.add(getName());

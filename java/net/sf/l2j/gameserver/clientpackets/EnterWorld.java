@@ -49,7 +49,6 @@ import net.sf.l2j.gameserver.model.entity.ClanHall;
 import net.sf.l2j.gameserver.model.entity.Hero;
 import net.sf.l2j.gameserver.model.entity.L2Event;
 import net.sf.l2j.gameserver.model.entity.Siege;
-import net.sf.l2j.gameserver.model.entity.TvTEvent;
 import net.sf.l2j.gameserver.model.quest.Quest;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.serverpackets.Die;
@@ -297,12 +296,6 @@ public class EnterWorld extends L2GameClientPacket {
     }
 
     RegionBBSManager.getInstance().changeCommunityBoard();
-
-    /*
-     * if(Config.GAMEGUARD_ENFORCE) - disabled by KenM will be reenabled later activeChar.sendPacket(new GameGuardQuery());
-     */
-
-    TvTEvent.onLogin(activeChar);
   }
 
   /**

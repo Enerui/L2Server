@@ -6600,6 +6600,3 @@ INSERT INTO `npc` (`id`,`idTemplate`,`name`,`serverSideName`,`title`,`serverSide
 	(35654,35654,'Court Magician',0,'Goddard',0,'Monster3.Elite_Mage',6.50,21.96,70,'male','L2Npc',40,3862,1493,11.85,2.78,40,43,30,21,20,10,0,0,1314,470,780,382,278,0,333,0,0,0,88,132,NULL,0,0,0,'LAST_HIT'),
 	(35655,35655,'Court Magician',0,'Rune',0,'Monster3.Elite_Mage',6.50,21.96,70,'male','L2Npc',40,3862,1493,11.85,2.78,40,43,30,21,20,10,0,0,1314,470,780,382,278,0,333,0,0,0,88,132,NULL,0,0,0,'LAST_HIT'),
 	(35656,35656,'Court Magician',0,'Schuttgart',0,'Monster3.Elite_Mage',6.50,21.96,70,'male','L2Npc',40,3862,1493,11.85,2.78,40,43,30,21,20,10,0,0,1314,470,780,382,278,0,333,0,0,0,88,132,NULL,0,0,0,'LAST_HIT');
-
-INSERT INTO `npc` VALUES
-	(70010,31606,'Catrina',1,'TvT Event Manager',1,'Monster2.queen_of_cat',8.00,15.00,70,'female','L2TvTEventNpc',40,3862,1493,11.85,2.78,40,43,30,21,20,10,0,0,1314,470,780,382,278,0,333,0,0,0,28,132,NULL,0,0,0,'LAST_HIT');
