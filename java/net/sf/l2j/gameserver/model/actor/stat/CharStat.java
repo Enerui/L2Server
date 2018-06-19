@@ -289,9 +289,6 @@ public class CharStat {
       return 1;
     }
     float bonusAtk = 1;
-    if(Config.L2JMOD_CHAMPION_ENABLE && _activeChar.isChampion()) {
-      bonusAtk = Config.L2JMOD_CHAMPION_ATK;
-    }
     double attack = _activeChar.getTemplate().baseMAtk * bonusAtk;
     // Get the skill type to calculate its effect in function of base stats
     // of the L2Character target
@@ -363,9 +360,6 @@ public class CharStat {
       return 1;
     }
     float bonusSpdAtk = 1;
-    if(Config.L2JMOD_CHAMPION_ENABLE && _activeChar.isChampion()) {
-      bonusSpdAtk = Config.L2JMOD_CHAMPION_SPD_ATK;
-    }
     double val = calcStat(Stats.MAGIC_ATTACK_SPEED, _activeChar.getTemplate().baseMAtkSpd * bonusSpdAtk, null, null);
     val /= _activeChar.getArmourExpertisePenalty();
     return (int) val;
@@ -473,9 +467,6 @@ public class CharStat {
       return 1;
     }
     float bonusAtk = 1;
-    if(Config.L2JMOD_CHAMPION_ENABLE && _activeChar.isChampion()) {
-      bonusAtk = Config.L2JMOD_CHAMPION_ATK;
-    }
     return (int) calcStat(Stats.POWER_ATTACK, _activeChar.getTemplate().basePAtk * bonusAtk, target, null);
   }
 
@@ -539,9 +530,6 @@ public class CharStat {
       return 1;
     }
     float bonusAtk = 1;
-    if(Config.L2JMOD_CHAMPION_ENABLE && _activeChar.isChampion()) {
-      bonusAtk = Config.L2JMOD_CHAMPION_SPD_ATK;
-    }
     return (int) (calcStat(Stats.POWER_ATTACK_SPEED, _activeChar.getTemplate().basePAtkSpd * bonusAtk, null, null) / _activeChar.getArmourExpertisePenalty());
   }
 

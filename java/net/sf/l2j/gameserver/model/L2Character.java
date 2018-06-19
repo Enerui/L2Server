@@ -265,11 +265,6 @@ public abstract class L2Character extends L2Object {
   private double _hpUpdateInterval = .0;
 
   /**
-   * The _champion.
-   */
-  private boolean _champion = false;
-
-  /**
    * Table of Calculators containing all used calculator.
    */
   private Calculator[] _calculators;
@@ -1120,29 +1115,6 @@ public abstract class L2Character extends L2Object {
       _log.info("doAttackHitByPole: Max radius = " + maxRadius);
       _log.info("doAttackHitByPole: Max angle = " + maxAngleDiff);
     }
-
-    // o1 x: 83420 y: 148158 (Giran)
-    // o2 x: 83379 y: 148081 (Giran)
-    // dx = -41
-    // dy = -77
-    // distance between o1 and o2 = 87.24
-    // arctan2 = -120 (240) degree (excel arctan2(dx, dy); java arctan2(dy, dx))
-    //
-    // o2
-    //
-    // o1 ----- (heading)
-    // In the diagram above:
-    // o1 has a heading of 0/360 degree from horizontal (facing East)
-    // Degree of o2 in respect to o1 = -120 (240) degree
-    //
-    // o2 / (heading)
-    // /
-    // o1
-    // In the diagram above
-    // o1 has a heading of -80 (280) degree from horizontal (facing north east)
-    // Degree of o2 in respect to 01 = -40 (320) degree
-
-    // ===========================================================
     // Make sure that char is facing selected target
     angleTarget = Util.calculateAngleFrom(this, getTarget());
     setHeading((int) ((angleTarget / 9.0) * 1610.0)); // = this.setHeading((int)((angleTarget / 360.0) * 64400.0));
@@ -7376,11 +7348,7 @@ public abstract class L2Character extends L2Object {
    * @param awake    the awake
    */
   public void reduceCurrentHp(double i, L2Character attacker, boolean awake) {
-    if(Config.L2JMOD_CHAMPION_ENABLE && isChampion() && (Config.L2JMOD_CHAMPION_HP != 0)) {
-      getStatus().reduceHp(i / Config.L2JMOD_CHAMPION_HP, attacker, awake);
-    } else {
-      getStatus().reduceHp(i, attacker, awake);
-    }
+    getStatus().reduceHp(i, attacker, awake);
   }
 
   /**
@@ -7517,24 +7485,6 @@ public abstract class L2Character extends L2Object {
    */
   public L2Character getLastBuffer() {
     return _lastBuffer;
-  }
-
-  /**
-   * Sets the champion.
-   *
-   * @param champ the new champion
-   */
-  public void setChampion(boolean champ) {
-    _champion = champ;
-  }
-
-  /**
-   * Checks if is champion.
-   *
-   * @return true, if is champion
-   */
-  public boolean isChampion() {
-    return _champion;
   }
 
   /**
