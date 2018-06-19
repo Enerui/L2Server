@@ -550,7 +550,6 @@ clanhall.sql
 clanhall_functions.sql
 class_list.sql
 cursed_weapons.sql
-dimensional_rift.sql
 droplist.sql
 enchant_skill_trees.sql
 etcitem.sql
