@@ -145,12 +145,6 @@ public final class Config {
   public static int AI_MAX_THREAD;
 
   /**
-   * Accept auto-loot ?
-   */
-  public static boolean AUTO_LOOT;
-  public static boolean AUTO_LOOT_HERBS;
-
-  /**
    * Character name template
    */
   public static String CNAME_TEMPLATE;
@@ -209,10 +203,6 @@ public final class Config {
    * Alternative game skill learning
    */
   public static boolean ALT_GAME_SKILL_LEARN;
-  /**
-   * Alternative auto skill learning
-   */
-  public static boolean AUTO_LEARN_SKILLS;
   /**
    * Cancel attack bow by hit
    */
@@ -2183,7 +2173,6 @@ public final class Config {
         ALT_WEIGHT_LIMIT = Double.parseDouble(altSettings.getProperty("AltWeightLimit", "1"));
         ALT_BLACKSMITH_USE_RECIPES = Boolean.parseBoolean(altSettings.getProperty("AltBlacksmithUseRecipes", "true"));
         ALT_GAME_SKILL_LEARN = Boolean.parseBoolean(altSettings.getProperty("AltGameSkillLearn", "false"));
-        AUTO_LEARN_SKILLS = Boolean.parseBoolean(altSettings.getProperty("AutoLearnSkills", "false"));
         ALT_GAME_CANCEL_BOW = altSettings.getProperty("AltGameCancelByHit", "Cast").equalsIgnoreCase("bow") || altSettings.getProperty("AltGameCancelByHit", "Cast").equalsIgnoreCase("all");
         ALT_GAME_CANCEL_CAST = altSettings.getProperty("AltGameCancelByHit", "Cast").equalsIgnoreCase("cast") || altSettings.getProperty("AltGameCancelByHit", "Cast").equalsIgnoreCase("all");
         ALT_GAME_SHIELD_BLOCKS = Boolean.parseBoolean(altSettings.getProperty("AltShieldBlocks", "false"));
@@ -2204,8 +2193,6 @@ public final class Config {
         LIFE_CRYSTAL_NEEDED = Boolean.parseBoolean(altSettings.getProperty("LifeCrystalNeeded", "true"));
         SP_BOOK_NEEDED = Boolean.parseBoolean(altSettings.getProperty("SpBookNeeded", "true"));
         ES_SP_BOOK_NEEDED = Boolean.parseBoolean(altSettings.getProperty("EnchantSkillSpBookNeeded", "true"));
-        AUTO_LOOT = altSettings.getProperty("AutoLoot").equalsIgnoreCase("True");
-        AUTO_LOOT_HERBS = altSettings.getProperty("AutoLootHerbs").equalsIgnoreCase("True");
         ALT_GAME_KARMA_PLAYER_CAN_BE_KILLED_IN_PEACEZONE = Boolean.valueOf(altSettings.getProperty("AltKarmaPlayerCanBeKilledInPeaceZone", "false"));
         ALT_GAME_KARMA_PLAYER_CAN_SHOP = Boolean.valueOf(altSettings.getProperty("AltKarmaPlayerCanShop", "true"));
         ALT_GAME_KARMA_PLAYER_CAN_USE_GK = Boolean.valueOf(altSettings.getProperty("AltKarmaPlayerCanUseGK", "false"));
@@ -2795,10 +2782,6 @@ public final class Config {
       LIFE_CRYSTAL_NEEDED = Boolean.valueOf(pValue);
     } else if(pName.equalsIgnoreCase("SpBookNeeded")) {
       SP_BOOK_NEEDED = Boolean.valueOf(pValue);
-    } else if(pName.equalsIgnoreCase("AutoLoot")) {
-      AUTO_LOOT = Boolean.valueOf(pValue);
-    } else if(pName.equalsIgnoreCase("AutoLootHerbs")) {
-      AUTO_LOOT_HERBS = Boolean.valueOf(pValue);
     } else if(pName.equalsIgnoreCase("AltKarmaPlayerCanBeKilledInPeaceZone")) {
       ALT_GAME_KARMA_PLAYER_CAN_BE_KILLED_IN_PEACEZONE = Boolean.valueOf(pValue);
     } else if(pName.equalsIgnoreCase("AltKarmaPlayerCanShop")) {

@@ -1285,12 +1285,7 @@ public class L2Attackable extends L2NpcInstance {
             _log.fine("Item id to drop: " + item.getItemId() + " amount: " + item.getCount());
           }
 
-          // Check if the autoLoot mode is active
-          if(Config.AUTO_LOOT) {
-            player.doAutoLoot(this, item); // Give this or these Item(s) to the L2PcInstance that has killed the L2Attackable
-          } else {
-            DropItem(player, item); // drop the item on the ground
-          }
+          player.doAutoLoot(this, item);
 
           // Broadcast message if RaidBoss was defeated
           if(this instanceof L2RaidBossInstance) {
@@ -1317,11 +1312,7 @@ public class L2Attackable extends L2NpcInstance {
       if((random < Config.RATE_DROP_SPECIAL_HERBS) && !_spec) // && !_spec useless yet
       {
         RewardItem item = new RewardItem(8612, 1); // Herb of Warrior
-        if(Config.AUTO_LOOT && Config.AUTO_LOOT_HERBS) {
-          player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
-        } else {
-          DropItem(player, item);
-        }
+        player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
         _spec = true;
       } else {
         for(int i = 0; i < 3; i++) {
@@ -1337,12 +1328,7 @@ public class L2Attackable extends L2NpcInstance {
             if(i == 2) {
               item = new RewardItem(8610, 1); // Herb of Critical Attack
             }
-
-            if(Config.AUTO_LOOT && Config.AUTO_LOOT_HERBS) {
-              player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
-            } else {
-              DropItem(player, item);
-            }
+            player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
             break;
           }
         }
@@ -1351,12 +1337,8 @@ public class L2Attackable extends L2NpcInstance {
       // mtk - matk type enhance
       random = Rnd.get(1000); // note *10
       if((random < Config.RATE_DROP_SPECIAL_HERBS) && !_spec) {
-        RewardItem item = new RewardItem(8613, 1); // Herb of Mystic
-        if(Config.AUTO_LOOT && Config.AUTO_LOOT_HERBS) {
-          player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
-        } else {
-          DropItem(player, item);
-        }
+        RewardItem item = new RewardItem(8613, 1);
+        player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
         _spec = true;
       } else {
         for(int i = 0; i < 2; i++) {
@@ -1369,12 +1351,7 @@ public class L2Attackable extends L2NpcInstance {
             if(i == 1) {
               item = new RewardItem(8609, 1); // Herb of Casting Speed
             }
-
-            if(Config.AUTO_LOOT && Config.AUTO_LOOT_HERBS) {
-              player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
-            } else {
-              DropItem(player, item);
-            }
+            player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
             break;
           }
         }
@@ -1384,11 +1361,7 @@ public class L2Attackable extends L2NpcInstance {
       random = Rnd.get(1000); // note *10
       if((random < Config.RATE_DROP_SPECIAL_HERBS) && !_spec) {
         RewardItem item = new RewardItem(8614, 1); // Herb of Recovery
-        if(Config.AUTO_LOOT && Config.AUTO_LOOT_HERBS) {
-          player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
-        } else {
-          DropItem(player, item);
-        }
+        player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
         _mp = true;
         _hp = true;
         _spec = true;
@@ -1397,83 +1370,57 @@ public class L2Attackable extends L2NpcInstance {
       if(!_hp) {
         random = Rnd.get(100);
         if(random < Config.RATE_DROP_MP_HP_HERBS) {
-          RewardItem item = new RewardItem(8600, 1); // Herb of Life
-          if(Config.AUTO_LOOT && Config.AUTO_LOOT_HERBS) {
-            player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
-          } else {
-            DropItem(player, item);
-          }
+          RewardItem item = new RewardItem(8600, 1);
+          player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
           _hp = true;
         }
       }
       if(!_hp) {
         random = Rnd.get(100);
         if(random < Config.RATE_DROP_GREATER_HERBS) {
-          RewardItem item = new RewardItem(8601, 1); // Greater Herb of Life
-          if(Config.AUTO_LOOT && Config.AUTO_LOOT_HERBS) {
-            player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
-          } else {
-            DropItem(player, item);
-          }
+          RewardItem item = new RewardItem(8601, 1);
+          player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
+
           _hp = true;
         }
       }
       if(!_hp) {
         random = Rnd.get(1000); // note *10
         if(random < Config.RATE_DROP_SUPERIOR_HERBS) {
-          RewardItem item = new RewardItem(8602, 1); // Superior Herb of Life
-          if(Config.AUTO_LOOT && Config.AUTO_LOOT_HERBS) {
-            player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
-          } else {
-            DropItem(player, item);
-          }
+          RewardItem item = new RewardItem(8602, 1);
+          player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
         }
       }
       // mp - restore mp type
       if(!_mp) {
         random = Rnd.get(100);
         if(random < Config.RATE_DROP_MP_HP_HERBS) {
-          RewardItem item = new RewardItem(8603, 1); // Herb of Manna
-          if(Config.AUTO_LOOT && Config.AUTO_LOOT_HERBS) {
-            player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
-          } else {
-            DropItem(player, item);
-          }
+          RewardItem item = new RewardItem(8603, 1);
+          player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
           _mp = true;
         }
       }
       if(!_mp) {
         random = Rnd.get(100);
         if(random < Config.RATE_DROP_GREATER_HERBS) {
-          RewardItem item = new RewardItem(8604, 1); // Greater Herb of Mana
-          if(Config.AUTO_LOOT && Config.AUTO_LOOT_HERBS) {
-            player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
-          } else {
-            DropItem(player, item);
-          }
+          RewardItem item = new RewardItem(8604, 1);
+          player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
           _mp = true;
         }
       }
       if(!_mp) {
         random = Rnd.get(1000); // note *10
         if(random < Config.RATE_DROP_SUPERIOR_HERBS) {
-          RewardItem item = new RewardItem(8605, 1); // Superior Herb of Mana
-          if(Config.AUTO_LOOT && Config.AUTO_LOOT_HERBS) {
-            player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
-          } else {
-            DropItem(player, item);
-          }
+          RewardItem item = new RewardItem(8605, 1);
+          player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
+
         }
       }
       // speed enhance type
       random = Rnd.get(100);
       if(random < Config.RATE_DROP_COMMON_HERBS) {
-        RewardItem item = new RewardItem(8611, 1); // Herb of Speed
-        if(Config.AUTO_LOOT && Config.AUTO_LOOT_HERBS) {
-          player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
-        } else {
-          DropItem(player, item);
-        }
+        RewardItem item = new RewardItem(8611, 1);
+        player.addItem("Loot", item.getItemId(), item.getCount(), this, true);
       }
     }
   }
@@ -1514,11 +1461,7 @@ public class L2Attackable extends L2NpcInstance {
     for(DateDrop drop : EventDroplist.getInstance().getAllDrops()) {
       if(Rnd.get(L2DropData.MAX_CHANCE) < drop.chance) {
         RewardItem item = new RewardItem(drop.items[Rnd.get(drop.items.length)], Rnd.get(drop.min, drop.max));
-        if(Config.AUTO_LOOT) {
-          player.doAutoLoot(this, item); // Give this or these Item(s) to the L2PcInstance that has killed the L2Attackable
-        } else {
-          DropItem(player, item); // drop the item on the ground
-        }
+        player.doAutoLoot(this, item);
       }
     }
   }

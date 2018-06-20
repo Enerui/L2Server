@@ -2800,10 +2800,7 @@ public final class L2PcInstance extends L2PlayableInstance {
       }
     }
 
-    // Auto-Learn skills if activated
-    if(Config.AUTO_LEARN_SKILLS) {
-      giveAvailableSkills();
-    }
+    giveAvailableSkills();
     sendSkillList();
     // This function gets called on login, so not such a bad place to check weight
     refreshOverloaded(); // Update the overloaded status of the L2PcInstance
