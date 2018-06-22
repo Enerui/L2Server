@@ -116,7 +116,4 @@ public class Experience
 	 * <BR>
 	 */
 	public final static byte MAX_LEVEL = 81;
-	
-	public final static byte MIN_NEWBIE_LEVEL = 6;
-	public final static byte MAX_NEWBIE_LEVEL = 25;
 }

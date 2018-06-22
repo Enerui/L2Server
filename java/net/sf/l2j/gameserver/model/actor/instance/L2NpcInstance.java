@@ -30,9 +30,7 @@ import net.sf.l2j.gameserver.ThreadPoolManager;
 import net.sf.l2j.gameserver.ai.CtrlIntention;
 import net.sf.l2j.gameserver.cache.HtmCache;
 import net.sf.l2j.gameserver.datatables.ClanTable;
-import net.sf.l2j.gameserver.datatables.HelperBuffTable;
 import net.sf.l2j.gameserver.datatables.ItemTable;
-import net.sf.l2j.gameserver.datatables.SkillTable;
 import net.sf.l2j.gameserver.datatables.SpawnTable;
 import net.sf.l2j.gameserver.idfactory.IdFactory;
 import net.sf.l2j.gameserver.instancemanager.CastleManager;
@@ -47,8 +45,6 @@ import net.sf.l2j.gameserver.model.L2DropData;
 import net.sf.l2j.gameserver.model.L2ItemInstance;
 import net.sf.l2j.gameserver.model.L2Multisell;
 import net.sf.l2j.gameserver.model.L2Object;
-import net.sf.l2j.gameserver.model.L2Skill;
-import net.sf.l2j.gameserver.model.L2Skill.SkillType;
 import net.sf.l2j.gameserver.model.L2Spawn;
 import net.sf.l2j.gameserver.model.L2Summon;
 import net.sf.l2j.gameserver.model.L2World;
@@ -77,7 +73,6 @@ import net.sf.l2j.gameserver.serverpackets.SystemMessage;
 import net.sf.l2j.gameserver.serverpackets.ValidateLocation;
 import net.sf.l2j.gameserver.skills.Stats;
 import net.sf.l2j.gameserver.taskmanager.DecayTaskManager;
-import net.sf.l2j.gameserver.templates.L2HelperBuff;
 import net.sf.l2j.gameserver.templates.L2Item;
 import net.sf.l2j.gameserver.templates.L2NpcTemplate;
 import net.sf.l2j.gameserver.templates.L2Weapon;
@@ -982,8 +977,6 @@ public class L2NpcInstance extends L2Character {
         showLotoWindow(player, val);
       } else if(command.startsWith("CPRecovery")) {
         makeCPRecovery(player);
-      } else if(command.startsWith("SupportMagic")) {
-        makeSupportMagic(player);
       } else if(command.startsWith("multisell")) {
         L2Multisell.getInstance().SeparateAndSend(Integer.parseInt(command.substring(9).trim()), player, false, getCastle().getTaxRate());
       } else if(command.startsWith("exc_multisell")) {
@@ -1537,75 +1530,6 @@ public class L2NpcInstance extends L2Character {
     sm = new SystemMessage(SystemMessageId.S1_CP_WILL_BE_RESTORED);
     sm.addString(player.getName());
     player.sendPacket(sm);
-  }
-
-  /**
-   * Add Newbie helper buffs to L2Player according to its level.<BR>
-   * <BR>
-   * <B><U> Actions</U> :</B><BR>
-   * <BR>
-   * <li>Get the range level in wich player must be to obtain buff</li> <li>If player level is out of range, display a message and return</li> <li>According to player level cast buff</li><BR>
-   * <BR>
-   * <FONT COLOR=#FF0000><B> Newbie Helper Buff list is define in sql table helper_buff_list</B></FONT><BR>
-   * <BR>
-   *
-   * @param player The L2PcInstance that talk with the L2NpcInstance
-   */
-  public void makeSupportMagic(L2PcInstance player) {
-    if(player == null) {
-      return;
-    }
-
-    // Prevent a cursed weapon weilder of being buffed
-    if(player.isCursedWeaponEquiped()) {
-      return;
-    }
-
-    int player_level = player.getLevel();
-    int lowestLevel = 0;
-    int higestLevel = 0;
-
-    // Select the player
-    setTarget(player);
-
-    // Calculate the min and max level between wich the player must be to obtain buff
-    if(player.isMageClass()) {
-      lowestLevel = HelperBuffTable.getInstance().getMagicClassLowestLevel();
-      higestLevel = HelperBuffTable.getInstance().getMagicClassHighestLevel();
-    } else {
-      lowestLevel = HelperBuffTable.getInstance().getPhysicClassLowestLevel();
-      higestLevel = HelperBuffTable.getInstance().getPhysicClassHighestLevel();
-    }
-
-    // If the player is too high level, display a message and return
-    if((player_level > higestLevel) || !player.isNewbie()) {
-      String content = "<html><body>Newbie Guide:<br>Only a <font color=\"LEVEL\">novice character of level " + higestLevel + " or less</font> can receive my support magic.<br>Your novice character is the first one that you created and raised in this world.</body></html>";
-      insertObjectIdAndShowChatWindow(player, content);
-      return;
-    }
-
-    // If the player is too low level, display a message and return
-    if(player_level < lowestLevel) {
-      String content = "<html><body>Come back here when you have reached level " + lowestLevel + ". I will give you support magic then.</body></html>";
-      insertObjectIdAndShowChatWindow(player, content);
-      return;
-    }
-
-    L2Skill skill = null;
-    // Go through the Helper Buff list define in sql table helper_buff_list and cast skill
-    for(L2HelperBuff helperBuffItem : HelperBuffTable.getInstance().getHelperBuffTable()) {
-      if(helperBuffItem.isMagicClassBuff() == player.isMageClass()) {
-        if((player_level >= helperBuffItem.getLowerLevel()) && (player_level <= helperBuffItem.getUpperLevel())) {
-          skill = SkillTable.getInstance().getInfo(helperBuffItem.getSkillID(), helperBuffItem.getSkillLevel());
-          if(skill.getSkillType() == SkillType.SUMMON) {
-            player.doCast(skill);
-          } else {
-            doCast(skill);
-          }
-        }
-      }
-    }
-
   }
 
   public void showChatWindow(L2PcInstance player) {

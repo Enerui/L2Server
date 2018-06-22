@@ -61,7 +61,6 @@ CREATE TABLE IF NOT EXISTS characters (
   online decimal(1,0) default NULL,
   onlinetime decimal(20,0) default NULL,
   char_slot decimal(1) default NULL,
-  newbie decimal(1,0) default '1',
   lastAccess decimal(20,0) default NULL,
   clan_privs INT DEFAULT 0,
   wantspeace decimal(1,0) DEFAULT 0,

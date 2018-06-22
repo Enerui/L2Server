@@ -201,8 +201,8 @@ public final class L2PcInstance extends L2PlayableInstance {
   private static final String ADD_SKILL_SAVE = "INSERT INTO character_skills_save (char_obj_id,skill_id,skill_level,effect_count,effect_cur_time,reuse_delay,restore_type,class_index,buff_index) VALUES (?,?,?,?,?,?,?,?,?)";
   private static final String RESTORE_SKILL_SAVE = "SELECT skill_id,skill_level,effect_count,effect_cur_time, reuse_delay FROM character_skills_save WHERE char_obj_id=? AND class_index=? AND restore_type=? ORDER BY buff_index ASC";
   private static final String DELETE_SKILL_SAVE = "DELETE FROM character_skills_save WHERE char_obj_id=? AND class_index=?";
-  private static final String UPDATE_CHARACTER = "UPDATE characters SET level=?,maxHp=?,curHp=?,maxCp=?,curCp=?,maxMp=?,curMp=?,str=?,con=?,dex=?,_int=?,men=?,wit=?,face=?,hairStyle=?,hairColor=?,heading=?,x=?,y=?,z=?,exp=?,expBeforeDeath=?,sp=?,karma=?,pvpkills=?,pkkills=?,rec_have=?,rec_left=?,clanid=?,maxload=?,race=?,classid=?,deletetime=?,title=?,accesslevel=?,online=?,isin7sdungeon=?,clan_privs=?,wantspeace=?,base_class=?,onlinetime=?,in_jail=?,jail_timer=?,newbie=?,nobless=?,power_grade=?,subpledge=?,last_recom_date=?,lvl_joined_academy=?,apprentice=?,sponsor=?,varka_ketra_ally=?,clan_join_expiry_time=?,clan_create_expiry_time=?,char_name=?,death_penalty_level=? WHERE obj_id=?";
-  private static final String RESTORE_CHARACTER = "SELECT account_name, obj_Id, char_name, level, maxHp, curHp, maxCp, curCp, maxMp, curMp, acc, crit, evasion, mAtk, mDef, mSpd, pAtk, pDef, pSpd, runSpd, walkSpd, str, con, dex, _int, men, wit, face, hairStyle, hairColor, sex, heading, x, y, z, movement_multiplier, attack_speed_multiplier, colRad, colHeight, exp, expBeforeDeath, sp, karma, pvpkills, pkkills, clanid, maxload, race, classid, deletetime, cancraft, title, rec_have, rec_left, accesslevel, online, char_slot, lastAccess, clan_privs, wantspeace, base_class, onlinetime, isin7sdungeon, in_jail, jail_timer, newbie, nobless, power_grade, subpledge, last_recom_date, lvl_joined_academy, apprentice, sponsor, varka_ketra_ally,clan_join_expiry_time,clan_create_expiry_time,death_penalty_level FROM characters WHERE obj_id=?";
+  private static final String UPDATE_CHARACTER = "UPDATE characters SET level=?,maxHp=?,curHp=?,maxCp=?,curCp=?,maxMp=?,curMp=?,str=?,con=?,dex=?,_int=?,men=?,wit=?,face=?,hairStyle=?,hairColor=?,heading=?,x=?,y=?,z=?,exp=?,expBeforeDeath=?,sp=?,karma=?,pvpkills=?,pkkills=?,rec_have=?,rec_left=?,clanid=?,maxload=?,race=?,classid=?,deletetime=?,title=?,accesslevel=?,online=?,isin7sdungeon=?,clan_privs=?,wantspeace=?,base_class=?,onlinetime=?,in_jail=?,jail_timer=?,nobless=?,power_grade=?,subpledge=?,last_recom_date=?,lvl_joined_academy=?,apprentice=?,sponsor=?,varka_ketra_ally=?,clan_join_expiry_time=?,clan_create_expiry_time=?,char_name=?,death_penalty_level=? WHERE obj_id=?";
+  private static final String RESTORE_CHARACTER = "SELECT account_name, obj_Id, char_name, level, maxHp, curHp, maxCp, curCp, maxMp, curMp, acc, crit, evasion, mAtk, mDef, mSpd, pAtk, pDef, pSpd, runSpd, walkSpd, str, con, dex, _int, men, wit, face, hairStyle, hairColor, sex, heading, x, y, z, movement_multiplier, attack_speed_multiplier, colRad, colHeight, exp, expBeforeDeath, sp, karma, pvpkills, pkkills, clanid, maxload, race, classid, deletetime, cancraft, title, rec_have, rec_left, accesslevel, online, char_slot, lastAccess, clan_privs, wantspeace, base_class, onlinetime, isin7sdungeon, in_jail, jail_timer, nobless, power_grade, subpledge, last_recom_date, lvl_joined_academy, apprentice, sponsor, varka_ketra_ally,clan_join_expiry_time,clan_create_expiry_time,death_penalty_level FROM characters WHERE obj_id=?";
   private static final String RESTORE_CHAR_SUBCLASSES = "SELECT class_id,exp,sp,level,class_index FROM character_subclasses WHERE char_obj_id=? ORDER BY class_index ASC";
   private static final String ADD_CHAR_SUBCLASS = "INSERT INTO character_subclasses (char_obj_id,class_id,exp,sp,level,class_index) VALUES (?,?,?,?,?,?)";
   private static final String UPDATE_CHAR_SUBCLASS = "UPDATE character_subclasses SET exp=?,sp=?,level=?,class_id=? WHERE char_obj_id=? AND class_index =?";
@@ -625,11 +625,6 @@ public final class L2PcInstance extends L2PlayableInstance {
    * The _buy list.
    */
   private TradeList _buyList;
-
-  /**
-   * True if the L2PcInstance is newbie.
-   */
-  private boolean _newbie;
 
   /**
    * The _noble.
@@ -1307,10 +1302,6 @@ public final class L2PcInstance extends L2PlayableInstance {
     // Set the base class ID to that of the actual class ID.
     player.setBaseClass(player.getClassId());
 
-    if(Config.ALT_GAME_NEW_CHAR_ALWAYS_IS_NEWBIE) {
-      player.setNewbie(true);
-    }
-
     // Add the player in the characters table of the database
     boolean ok = player.createDb();
 
@@ -1602,24 +1593,6 @@ public final class L2PcInstance extends L2PlayableInstance {
   @Override
   public final int getLevel() {
     return getStat().getLevel();
-  }
-
-  /**
-   * Return the _newbie state of the L2PcInstance.
-   *
-   * @return true, if is newbie
-   */
-  public boolean isNewbie() {
-    return _newbie;
-  }
-
-  /**
-   * Set the _newbie state of the L2PcInstance.
-   *
-   * @param isNewbie The Identifier of the _newbie state
-   */
-  public void setNewbie(boolean isNewbie) {
-    _newbie = isNewbie;
   }
 
   /**
@@ -6124,7 +6097,7 @@ public final class L2PcInstance extends L2PlayableInstance {
     try {
       con = L2DatabaseFactory.getInstance().getConnection();
       PreparedStatement statement;
-      statement = con.prepareStatement("INSERT INTO characters " + "(account_name,obj_Id,char_name,level,maxHp,curHp,maxCp,curCp,maxMp,curMp," + "acc,crit,evasion,mAtk,mDef,mSpd,pAtk,pDef,pSpd,runSpd,walkSpd," + "str,con,dex,_int,men,wit,face,hairStyle,hairColor,sex," + "movement_multiplier,attack_speed_multiplier,colRad,colHeight," + "exp,sp,karma,pvpkills,pkkills,clanid,maxload,race,classid,deletetime," + "cancraft,title,accesslevel,online,isin7sdungeon,clan_privs,wantspeace," + "base_class,newbie,nobless,power_grade,last_recom_date) " + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+      statement = con.prepareStatement("INSERT INTO characters " + "(account_name,obj_Id,char_name,level,maxHp,curHp,maxCp,curCp,maxMp,curMp," + "acc,crit,evasion,mAtk,mDef,mSpd,pAtk,pDef,pSpd,runSpd,walkSpd," + "str,con,dex,_int,men,wit,face,hairStyle,hairColor,sex," + "movement_multiplier,attack_speed_multiplier,colRad,colHeight," + "exp,sp,karma,pvpkills,pkkills,clanid,maxload,race,classid,deletetime," + "cancraft,title,accesslevel,online,isin7sdungeon,clan_privs,wantspeace," + "base_class,nobless,power_grade,last_recom_date) " + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
       statement.setString(1, _accountName);
       statement.setInt(2, getObjectId());
       statement.setString(3, getName());
@@ -6178,10 +6151,9 @@ public final class L2PcInstance extends L2PlayableInstance {
       statement.setInt(51, getClanPrivileges());
       statement.setInt(52, getWantsPeace());
       statement.setInt(53, getBaseClass());
-      statement.setInt(54, isNewbie() ? 1 : 0);
-      statement.setInt(55, isNoble() ? 1 : 0);
-      statement.setLong(56, 0);
-      statement.setLong(57, System.currentTimeMillis());
+      statement.setInt(54, isNoble() ? 1 : 0);
+      statement.setLong(55, 0);
+      statement.setLong(56, System.currentTimeMillis());
       statement.executeUpdate();
       statement.close();
     } catch(Exception e) {
@@ -6243,7 +6215,6 @@ public final class L2PcInstance extends L2PlayableInstance {
         player.setPvpKills(rset.getInt("pvpkills"));
         player.setPkKills(rset.getInt("pkkills"));
         player.setOnlineTime(rset.getLong("onlinetime"));
-        player.setNewbie(rset.getInt("newbie") == 1);
         player.setNoble(rset.getInt("nobless") == 1);
 
         player.setClanJoinExpiryTime(rset.getLong("clan_join_expiry_time"));
@@ -6675,12 +6646,6 @@ public final class L2PcInstance extends L2PlayableInstance {
       statement.setInt(29, getClanId());
       statement.setInt(30, getMaxLoad());
       statement.setInt(31, getRace().ordinal());
-
-      // if (!isSubClassActive())
-
-      // else
-      // statement.setInt(30, getBaseTemplate().race.ordinal());
-
       statement.setInt(32, getClassId().getId());
       statement.setLong(33, getDeleteTimer());
       statement.setString(34, getTitle());
@@ -6700,20 +6665,19 @@ public final class L2PcInstance extends L2PlayableInstance {
       statement.setLong(41, totalOnlineTime);
       statement.setInt(42, isInJail() ? 1 : 0);
       statement.setLong(43, getJailTimer());
-      statement.setInt(44, isNewbie() ? 1 : 0);
-      statement.setInt(45, isNoble() ? 1 : 0);
-      statement.setLong(46, getPowerGrade());
-      statement.setInt(47, getPledgeType());
-      statement.setLong(48, getLastRecomUpdate());
-      statement.setInt(49, getLvlJoinedAcademy());
-      statement.setLong(50, getApprentice());
-      statement.setLong(51, getSponsor());
-      statement.setInt(52, getAllianceWithVarkaKetra());
-      statement.setLong(53, getClanJoinExpiryTime());
-      statement.setLong(54, getClanCreateExpiryTime());
-      statement.setString(55, getName());
-      statement.setLong(56, getDeathPenaltyBuffLevel());
-      statement.setInt(57, getObjectId());
+      statement.setInt(44, isNoble() ? 1 : 0);
+      statement.setLong(45, getPowerGrade());
+      statement.setInt(46, getPledgeType());
+      statement.setLong(47, getLastRecomUpdate());
+      statement.setInt(48, getLvlJoinedAcademy());
+      statement.setLong(49, getApprentice());
+      statement.setLong(50, getSponsor());
+      statement.setInt(51, getAllianceWithVarkaKetra());
+      statement.setLong(52, getClanJoinExpiryTime());
+      statement.setLong(53, getClanCreateExpiryTime());
+      statement.setString(54, getName());
+      statement.setLong(55, getDeathPenaltyBuffLevel());
+      statement.setInt(56, getObjectId());
 
       statement.execute();
       statement.close();

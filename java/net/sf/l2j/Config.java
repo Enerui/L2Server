@@ -371,11 +371,6 @@ public final class Config {
   public static int ALT_CREATE_ALLY_DAYS_WHEN_DISSOLVED;
 
   /**
-   * Alternative gaming - all new characters always are newbies.
-   */
-  public static boolean ALT_GAME_NEW_CHAR_ALWAYS_IS_NEWBIE;
-
-  /**
    * Alternative gaming - clan members with see privilege can also withdraw from clan warehouse.
    */
   public static boolean ALT_MEMBERS_CAN_WITHDRAW_FROM_CLANWH;
@@ -2203,7 +2198,6 @@ public final class Config {
         ALT_RECOMMEND = Boolean.parseBoolean(altSettings.getProperty("AltRecommend", "False"));
         ALT_GAME_SUBCLASS_WITHOUT_QUESTS = Boolean.parseBoolean(altSettings.getProperty("AltSubClassWithoutQuests", "False"));
         ALT_GAME_VIEWNPC = Boolean.parseBoolean(altSettings.getProperty("AltGameViewNpc", "False"));
-        ALT_GAME_NEW_CHAR_ALWAYS_IS_NEWBIE = Boolean.parseBoolean(altSettings.getProperty("AltNewCharAlwaysIsNewbie", "False"));
         ALT_MEMBERS_CAN_WITHDRAW_FROM_CLANWH = Boolean.parseBoolean(altSettings.getProperty("AltMembersCanWithdrawFromClanWH", "False"));
         ALT_MAX_NUM_OF_CLANS_IN_ALLY = Integer.parseInt(altSettings.getProperty("AltMaxNumOfClansInAlly", "3"));
         DWARF_RECIPE_LIMIT = Integer.parseInt(altSettings.getProperty("DwarfRecipeLimit", "50"));
@@ -2802,8 +2796,6 @@ public final class Config {
       ALT_GAME_FREE_TELEPORT = Boolean.valueOf(pValue);
     } else if(pName.equalsIgnoreCase("AltSubClassWithoutQuests")) {
       ALT_GAME_SUBCLASS_WITHOUT_QUESTS = Boolean.valueOf(pValue);
-    } else if(pName.equalsIgnoreCase("AltNewCharAlwaysIsNewbie")) {
-      ALT_GAME_NEW_CHAR_ALWAYS_IS_NEWBIE = Boolean.valueOf(pValue);
     } else if(pName.equalsIgnoreCase("AltMembersCanWithdrawFromClanWH")) {
       ALT_MEMBERS_CAN_WITHDRAW_FROM_CLANWH = Boolean.valueOf(pValue);
     } else if(pName.equalsIgnoreCase("DwarfRecipeLimit")) {
