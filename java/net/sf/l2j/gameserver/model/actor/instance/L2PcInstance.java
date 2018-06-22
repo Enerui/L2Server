@@ -200,7 +200,7 @@ public final class L2PcInstance extends L2PlayableInstance {
   private static final String ADD_SKILL_SAVE = "INSERT INTO character_skills_save (char_obj_id,skill_id,skill_level,effect_count,effect_cur_time,reuse_delay,restore_type,class_index,buff_index) VALUES (?,?,?,?,?,?,?,?,?)";
   private static final String RESTORE_SKILL_SAVE = "SELECT skill_id,skill_level,effect_count,effect_cur_time, reuse_delay FROM character_skills_save WHERE char_obj_id=? AND class_index=? AND restore_type=? ORDER BY buff_index ASC";
   private static final String DELETE_SKILL_SAVE = "DELETE FROM character_skills_save WHERE char_obj_id=? AND class_index=?";
-  private static final String UPDATE_CHARACTER = "UPDATE characters SET level=?,maxHp=?,curHp=?,maxCp=?,curCp=?,maxMp=?,curMp=?,str=?,con=?,dex=?,_int=?,men=?,wit=?,face=?,hairStyle=?,hairColor=?,heading=?,x=?,y=?,z=?,exp=?,sp=?,karma=?,pvpkills=?,pkkills=?,rec_have=?,rec_left=?,clanid=?,maxload=?,race=?,classid=?,deletetime=?,title=?,accesslevel=?,online=?,isin7sdungeon=?,clan_privs=?,wantspeace=?,base_class=?,onlinetime=?,in_jail=?,jail_timer=?,nobless=?,power_grade=?,subpledge=?,last_recom_date=?,lvl_joined_academy=?,apprentice=?,sponsor=?,varka_ketra_ally=?,clan_join_expiry_time=?,clan_create_expiry_time=?,char_name=?, WHERE obj_id=?";
+  private static final String UPDATE_CHARACTER = "UPDATE characters SET level=?,maxHp=?,curHp=?,maxCp=?,curCp=?,maxMp=?,curMp=?,str=?,con=?,dex=?,_int=?,men=?,wit=?,face=?,hairStyle=?,hairColor=?,heading=?,x=?,y=?,z=?,exp=?,sp=?,karma=?,pvpkills=?,pkkills=?,rec_have=?,rec_left=?,clanid=?,maxload=?,race=?,classid=?,deletetime=?,title=?,accesslevel=?,online=?,isin7sdungeon=?,clan_privs=?,wantspeace=?,base_class=?,onlinetime=?,in_jail=?,jail_timer=?,nobless=?,power_grade=?,subpledge=?,last_recom_date=?,lvl_joined_academy=?,apprentice=?,sponsor=?,varka_ketra_ally=?,clan_join_expiry_time=?,clan_create_expiry_time=?,char_name=? WHERE obj_id=?";
   private static final String RESTORE_CHARACTER = "SELECT account_name, obj_Id, char_name, level, maxHp, curHp, maxCp, curCp, maxMp, curMp, acc, crit, evasion, mAtk, mDef, mSpd, pAtk, pDef, pSpd, runSpd, walkSpd, str, con, dex, _int, men, wit, face, hairStyle, hairColor, sex, heading, x, y, z, movement_multiplier, attack_speed_multiplier, colRad, colHeight, exp, sp, karma, pvpkills, pkkills, clanid, maxload, race, classid, deletetime, cancraft, title, rec_have, rec_left, accesslevel, online, char_slot, lastAccess, clan_privs, wantspeace, base_class, onlinetime, isin7sdungeon, in_jail, jail_timer, nobless, power_grade, subpledge, last_recom_date, lvl_joined_academy, apprentice, sponsor, varka_ketra_ally,clan_join_expiry_time,clan_create_expiry_time FROM characters WHERE obj_id=?";
   private static final String RESTORE_CHAR_SUBCLASSES = "SELECT class_id,exp,sp,level,class_index FROM character_subclasses WHERE char_obj_id=? ORDER BY class_index ASC";
   private static final String ADD_CHAR_SUBCLASS = "INSERT INTO character_subclasses (char_obj_id,class_id,exp,sp,level,class_index) VALUES (?,?,?,?,?,?)";
@@ -2682,24 +2682,9 @@ public final class L2PcInstance extends L2PlayableInstance {
     return weaponItem;
   }
 
-  /**
-   * Give Expertise skill of this level and remove beginner Lucky skill. <B><U> Actions</U> :</B><BR>
-   * <li>Get the Level of the L2PcInstance</li> <li>If L2PcInstance Level is 5, remove beginner Lucky skill</li> <li>Add the Expertise skill corresponding to its Expertise level</li> <li>Update the overloaded status of the L2PcInstance</li><BR>
-   * <FONT COLOR=#FF0000><B> <U>Caution</U> : This method DOESN'T give other free skills (SP needed = 0)</B></FONT>
-   */
   public void rewardSkills() {
     // Get the Level of the L2PcInstance
     int lvl = getLevel();
-
-    // Remove beginner Lucky skill
-    if(lvl == 10) {
-      L2Skill skill = SkillTable.getInstance().getInfo(194, 1);
-      skill = removeSkill(skill);
-
-      if(Config.DEBUG && (skill != null)) {
-        _log.fine("removed skill 'Lucky' from " + getName());
-      }
-    }
 
     // Calculate the current higher Expertise of the L2PcInstance
     for(int i = 0; i < EXPERTISE_LEVELS.length; i++) {
@@ -4704,25 +4689,13 @@ public final class L2PcInstance extends L2PlayableInstance {
                 _clan.setReputationScore(_clan.getReputationScore() - 2, true);
               }
             }
-            if(Config.ALT_GAME_DELEVEL) {
-              onDieUpdateKarma(); // Update karma if delevel is not allowed
-            }
+            onDieUpdateKarma();
           }
         }
       }
     }
 
     setPvpFlag(0); // Clear the pvp flag
-
-    // Unsummon Cubics
-    if(_cubics.size() > 0) {
-      for(L2CubicInstance cubic : _cubics.values()) {
-        cubic.stopAction();
-        cubic.cancelDisappear();
-      }
-
-      _cubics.clear();
-    }
 
     if(_forceBuff != null) {
       _forceBuff.delete();
@@ -5152,12 +5125,6 @@ public final class L2PcInstance extends L2PlayableInstance {
     return _partyMatchingShowLevel;
   }
 
-  /**
-   * Manage the increase level task of a L2PcInstance (Max MP, Max MP, Recommandation, Expertise and beginner skills...).<BR>
-   * <B><U> Actions</U> :</B><BR>
-   * <li>Send a Server->Client System Message to the L2PcInstance : YOU_INCREASED_YOUR_LEVEL</li> <li>Send a Server->Client packet StatusUpdate to the L2PcInstance with new LEVEL, MAX_HP and MAX_MP</li> <li>Set the current HP and MP of the L2PcInstance, Launch/Stop a HP/MP/CP Regeneration Task and
-   * send StatusUpdate packet to all other L2PcInstance to inform (exclusive broadcast)</li> <li>Recalculate the party level</li> <li>Recalculate the number of Recommandation that the L2PcInstance can give</li> <li>Give Expertise skill of this level and remove beginner Lucky skill</li><BR>
-   */
   public void increaseLevel() {
     // Set the current HP and MP of the L2Character, Launch/Stop a HP/MP/CP Regeneration Task and send StatusUpdate packet to all other L2PcInstance to inform (exclusive broadcast)
     setCurrentHpMp(getMaxHp(), getMaxMp());
@@ -6223,9 +6190,6 @@ public final class L2PcInstance extends L2PlayableInstance {
         return null;
       }
 
-      // Retrieve from the database all secondary data of this L2PcInstance
-      // and reward expertise/lucky skills if necessary.
-      // Note that Clan, Noblesse and Hero skills are given separately and not here.
       player.restoreCharData();
       player.rewardSkills();
 

@@ -39,7 +39,6 @@ import net.sf.l2j.gameserver.model.base.PlayerClass;
 import net.sf.l2j.gameserver.model.base.PlayerRace;
 import net.sf.l2j.gameserver.model.base.SubClass;
 import net.sf.l2j.gameserver.model.entity.Castle;
-import net.sf.l2j.gameserver.model.quest.QuestState;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.serverpackets.ActionFailed;
 import net.sf.l2j.gameserver.serverpackets.AquireSkillList;
@@ -251,24 +250,6 @@ public final class L2VillageMasterInstance extends L2FolkInstance {
                   break;
                 }
               }
-            }
-          }
-
-          /*
-           * If quest checking is enabled, verify if the character has completed the Mimir's Elixir (Path to Subclass) and Fate's Whisper (A Grade Weapon) quests by checking for instances of their unique reward items. If they both exist, remove both unique items and continue with adding
-           * the sub-class.
-           */
-          if(!Config.ALT_GAME_SUBCLASS_WITHOUT_QUESTS) {
-
-            QuestState qs = player.getQuestState("235_MimirsElixir");
-            if((qs == null) || !qs.isCompleted()) {
-              player.sendMessage("You must have completed the Mimir's Elixir quest to continue adding your sub class.");
-              return;
-            }
-            qs = player.getQuestState("234_FatesWhisper");
-            if((qs == null) || !qs.isCompleted()) {
-              player.sendMessage("You must have completed the Fate's Whisper quest to continue adding your sub class.");
-              return;
             }
           }
 
@@ -605,11 +586,6 @@ public final class L2VillageMasterInstance extends L2FolkInstance {
 
     PlayerClass currClass = PlayerClass.values()[charClassId];
 
-    /**
-     * If the race of your main class is Elf or Dark Elf, you may not select each class as a subclass to the other class, and you may not select Overlord and Warsmith class as a subclass. You may not select a similar class as the subclass. The occupations classified as similar classes are as
-     * follows: Treasure Hunter, Plainswalker and Abyss Walker Hawkeye, Silver Ranger and Phantom Ranger Paladin, Dark Avenger, Temple Knight and Shillien Knight Warlocks, Elemental Summoner and Phantom Summoner Elder and Shillien Elder Swordsinger and Bladedancer Sorcerer, Spellsinger and
-     * Spellhowler
-     */
     Set<PlayerClass> availSubs = currClass.getAvailableSubclasses();
 
     if(availSubs != null) {
@@ -625,26 +601,8 @@ public final class L2VillageMasterInstance extends L2FolkInstance {
             availSubs.remove(PlayerClass.values()[availSub.ordinal()]);
           }
         }
-
-        if(((npcRace == PlayerRace.Human) || (npcRace == PlayerRace.LightElf))) {
-          // If the master is human or light elf, ensure that fighter-type
-          // masters only teach fighter classes, and priest-type masters
-          // only teach priest classes etc.
-          if(!availSub.isOfType(npcTeachType)) {
-            availSubs.remove(availSub);
-          } else if(!availSub.isOfRace(PlayerRace.Human) && !availSub.isOfRace(PlayerRace.LightElf)) {
-            availSubs.remove(availSub);
-          }
-        } else {
-          // If the master is not human and not light elf,
-          // then remove any classes not of the same race as the master.
-          if(((npcRace != PlayerRace.Human) && (npcRace != PlayerRace.LightElf)) && !availSub.isOfRace(npcRace)) {
-            availSubs.remove(availSub);
-          }
-        }
       }
     }
-
     return availSubs;
   }
 

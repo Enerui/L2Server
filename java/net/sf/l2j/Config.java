@@ -247,11 +247,6 @@ public final class Config {
   public static float ALT_GAME_SKILL_HIT_RATE;
 
   /**
-   * Alternative gameing - loss of XP on death
-   */
-  public static boolean ALT_GAME_DELEVEL;
-
-  /**
    * Alternative gameing - magic dmg failures
    */
   public static boolean ALT_GAME_MAGICFAILURES;
@@ -275,11 +270,6 @@ public final class Config {
    * Disallow recommend character twice or more a day ?
    */
   public static boolean ALT_RECOMMEND;
-
-  /**
-   * Alternative gaming - allow sub-class addition without quest completion.
-   */
-  public static boolean ALT_GAME_SUBCLASS_WITHOUT_QUESTS;
 
   /**
    * View npc stats/drop by shift-cliking it for nongm-players
@@ -2165,7 +2155,6 @@ public final class Config {
         ALT_GAME_CANCEL_CAST = altSettings.getProperty("AltGameCancelByHit", "Cast").equalsIgnoreCase("cast") || altSettings.getProperty("AltGameCancelByHit", "Cast").equalsIgnoreCase("all");
         ALT_GAME_SHIELD_BLOCKS = Boolean.parseBoolean(altSettings.getProperty("AltShieldBlocks", "false"));
         ALT_PERFECT_SHLD_BLOCK = Integer.parseInt(altSettings.getProperty("AltPerfectShieldBlockRate", "10"));
-        ALT_GAME_DELEVEL = Boolean.parseBoolean(altSettings.getProperty("Delevel", "true"));
         ALT_GAME_MAGICFAILURES = Boolean.parseBoolean(altSettings.getProperty("MagicFailures", "false"));
         ALT_GAME_MOB_ATTACK_AI = Boolean.parseBoolean(altSettings.getProperty("AltGameMobAttackAI", "false"));
         ALT_MOB_AGRO_IN_PEACEZONE = Boolean.parseBoolean(altSettings.getProperty("AltMobAgroInPeaceZone", "true"));
@@ -2189,7 +2178,6 @@ public final class Config {
         ALT_GAME_KARMA_PLAYER_CAN_USE_WAREHOUSE = Boolean.valueOf(altSettings.getProperty("AltKarmaPlayerCanUseWareHouse", "true"));
         ALT_GAME_FREE_TELEPORT = Boolean.parseBoolean(altSettings.getProperty("AltFreeTeleporting", "False"));
         ALT_RECOMMEND = Boolean.parseBoolean(altSettings.getProperty("AltRecommend", "False"));
-        ALT_GAME_SUBCLASS_WITHOUT_QUESTS = Boolean.parseBoolean(altSettings.getProperty("AltSubClassWithoutQuests", "False"));
         ALT_GAME_VIEWNPC = Boolean.parseBoolean(altSettings.getProperty("AltGameViewNpc", "False"));
         ALT_MEMBERS_CAN_WITHDRAW_FROM_CLANWH = Boolean.parseBoolean(altSettings.getProperty("AltMembersCanWithdrawFromClanWH", "False"));
         ALT_MAX_NUM_OF_CLANS_IN_ALLY = Integer.parseInt(altSettings.getProperty("AltMaxNumOfClansInAlly", "3"));
@@ -2741,8 +2729,6 @@ public final class Config {
       ALT_GAME_SHIELD_BLOCKS = Boolean.valueOf(pValue);
     } else if(pName.equalsIgnoreCase("AltPerfectShieldBlockRate")) {
       ALT_PERFECT_SHLD_BLOCK = Integer.parseInt(pValue);
-    } else if(pName.equalsIgnoreCase("Delevel")) {
-      ALT_GAME_DELEVEL = Boolean.valueOf(pValue);
     } else if(pName.equalsIgnoreCase("MagicFailures")) {
       ALT_GAME_MAGICFAILURES = Boolean.valueOf(pValue);
     } else if(pName.equalsIgnoreCase("AltGameMobAttackAI")) {
@@ -2787,8 +2773,6 @@ public final class Config {
       ALT_GAME_REQUIRE_CLAN_CASTLE = Boolean.valueOf(pValue);
     } else if(pName.equalsIgnoreCase("AltFreeTeleporting")) {
       ALT_GAME_FREE_TELEPORT = Boolean.valueOf(pValue);
-    } else if(pName.equalsIgnoreCase("AltSubClassWithoutQuests")) {
-      ALT_GAME_SUBCLASS_WITHOUT_QUESTS = Boolean.valueOf(pValue);
     } else if(pName.equalsIgnoreCase("AltMembersCanWithdrawFromClanWH")) {
       ALT_MEMBERS_CAN_WITHDRAW_FROM_CLANWH = Boolean.valueOf(pValue);
     } else if(pName.equalsIgnoreCase("DwarfRecipeLimit")) {
