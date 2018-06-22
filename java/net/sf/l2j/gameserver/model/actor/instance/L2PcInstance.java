@@ -117,7 +117,6 @@ import net.sf.l2j.gameserver.model.actor.stat.PcStat;
 import net.sf.l2j.gameserver.model.actor.status.PcStatus;
 import net.sf.l2j.gameserver.model.base.ClassId;
 import net.sf.l2j.gameserver.model.base.ClassLevel;
-import net.sf.l2j.gameserver.model.base.Experience;
 import net.sf.l2j.gameserver.model.base.PlayerClass;
 import net.sf.l2j.gameserver.model.base.Race;
 import net.sf.l2j.gameserver.model.base.SubClass;
@@ -201,8 +200,8 @@ public final class L2PcInstance extends L2PlayableInstance {
   private static final String ADD_SKILL_SAVE = "INSERT INTO character_skills_save (char_obj_id,skill_id,skill_level,effect_count,effect_cur_time,reuse_delay,restore_type,class_index,buff_index) VALUES (?,?,?,?,?,?,?,?,?)";
   private static final String RESTORE_SKILL_SAVE = "SELECT skill_id,skill_level,effect_count,effect_cur_time, reuse_delay FROM character_skills_save WHERE char_obj_id=? AND class_index=? AND restore_type=? ORDER BY buff_index ASC";
   private static final String DELETE_SKILL_SAVE = "DELETE FROM character_skills_save WHERE char_obj_id=? AND class_index=?";
-  private static final String UPDATE_CHARACTER = "UPDATE characters SET level=?,maxHp=?,curHp=?,maxCp=?,curCp=?,maxMp=?,curMp=?,str=?,con=?,dex=?,_int=?,men=?,wit=?,face=?,hairStyle=?,hairColor=?,heading=?,x=?,y=?,z=?,exp=?,expBeforeDeath=?,sp=?,karma=?,pvpkills=?,pkkills=?,rec_have=?,rec_left=?,clanid=?,maxload=?,race=?,classid=?,deletetime=?,title=?,accesslevel=?,online=?,isin7sdungeon=?,clan_privs=?,wantspeace=?,base_class=?,onlinetime=?,in_jail=?,jail_timer=?,nobless=?,power_grade=?,subpledge=?,last_recom_date=?,lvl_joined_academy=?,apprentice=?,sponsor=?,varka_ketra_ally=?,clan_join_expiry_time=?,clan_create_expiry_time=?,char_name=?,death_penalty_level=? WHERE obj_id=?";
-  private static final String RESTORE_CHARACTER = "SELECT account_name, obj_Id, char_name, level, maxHp, curHp, maxCp, curCp, maxMp, curMp, acc, crit, evasion, mAtk, mDef, mSpd, pAtk, pDef, pSpd, runSpd, walkSpd, str, con, dex, _int, men, wit, face, hairStyle, hairColor, sex, heading, x, y, z, movement_multiplier, attack_speed_multiplier, colRad, colHeight, exp, expBeforeDeath, sp, karma, pvpkills, pkkills, clanid, maxload, race, classid, deletetime, cancraft, title, rec_have, rec_left, accesslevel, online, char_slot, lastAccess, clan_privs, wantspeace, base_class, onlinetime, isin7sdungeon, in_jail, jail_timer, nobless, power_grade, subpledge, last_recom_date, lvl_joined_academy, apprentice, sponsor, varka_ketra_ally,clan_join_expiry_time,clan_create_expiry_time,death_penalty_level FROM characters WHERE obj_id=?";
+  private static final String UPDATE_CHARACTER = "UPDATE characters SET level=?,maxHp=?,curHp=?,maxCp=?,curCp=?,maxMp=?,curMp=?,str=?,con=?,dex=?,_int=?,men=?,wit=?,face=?,hairStyle=?,hairColor=?,heading=?,x=?,y=?,z=?,exp=?,sp=?,karma=?,pvpkills=?,pkkills=?,rec_have=?,rec_left=?,clanid=?,maxload=?,race=?,classid=?,deletetime=?,title=?,accesslevel=?,online=?,isin7sdungeon=?,clan_privs=?,wantspeace=?,base_class=?,onlinetime=?,in_jail=?,jail_timer=?,nobless=?,power_grade=?,subpledge=?,last_recom_date=?,lvl_joined_academy=?,apprentice=?,sponsor=?,varka_ketra_ally=?,clan_join_expiry_time=?,clan_create_expiry_time=?,char_name=?, WHERE obj_id=?";
+  private static final String RESTORE_CHARACTER = "SELECT account_name, obj_Id, char_name, level, maxHp, curHp, maxCp, curCp, maxMp, curMp, acc, crit, evasion, mAtk, mDef, mSpd, pAtk, pDef, pSpd, runSpd, walkSpd, str, con, dex, _int, men, wit, face, hairStyle, hairColor, sex, heading, x, y, z, movement_multiplier, attack_speed_multiplier, colRad, colHeight, exp, sp, karma, pvpkills, pkkills, clanid, maxload, race, classid, deletetime, cancraft, title, rec_have, rec_left, accesslevel, online, char_slot, lastAccess, clan_privs, wantspeace, base_class, onlinetime, isin7sdungeon, in_jail, jail_timer, nobless, power_grade, subpledge, last_recom_date, lvl_joined_academy, apprentice, sponsor, varka_ketra_ally,clan_join_expiry_time,clan_create_expiry_time FROM characters WHERE obj_id=?";
   private static final String RESTORE_CHAR_SUBCLASSES = "SELECT class_id,exp,sp,level,class_index FROM character_subclasses WHERE char_obj_id=? ORDER BY class_index ASC";
   private static final String ADD_CHAR_SUBCLASS = "INSERT INTO character_subclasses (char_obj_id,class_id,exp,sp,level,class_index) VALUES (?,?,?,?,?,?)";
   private static final String UPDATE_CHAR_SUBCLASS = "UPDATE character_subclasses SET exp=?,sp=?,level=?,class_id=? WHERE char_obj_id=? AND class_index =?";
@@ -358,11 +357,6 @@ public final class L2PcInstance extends L2PlayableInstance {
   private Map<Integer, SubClass> _subClasses;
   private PcAppearance _appearance;
   private int _charId = 0x00030b7a;
-
-  /**
-   * The Experience of the L2PcInstance before the last Death Penalty.
-   */
-  private long _expBeforeDeath;
 
   /**
    * The Karma of the L2PcInstance (if higher than 0, the name of the L2PcInstance appears in red).
@@ -810,12 +804,6 @@ public final class L2PcInstance extends L2PlayableInstance {
    * The _wants peace.
    */
   private int _wantsPeace = 0;
-
-  // Death Penalty Buff Level
-  /**
-   * The _death penalty buff level.
-   */
-  private int _deathPenaltyBuffLevel = 0;
 
   // GM related variables
   /**
@@ -2330,24 +2318,6 @@ public final class L2PcInstance extends L2PlayableInstance {
    */
   public boolean canRecom(L2PcInstance target) {
     return !_recomChars.contains(target.getObjectId());
-  }
-
-  /**
-   * Set the exp of the L2PcInstance before a death.
-   *
-   * @param exp the new exp before death
-   */
-  public void setExpBeforeDeath(long exp) {
-    _expBeforeDeath = exp;
-  }
-
-  /**
-   * Gets the exp before death.
-   *
-   * @return the exp before death
-   */
-  public long getExpBeforeDeath() {
-    return _expBeforeDeath;
   }
 
   /**
@@ -4717,9 +4687,6 @@ public final class L2PcInstance extends L2PlayableInstance {
         pk.kills.add(getName());
       }
 
-      // Clear resurrect xp calculation
-      setExpBeforeDeath(0);
-
       if(isCursedWeaponEquiped()) {
         CursedWeaponsManager.getInstance().drop(_cursedWeaponEquipedId, killer);
       } else {
@@ -4738,12 +4705,6 @@ public final class L2PcInstance extends L2PlayableInstance {
               }
             }
             if(Config.ALT_GAME_DELEVEL) {
-              // Reduce the Experience of the L2PcInstance in function of the calculated Death Penalty
-              // NOTE: deathPenalty +- Exp will update karma
-              if((getSkillLevel(L2Skill.SKILL_LUCKY) < 0) || (getStat().getLevel() > 9)) {
-                deathPenalty(((pk != null) && (getClan() != null) && (pk.getClan() != null) && pk.getClan().isAtWarWith(getClanId())));
-              }
-            } else {
               onDieUpdateKarma(); // Update karma if delevel is not allowed
             }
           }
@@ -4772,10 +4733,6 @@ public final class L2PcInstance extends L2PlayableInstance {
         character.abortCast();
       }
     }
-
-    // calculate death penalty buff
-    calculateDeathPenaltyBuffLevel(killer);
-
     stopRentPet();
     stopWaterTask();
     return true;
@@ -5121,76 +5078,6 @@ public final class L2PcInstance extends L2PlayableInstance {
         startPvPFlag();
       }
     }
-  }
-
-  /**
-   * Restore the specified % of experience this L2PcInstance has lost and sends a Server->Client StatusUpdate packet.
-   *
-   * @param restorePercent the restore percent
-   */
-  public void restoreExp(double restorePercent) {
-    if(getExpBeforeDeath() > 0) {
-      // Restore the specified % of lost experience.
-      getStat().addExp((int) Math.round(((getExpBeforeDeath() - getExp()) * restorePercent) / 100));
-      setExpBeforeDeath(0);
-    }
-  }
-
-  /**
-   * Reduce the Experience (and level if necessary) of the L2PcInstance in function of the calculated Death Penalty.<BR>
-   * <B><U> Actions</U> :</B><BR>
-   * <li>Calculate the Experience loss</li> <li>Set the value of _expBeforeDeath</li> <li>Set the new Experience value of the L2PcInstance and Decrease its level if necessary</li> <li>Send a Server->Client StatusUpdate packet with its new Experience</li><BR>
-   *
-   * @param atwar the atwar
-   */
-  public void deathPenalty(boolean atwar) {
-    // TODO Need Correct Penalty
-    // Get the level of the L2PcInstance
-    final int lvl = getLevel();
-
-    // The death steal you some Exp
-    double percentLost = 7.0;
-    if(getLevel() >= 76) {
-      percentLost = 2.0;
-    } else if(getLevel() >= 40) {
-      percentLost = 4.0;
-    }
-
-    if(getKarma() > 0) {
-      percentLost *= Config.RATE_KARMA_EXP_LOST;
-    }
-
-    if(isFestivalParticipant() || atwar || isInsideZone(ZONE_SIEGE)) {
-      percentLost /= 4.0;
-    }
-
-    // Calculate the Experience loss
-    long lostExp = 0;
-    if(!atEvent) {
-      if(lvl < Experience.MAX_LEVEL) {
-        lostExp = Math.round(((getStat().getExpForLevel(lvl + 1) - getStat().getExpForLevel(lvl)) * percentLost) / 100);
-      } else {
-        lostExp = Math.round(((getStat().getExpForLevel(Experience.MAX_LEVEL) - getStat().getExpForLevel(Experience.MAX_LEVEL - 1)) * percentLost) / 100);
-      }
-    }
-
-    // Get the Experience before applying penalty
-    setExpBeforeDeath(getExp());
-
-    if(getCharmOfCourage()) {
-      if((getSiegeState() > 0) && isInsideZone(ZONE_SIEGE)) {
-        lostExp = 0;
-      }
-    }
-
-    setCharmOfCourage(false);
-
-    if(Config.DEBUG) {
-      _log.fine(getName() + " died and lost " + lostExp + " experience.");
-    }
-
-    // Set the new Experience value of the L2PcInstance
-    getStat().addExp(-lostExp);
   }
 
   /**
@@ -6203,7 +6090,6 @@ public final class L2PcInstance extends L2PlayableInstance {
         player._lastAccess = rset.getLong("lastAccess");
 
         player.getStat().setExp(rset.getLong("exp"));
-        player.setExpBeforeDeath(rset.getLong("expBeforeDeath"));
         player.getStat().setLevel(rset.getByte("level"));
         player.getStat().setSp(rset.getInt("sp"));
 
@@ -6308,11 +6194,6 @@ public final class L2PcInstance extends L2PlayableInstance {
         CursedWeaponsManager.getInstance().checkPlayer(player);
 
         player.setAllianceWithVarkaKetra(rset.getInt("varka_ketra_ally"));
-
-        player.setDeathPenaltyBuffLevel(rset.getInt("death_penalty_level"));
-
-        // Add the L2PcInstance object in _allObjects
-        // L2World.getInstance().storeObject(player);
 
         // Set the x,y,z position of the L2PcInstance and make it invisible
         player.setXYZInvisible(rset.getInt("x"), rset.getInt("y"), rset.getInt("z"));
@@ -6636,25 +6517,24 @@ public final class L2PcInstance extends L2PlayableInstance {
       statement.setInt(19, _observerMode ? _obsY : getY());
       statement.setInt(20, _observerMode ? _obsZ : getZ());
       statement.setLong(21, exp);
-      statement.setLong(22, getExpBeforeDeath());
-      statement.setInt(23, sp);
-      statement.setInt(24, getKarma());
-      statement.setInt(25, getPvpKills());
-      statement.setInt(26, getPkKills());
-      statement.setInt(27, getRecomHave());
-      statement.setInt(28, getRecomLeft());
-      statement.setInt(29, getClanId());
-      statement.setInt(30, getMaxLoad());
-      statement.setInt(31, getRace().ordinal());
-      statement.setInt(32, getClassId().getId());
-      statement.setLong(33, getDeleteTimer());
-      statement.setString(34, getTitle());
-      statement.setInt(35, getAccessLevel());
-      statement.setInt(36, isOnline());
-      statement.setInt(37, isIn7sDungeon() ? 1 : 0);
-      statement.setInt(38, getClanPrivileges());
-      statement.setInt(39, getWantsPeace());
-      statement.setInt(40, getBaseClass());
+      statement.setInt(22, sp);
+      statement.setInt(23, getKarma());
+      statement.setInt(24, getPvpKills());
+      statement.setInt(25, getPkKills());
+      statement.setInt(26, getRecomHave());
+      statement.setInt(27, getRecomLeft());
+      statement.setInt(28, getClanId());
+      statement.setInt(29, getMaxLoad());
+      statement.setInt(30, getRace().ordinal());
+      statement.setInt(31, getClassId().getId());
+      statement.setLong(32, getDeleteTimer());
+      statement.setString(33, getTitle());
+      statement.setInt(34, getAccessLevel());
+      statement.setInt(35, isOnline());
+      statement.setInt(36, isIn7sDungeon() ? 1 : 0);
+      statement.setInt(37, getClanPrivileges());
+      statement.setInt(38, getWantsPeace());
+      statement.setInt(39, getBaseClass());
 
       long totalOnlineTime = _onlineTime;
 
@@ -6662,22 +6542,21 @@ public final class L2PcInstance extends L2PlayableInstance {
         totalOnlineTime += (System.currentTimeMillis() - _onlineBeginTime) / 1000;
       }
 
-      statement.setLong(41, totalOnlineTime);
-      statement.setInt(42, isInJail() ? 1 : 0);
-      statement.setLong(43, getJailTimer());
-      statement.setInt(44, isNoble() ? 1 : 0);
-      statement.setLong(45, getPowerGrade());
-      statement.setInt(46, getPledgeType());
-      statement.setLong(47, getLastRecomUpdate());
-      statement.setInt(48, getLvlJoinedAcademy());
-      statement.setLong(49, getApprentice());
-      statement.setLong(50, getSponsor());
-      statement.setInt(51, getAllianceWithVarkaKetra());
-      statement.setLong(52, getClanJoinExpiryTime());
-      statement.setLong(53, getClanCreateExpiryTime());
-      statement.setString(54, getName());
-      statement.setLong(55, getDeathPenaltyBuffLevel());
-      statement.setInt(56, getObjectId());
+      statement.setLong(40, totalOnlineTime);
+      statement.setInt(41, isInJail() ? 1 : 0);
+      statement.setLong(42, getJailTimer());
+      statement.setInt(43, isNoble() ? 1 : 0);
+      statement.setLong(44, getPowerGrade());
+      statement.setInt(45, getPledgeType());
+      statement.setLong(46, getLastRecomUpdate());
+      statement.setInt(47, getLvlJoinedAcademy());
+      statement.setLong(48, getApprentice());
+      statement.setLong(49, getSponsor());
+      statement.setInt(50, getAllianceWithVarkaKetra());
+      statement.setLong(51, getClanJoinExpiryTime());
+      statement.setLong(52, getClanCreateExpiryTime());
+      statement.setString(53, getName());
+      statement.setInt(54, getObjectId());
 
       statement.execute();
       statement.close();
@@ -9517,10 +9396,6 @@ public final class L2PcInstance extends L2PlayableInstance {
     } else {
       restoreRecipeBook();
     }
-
-    // Restore any Death Penalty Buff
-    restoreDeathPenaltyBuffLevel();
-
     restoreSkills();
     regiveTemporarySkills();
     rewardSkills();
@@ -9553,9 +9428,6 @@ public final class L2PcInstance extends L2PlayableInstance {
     broadcastUserInfo();
     refreshOverloaded();
     refreshExpertisePenalty();
-
-    // Clear resurrect xp calculation
-    setExpBeforeDeath(0);
 
     // _macroses.restore();
     // _macroses.sendUpdate();
@@ -9812,9 +9684,6 @@ public final class L2PcInstance extends L2PlayableInstance {
 
   @Override
   public void doRevive(double revivePower) {
-    // Restore the player's lost experience,
-    // depending on the % return of the skill used (based on its power).
-    restoreExp(revivePower);
     doRevive();
   }
 
@@ -11331,107 +11200,6 @@ public final class L2PcInstance extends L2PlayableInstance {
   public void setCharmOfCourage(boolean val) {
     _charmOfCourage = val;
     sendPacket(new EtcStatusUpdate(this));
-  }
-
-  /**
-   * Gets the death penalty buff level.
-   *
-   * @return the death penalty buff level
-   */
-  public int getDeathPenaltyBuffLevel() {
-    return _deathPenaltyBuffLevel;
-  }
-
-  /**
-   * Sets the death penalty buff level.
-   *
-   * @param level the new death penalty buff level
-   */
-  public void setDeathPenaltyBuffLevel(int level) {
-    _deathPenaltyBuffLevel = level;
-  }
-
-  /**
-   * Calculate death penalty buff level.
-   *
-   * @param killer the killer
-   */
-  public void calculateDeathPenaltyBuffLevel(L2Character killer) {
-    if((Rnd.get(100) <= Config.DEATH_PENALTY_CHANCE) && !(killer instanceof L2PcInstance) && !(isGM()) && !(getCharmOfLuck() && ((killer instanceof L2BossInstance) || (killer instanceof L2RaidBossInstance)))) {
-      increaseDeathPenaltyBuffLevel();
-    }
-  }
-
-  /**
-   * Increase death penalty buff level.
-   */
-  public void increaseDeathPenaltyBuffLevel() {
-    if(getDeathPenaltyBuffLevel() >= 15) {
-      return;
-    }
-
-    if(getDeathPenaltyBuffLevel() != 0) {
-      L2Skill skill = SkillTable.getInstance().getInfo(5076, getDeathPenaltyBuffLevel());
-
-      if(skill != null) {
-        removeSkill(skill, true);
-      }
-    }
-
-    _deathPenaltyBuffLevel++;
-
-    addSkill(SkillTable.getInstance().getInfo(5076, getDeathPenaltyBuffLevel()), false);
-    sendPacket(new EtcStatusUpdate(this));
-    SystemMessage sm = new SystemMessage(SystemMessageId.DEATH_PENALTY_LEVEL_S1_ADDED);
-    sm.addNumber(getDeathPenaltyBuffLevel());
-    sendPacket(sm);
-  }
-
-  /**
-   * Reduce death penalty buff level.
-   */
-  public void reduceDeathPenaltyBuffLevel() {
-    if(getDeathPenaltyBuffLevel() <= 0) {
-      return;
-    }
-
-    L2Skill skill = SkillTable.getInstance().getInfo(5076, getDeathPenaltyBuffLevel());
-
-    if(skill != null) {
-      removeSkill(skill, true);
-    }
-
-    _deathPenaltyBuffLevel--;
-
-    if(getDeathPenaltyBuffLevel() > 0) {
-      addSkill(SkillTable.getInstance().getInfo(5076, getDeathPenaltyBuffLevel()), false);
-      sendPacket(new EtcStatusUpdate(this));
-      SystemMessage sm = new SystemMessage(SystemMessageId.DEATH_PENALTY_LEVEL_S1_ADDED);
-      sm.addNumber(getDeathPenaltyBuffLevel());
-      sendPacket(sm);
-    } else {
-      sendPacket(new EtcStatusUpdate(this));
-      sendPacket(new SystemMessage(SystemMessageId.DEATH_PENALTY_LIFTED));
-    }
-  }
-
-  /**
-   * Restore death penalty buff level.
-   */
-  public void restoreDeathPenaltyBuffLevel() {
-    L2Skill skill = SkillTable.getInstance().getInfo(5076, getDeathPenaltyBuffLevel());
-
-    if(skill != null) {
-      removeSkill(skill, true);
-    }
-
-    if(getDeathPenaltyBuffLevel() > 0) {
-      addSkill(SkillTable.getInstance().getInfo(5076, getDeathPenaltyBuffLevel()), false);
-      // SystemMessage sm = new SystemMessage(SystemMessageId.DEATH_PENALTY_LEVEL_S1_ADDED);
-      // sm.addNumber(getDeathPenaltyBuffLevel());
-      // sendPacket(sm);
-    }
-    // sendPacket(new EtcStatusUpdate(this));
   }
 
   /**

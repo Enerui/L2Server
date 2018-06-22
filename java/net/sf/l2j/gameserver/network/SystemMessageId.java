@@ -4663,18 +4663,6 @@ public enum SystemMessageId
 	YOUR_SEED_OR_REMAINING_PURCHASE_AMOUNT_IS_INADEQUATE(2013),
 	
 	/**
-	 * ID: 1916<br>
-	 * Message: Your Death Penalty is now level $s1.
-	 */
-	DEATH_PENALTY_LEVEL_S1_ADDED(1916),
-	
-	/**
-	 * ID: 1917<br>
-	 * Message: Your Death Penalty has been lifted.
-	 */
-	DEATH_PENALTY_LIFTED(1917),
-	
-	/**
 	 * ID: 1607<br>
 	 * Message: $s1 adena has been withdrawn to pay for purchasing fees.
 	 */

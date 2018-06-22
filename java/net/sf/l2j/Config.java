@@ -1479,11 +1479,6 @@ public final class Config {
   public static boolean IS_TELNET_ENABLED;
 
   /**
-   * Death Penalty chance
-   */
-  public static int DEATH_PENALTY_CHANCE;
-
-  /**
    * Player Protection control
    */
   public static int PLAYER_SPAWN_PROTECTION;
@@ -2099,8 +2094,6 @@ public final class Config {
 
         JAIL_IS_PVP = Boolean.valueOf(otherSettings.getProperty("JailIsPvp", "True"));
         JAIL_DISABLE_CHAT = Boolean.valueOf(otherSettings.getProperty("JailDisableChat", "True"));
-
-        DEATH_PENALTY_CHANCE = Integer.parseInt(otherSettings.getProperty("DeathPenaltyChance", "20"));
       } catch(Exception e) {
         e.printStackTrace();
         throw new Error("Failed to Load " + OTHER_CONFIG_FILE + " File.");
