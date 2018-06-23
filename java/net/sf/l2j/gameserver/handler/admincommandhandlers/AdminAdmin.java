@@ -35,10 +35,6 @@ import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.serverpackets.SystemMessage;
 
-/**
- * This class handles following admin commands: - admin|admin1/admin2/admin3/admin4/admin5 = slots for the 5 starting admin menus - gmliston/gmlistoff = includes/excludes active character from /gmlist results - silence = toggles private messages acceptance mode - diet = toggles weight penalty mode -
- * tradeoff = toggles trade acceptance mode - reload = reloads specified component from multisell|skill|npc|htm|item|instancemanager - set/set_menu/set_mod = alters specified server setting - saveolymp = saves olympiad state manually - manualhero = cycles olympiad and calculate new heroes.
- */
 public class AdminAdmin implements IAdminCommandHandler {
 
   private static final String[] ADMIN_COMMANDS =
@@ -125,8 +121,6 @@ public class AdminAdmin implements IAdminCommandHandler {
           activeChar.setDietMode(true);
           activeChar.sendMessage("Diet mode on");
         }
-      } finally {
-        activeChar.refreshOverloaded();
       }
     } else if(command.startsWith("admin_tradeoff")) {
       try {

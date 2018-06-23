@@ -138,9 +138,6 @@ public final class CharacterCreate extends L2GameClientPacket
 		newChar.setCurrentHp(template.baseHpMax);
 		newChar.setCurrentCp(template.baseCpMax);
 		newChar.setCurrentMp(template.baseMpMax);
-		// newChar.setMaxLoad(template.baseLoad);
-		
-		// send acknowledgement
 		CharCreateOk cco = new CharCreateOk();
 		sendPacket(cco);
 		

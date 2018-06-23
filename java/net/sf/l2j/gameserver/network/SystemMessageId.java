@@ -769,13 +769,7 @@ public enum SystemMessageId
 	 * Message: Leader: $s1
 	 */
 	PARTY_LEADER_S1(1611),
-	
-	/**
-	 * ID: 422<br>
-	 * Message: You have exceeded the weight limit.
-	 */
-	WEIGHT_LIMIT_EXCEEDED(422),
-	
+
 	/**
 	 * ID: 112<br>
 	 * Message: You may no longer adjust items in the trade because the trade has been confirmed.
@@ -3257,13 +3251,7 @@ public enum SystemMessageId
 	 * Message: The prize amount for Lucky Lottery #$s1 is $s2 adena. There was no first prize winner in this drawing, therefore the jackpot will be added to the next drawing.
 	 */
 	AMOUNT_FOR_LOTTERY_S1_IS_S2_ADENA_NO_WINNER(1113),
-	
-	/**
-	 * ID: 1118<br>
-	 * Message: Progress in a quest is possible only when your inventory's weight and volume are less than 80 percent of capacity.
-	 */
-	INVENTORY_LESS_THAN_80_PERCENT(1118),
-	
+
 	/**
 	 * ID: 930<br>
 	 * Message: Lottery tickets are not currently being sold.
@@ -3748,13 +3736,7 @@ public enum SystemMessageId
 	 * Message: You have already joined the waiting list for a non-class specific match.
 	 */
 	YOU_ARE_ALREADY_ON_THE_WAITING_LIST_FOR_ALL_CLASSES_WAITING_TO_PARTICIPATE_IN_THE_GAME(1690),
-	
-	/**
-	 * ID: 1691<br>
-	 * Message: You can't join a Grand Olympiad Game match with that much stuff on you! Reduce your weight to below 80 percent full and request to join again!
-	 */
-	SINCE_80_PERCENT_OR_MORE_OF_YOUR_INVENTORY_SLOTS_ARE_FULL_YOU_CANNOT_PARTICIPATE_IN_THE_OLYMPIAD(1691),
-	
+
 	/**
 	 * ID: 1692<br>
 	 * Message: You have changed from your main class to a subclass and therefore are removed from the Grand Olympiad Games waiting list.

@@ -3411,14 +3411,6 @@ public abstract class L2Character extends L2Object {
       return; // nothing to do (should not happen)
     }
 
-    // Add special effects
-    // Note: Now handled by EtcStatusUpdate packet
-    // NOTE: CHECK IF THEY WERE EVEN VISIBLE TO OTHERS...
-    /*
-     * if (player != null && mi != null) { if (player.getWeightPenalty() > 0) mi.addEffect(4270, player.getWeightPenalty(), -1); if (player.getExpertisePenalty() > 0) mi.addEffect(4267, 1, -1); if (player.getMessageRefusal()) mi.addEffect(4269, 1, -1); }
-     */
-
-    // Go through all effects if any
     L2Effect[] effects = getAllEffects();
     if((effects != null) && (effects.length > 0)) {
       for(L2Effect effect : effects) {

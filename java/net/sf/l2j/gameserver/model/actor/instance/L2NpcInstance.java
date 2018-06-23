@@ -1173,15 +1173,6 @@ public class L2NpcInstance extends L2Character {
     String content;
 
     Quest q = QuestManager.getInstance().getQuest(questId);
-
-    if((player.getWeightPenalty() >= 3) && (q.getQuestIntId() >= 1) && (q.getQuestIntId() < 1000)) {
-      player.sendPacket(new SystemMessage(SystemMessageId.INVENTORY_LESS_THAN_80_PERCENT));
-      return;
-    }
-
-    // FileInputStream fis = null;
-
-    // Get the state of the selected quest
     QuestState qs = player.getQuestState(questId);
 
     if(qs != null) {

@@ -51,11 +51,6 @@ import net.sf.l2j.gameserver.templates.L2Weapon;
 import net.sf.l2j.gameserver.templates.L2WeaponType;
 import net.sf.l2j.gameserver.templates.StatsSet;
 
-/**
- * This class ...
- *
- * @version $Revision: 1.9.2.6.2.9 $ $Date: 2005/04/02 15:57:34 $
- */
 public class ItemTable {
   private static Logger _log = Logger.getLogger(ItemTable.class.getName());
   private static Logger _logItems = Logger.getLogger("item");
@@ -158,11 +153,11 @@ public class ItemTable {
    */
   private static final String[] SQL_ITEM_SELECTS =
       {
-          "SELECT item_id, name, crystallizable, item_type, weight, consume_type, material, crystal_type, duration, price, crystal_count, sellable, dropable, destroyable, tradeable FROM etcitem",
+          "SELECT item_id, name, crystallizable, item_type, consume_type, material, crystal_type, duration, price, crystal_count, sellable, dropable, destroyable, tradeable FROM etcitem",
 
-          "SELECT item_id, name, bodypart, crystallizable, armor_type, weight," + " material, crystal_type, avoid_modify, duration, p_def, m_def, mp_bonus," + " price, crystal_count, sellable, dropable, destroyable, tradeable, item_skill_id, item_skill_lvl FROM armor",
+          "SELECT item_id, name, bodypart, crystallizable, armor_type," + " material, crystal_type, avoid_modify, duration, p_def, m_def, mp_bonus," + " price, crystal_count, sellable, dropable, destroyable, tradeable, item_skill_id, item_skill_lvl FROM armor",
 
-          "SELECT item_id, name, bodypart, crystallizable, weight, soulshots, spiritshots," + " material, crystal_type, p_dam, rnd_dam, weaponType, critical, hit_modify, avoid_modify," + " shield_def, shield_def_rate, atk_speed, mp_consume, m_dam, duration, price, crystal_count," + " sellable, dropable, destroyable, tradeable, item_skill_id, item_skill_lvl,enchant4_skill_id,enchant4_skill_lvl, onCast_skill_id, onCast_skill_lvl," + " onCast_skill_chance, onCrit_skill_id, onCrit_skill_lvl, onCrit_skill_chance FROM weapon"
+          "SELECT item_id, name, bodypart, crystallizable, soulshots, spiritshots," + " material, crystal_type, p_dam, rnd_dam, weaponType, critical, hit_modify, avoid_modify," + " shield_def, shield_def_rate, atk_speed, mp_consume, m_dam, duration, price, crystal_count," + " sellable, dropable, destroyable, tradeable, item_skill_id, item_skill_lvl,enchant4_skill_id,enchant4_skill_lvl, onCast_skill_id, onCast_skill_lvl," + " onCast_skill_chance, onCrit_skill_id, onCrit_skill_lvl, onCrit_skill_chance FROM weapon"
       };
   /**
    * List of etcItem
@@ -290,7 +285,6 @@ public class ItemTable {
     item.set.set("material", _materials.get(rset.getString("material")));
     item.set.set("crystal_type", _crystalTypes.get(rset.getString("crystal_type")));
     item.set.set("crystallizable", Boolean.valueOf(rset.getString("crystallizable")).booleanValue());
-    item.set.set("weight", rset.getInt("weight"));
     item.set.set("soulshots", rset.getInt("soulshots"));
     item.set.set("spiritshots", rset.getInt("spiritshots"));
     item.set.set("p_dam", rset.getInt("p_dam"));
@@ -377,8 +371,6 @@ public class ItemTable {
       item.set.set("type1", L2Item.TYPE1_SHIELD_ARMOR);
       item.set.set("type2", L2Item.TYPE2_SHIELD_ARMOR);
     }
-
-    item.set.set("weight", rset.getInt("weight"));
     item.set.set("material", _materials.get(rset.getString("material")));
     item.set.set("crystal_type", _crystalTypes.get(rset.getString("crystal_type")));
     item.set.set("avoid_modify", rset.getInt("avoid_modify"));
@@ -478,15 +470,10 @@ public class ItemTable {
 
     int material = _materials.get(rset.getString("material"));
     item.set.set("material", material);
-
     int crystal = _crystalTypes.get(rset.getString("crystal_type"));
     item.set.set("crystal_type", crystal);
-
-    int weight = rset.getInt("weight");
-    item.set.set("weight", weight);
     item.name = rset.getString("name");
     item.set.set("name", item.name);
-
     item.set.set("duration", rset.getInt("duration"));
     item.set.set("price", rset.getInt("price"));
 

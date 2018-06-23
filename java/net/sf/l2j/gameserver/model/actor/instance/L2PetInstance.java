@@ -531,11 +531,6 @@ public class L2PetInstance extends L2Summon {
         playerUI.addNewItem(newItem);
       }
       targetPlayer.sendPacket(playerUI);
-
-      // Update current load as well
-      StatusUpdate playerSU = new StatusUpdate(targetPlayer.getObjectId());
-      playerSU.addAttribute(StatusUpdate.CUR_LOAD, targetPlayer.getCurrentLoad());
-      targetPlayer.sendPacket(playerSU);
     } else if(target instanceof PetInventory) {
       petIU = new PetInventoryUpdate();
       if(newItem.getCount() > count) {
@@ -555,13 +550,8 @@ public class L2PetInstance extends L2Summon {
       L2ItemInstance[] items = petInventory.getItems();
       for(int i = 0; (i < items.length); i++) {
         L2ItemInstance giveit = items[i];
-        if(((giveit.getItem().getWeight() * giveit.getCount()) + getOwner().getInventory().getTotalWeight()) < getOwner().getMaxLoad()) {
-          // If the owner can carry it give it to them
-          giveItemToOwner(giveit);
-        } else {
-          // If they can't carry it, chuck it on the floor :)
-          dropItemHere(giveit);
-        }
+        giveItemToOwner(giveit);
+        dropItemHere(giveit);
       }
     } catch(Exception e) {
       _logPet.warning("Give all items error " + e);
@@ -598,11 +588,6 @@ public class L2PetInstance extends L2Summon {
       iu.addRemovedItem(removedItem);
 
       owner.sendPacket(iu);
-
-      StatusUpdate su = new StatusUpdate(owner.getObjectId());
-      su.addAttribute(StatusUpdate.CUR_LOAD, owner.getCurrentLoad());
-      owner.sendPacket(su);
-
       owner.broadcastUserInfo();
 
       L2World world = L2World.getInstance();

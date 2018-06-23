@@ -48,7 +48,6 @@ CREATE TABLE IF NOT EXISTS characters (
   pvpkills decimal(11,0) default NULL,
   pkkills decimal(11,0) default NULL,
   clanid decimal(11,0) default NULL,
-  maxload decimal(11,0) default NULL,
   race decimal(11,0) default NULL,
   classid decimal(11,0) default NULL,
   base_class int(2) NOT NULL default '0',

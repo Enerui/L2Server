@@ -70,8 +70,8 @@ public class GMViewCharacterInfo extends L2GameServerPacket
 		writeD(_activeChar.getMaxMp());
 		writeD((int) _activeChar.getCurrentMp());
 		writeD(_activeChar.getSp());
-		writeD(_activeChar.getCurrentLoad());
-		writeD(_activeChar.getMaxLoad());
+		writeD(0);
+		writeD(0);
 		writeD(0x28); // unknown
 		
 		writeD(_activeChar.getInventory().getPaperdollObjectId(Inventory.PAPERDOLL_DHAIR));

@@ -64,14 +64,8 @@ public abstract class Inventory extends ItemContainer {
   public static final int PAPERDOLL_HAIR = 16;
   public static final int PAPERDOLL_DHAIR = 17;
 
-  // Speed percentage mods
-  public static final double MAX_ARMOR_WEIGHT = 12000;
-
   private final L2ItemInstance[] _paperdoll;
   private final List<PaperdollListener> _paperdollListeners;
-
-  // protected to be accessed from child classes only
-  protected int _totalWeight;
 
   // used to quickly check for using of items of special type
   private int _wearedMask;
@@ -436,7 +430,6 @@ public abstract class Inventory extends ItemContainer {
       item.setLastChange(L2ItemInstance.REMOVED);
 
       item.updateDatabase();
-      refreshWeight();
     }
     return item;
   }
@@ -466,7 +459,6 @@ public abstract class Inventory extends ItemContainer {
       item = ItemTable.getInstance().createItem(process, item.getItemId(), count, actor, reference);
 
       item.updateDatabase();
-      refreshWeight();
       return item;
     }
     // Directly drop entire item
@@ -1058,31 +1050,6 @@ public abstract class Inventory extends ItemContainer {
   }
 
   /**
-   * Refresh the weight of equipment loaded
-   */
-  @Override
-  protected void refreshWeight() {
-    int weight = 0;
-
-    for(L2ItemInstance item : _items) {
-      if((item != null) && (item.getItem() != null)) {
-        weight += item.getItem().getWeight() * item.getCount();
-      }
-    }
-
-    _totalWeight = weight;
-  }
-
-  /**
-   * Returns the totalWeight.
-   *
-   * @return int
-   */
-  public int getTotalWeight() {
-    return _totalWeight;
-  }
-
-  /**
    * Return the L2ItemInstance of the arrows needed for this bow.<BR>
    * <BR>
    *
@@ -1165,7 +1132,6 @@ public abstract class Inventory extends ItemContainer {
 
       inv.close();
       statement.close();
-      refreshWeight();
     } catch(Exception e) {
       _log.warning("Could not restore inventory : " + e);
     } finally {

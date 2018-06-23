@@ -200,8 +200,8 @@ public final class L2PcInstance extends L2PlayableInstance {
   private static final String ADD_SKILL_SAVE = "INSERT INTO character_skills_save (char_obj_id,skill_id,skill_level,effect_count,effect_cur_time,reuse_delay,restore_type,class_index,buff_index) VALUES (?,?,?,?,?,?,?,?,?)";
   private static final String RESTORE_SKILL_SAVE = "SELECT skill_id,skill_level,effect_count,effect_cur_time, reuse_delay FROM character_skills_save WHERE char_obj_id=? AND class_index=? AND restore_type=? ORDER BY buff_index ASC";
   private static final String DELETE_SKILL_SAVE = "DELETE FROM character_skills_save WHERE char_obj_id=? AND class_index=?";
-  private static final String UPDATE_CHARACTER = "UPDATE characters SET level=?,maxHp=?,curHp=?,maxCp=?,curCp=?,maxMp=?,curMp=?,str=?,con=?,dex=?,_int=?,men=?,wit=?,face=?,hairStyle=?,hairColor=?,heading=?,x=?,y=?,z=?,exp=?,sp=?,karma=?,pvpkills=?,pkkills=?,rec_have=?,rec_left=?,clanid=?,maxload=?,race=?,classid=?,deletetime=?,title=?,accesslevel=?,online=?,isin7sdungeon=?,clan_privs=?,wantspeace=?,base_class=?,onlinetime=?,in_jail=?,jail_timer=?,nobless=?,power_grade=?,subpledge=?,last_recom_date=?,lvl_joined_academy=?,apprentice=?,sponsor=?,varka_ketra_ally=?,clan_join_expiry_time=?,clan_create_expiry_time=?,char_name=? WHERE obj_id=?";
-  private static final String RESTORE_CHARACTER = "SELECT account_name, obj_Id, char_name, level, maxHp, curHp, maxCp, curCp, maxMp, curMp, acc, crit, evasion, mAtk, mDef, mSpd, pAtk, pDef, pSpd, runSpd, walkSpd, str, con, dex, _int, men, wit, face, hairStyle, hairColor, sex, heading, x, y, z, movement_multiplier, attack_speed_multiplier, colRad, colHeight, exp, sp, karma, pvpkills, pkkills, clanid, maxload, race, classid, deletetime, cancraft, title, rec_have, rec_left, accesslevel, online, char_slot, lastAccess, clan_privs, wantspeace, base_class, onlinetime, isin7sdungeon, in_jail, jail_timer, nobless, power_grade, subpledge, last_recom_date, lvl_joined_academy, apprentice, sponsor, varka_ketra_ally,clan_join_expiry_time,clan_create_expiry_time FROM characters WHERE obj_id=?";
+  private static final String UPDATE_CHARACTER = "UPDATE characters SET level=?,maxHp=?,curHp=?,maxCp=?,curCp=?,maxMp=?,curMp=?,str=?,con=?,dex=?,_int=?,men=?,wit=?,face=?,hairStyle=?,hairColor=?,heading=?,x=?,y=?,z=?,exp=?,sp=?,karma=?,pvpkills=?,pkkills=?,rec_have=?,rec_left=?,clanid=?,race=?,classid=?,deletetime=?,title=?,accesslevel=?,online=?,isin7sdungeon=?,clan_privs=?,wantspeace=?,base_class=?,onlinetime=?,in_jail=?,jail_timer=?,nobless=?,power_grade=?,subpledge=?,last_recom_date=?,lvl_joined_academy=?,apprentice=?,sponsor=?,varka_ketra_ally=?,clan_join_expiry_time=?,clan_create_expiry_time=?,char_name=? WHERE obj_id=?";
+  private static final String RESTORE_CHARACTER = "SELECT account_name, obj_Id, char_name, level, maxHp, curHp, maxCp, curCp, maxMp, curMp, acc, crit, evasion, mAtk, mDef, mSpd, pAtk, pDef, pSpd, runSpd, walkSpd, str, con, dex, _int, men, wit, face, hairStyle, hairColor, sex, heading, x, y, z, movement_multiplier, attack_speed_multiplier, colRad, colHeight, exp, sp, karma, pvpkills, pkkills, clanid, race, classid, deletetime, cancraft, title, rec_have, rec_left, accesslevel, online, char_slot, lastAccess, clan_privs, wantspeace, base_class, onlinetime, isin7sdungeon, in_jail, jail_timer, nobless, power_grade, subpledge, last_recom_date, lvl_joined_academy, apprentice, sponsor, varka_ketra_ally,clan_join_expiry_time,clan_create_expiry_time FROM characters WHERE obj_id=?";
   private static final String RESTORE_CHAR_SUBCLASSES = "SELECT class_id,exp,sp,level,class_index FROM character_subclasses WHERE char_obj_id=? ORDER BY class_index ASC";
   private static final String ADD_CHAR_SUBCLASS = "INSERT INTO character_subclasses (char_obj_id,class_id,exp,sp,level,class_index) VALUES (?,?,?,?,?,?)";
   private static final String UPDATE_CHAR_SUBCLASS = "UPDATE character_subclasses SET exp=?,sp=?,level=?,class_id=? WHERE char_obj_id=? AND class_index =?";
@@ -382,11 +382,6 @@ public final class L2PcInstance extends L2PlayableInstance {
    * The Siege state of the L2PcInstance.
    */
   private byte _siegeState = 0;
-
-  /**
-   * The _cur weight penalty.
-   */
-  private int _curWeightPenalty = 0;
 
   /**
    * The _last compass zone.
@@ -834,7 +829,7 @@ public final class L2PcInstance extends L2PlayableInstance {
   /**
    * The _diet mode.
    */
-  private boolean _dietMode = false; // ignore weight penalty
+  private boolean _dietMode = false;
 
   /**
    * The _trade refusal.
@@ -1377,15 +1372,6 @@ public final class L2PcInstance extends L2PlayableInstance {
     return result;
   }
 
-  /**
-   * Retrieve a L2PcInstance from the characters table of the database and add it in _allObjects of the L2world (call restore method).<BR>
-   * <B><U> Actions</U> :</B><BR>
-   * <BR>
-   * <li>Retrieve the L2PcInstance from the characters table of the database</li> <li>Add the L2PcInstance object in _allObjects</li> <li>Set the x,y,z position of the L2PcInstance and make it invisible</li> <li>Update the overloaded status of the L2PcInstance</li><BR>
-   *
-   * @param objectId Identifier of the object to initialized
-   * @return The L2PcInstance loaded from the database
-   */
   public static L2PcInstance load(int objectId) {
     return restore(objectId);
   }
@@ -2206,15 +2192,6 @@ public final class L2PcInstance extends L2PlayableInstance {
   }
 
   /**
-   * Return the current weight of the L2PcInstance.
-   *
-   * @return the current load
-   */
-  public int getCurrentLoad() {
-    return _inventory.getTotalWeight();
-  }
-
-  /**
    * Return date of las update of recomPoints.
    *
    * @return the last recom update
@@ -2358,79 +2335,12 @@ public final class L2PcInstance extends L2PlayableInstance {
   }
 
   /**
-   * Return the max weight that the L2PcInstance can load.
-   *
-   * @return the max load
-   */
-  public int getMaxLoad() {
-    // Weight Limit = (CON Modifier*69000)*Skills
-    // Source http://l2p.bravehost.com/weightlimit.html (May 2007)
-    // Fitted exponential curve to the data
-    int con = getCON();
-    if(con < 1) {
-      return 31000;
-    }
-    if(con > 59) {
-      return 176000;
-    }
-    double baseLoad = Math.pow(1.029993928, con) * 30495.627366;
-    return (int) calcStat(Stats.MAX_LOAD, baseLoad * Config.ALT_WEIGHT_LIMIT, this, null);
-  }
-
-  /**
    * Gets the expertise penalty.
    *
    * @return the expertise penalty
    */
   public int getExpertisePenalty() {
     return _expertisePenalty;
-  }
-
-  /**
-   * Gets the weight penalty.
-   *
-   * @return the weight penalty
-   */
-  public int getWeightPenalty() {
-    if(_dietMode) {
-      return 0;
-    }
-    return _curWeightPenalty;
-  }
-
-  /**
-   * Update the overloaded status of the L2PcInstance.
-   */
-  public void refreshOverloaded() {
-    int maxLoad = getMaxLoad();
-    if(maxLoad > 0) {
-      setIsOverloaded(getCurrentLoad() > maxLoad);
-      int weightproc = (getCurrentLoad() * 1000) / maxLoad;
-      int newWeightPenalty;
-      if((weightproc < 500) || _dietMode) {
-        newWeightPenalty = 0;
-      } else if(weightproc < 666) {
-        newWeightPenalty = 1;
-      } else if(weightproc < 800) {
-        newWeightPenalty = 2;
-      } else if(weightproc < 1000) {
-        newWeightPenalty = 3;
-      } else {
-        newWeightPenalty = 4;
-      }
-
-      if(_curWeightPenalty != newWeightPenalty) {
-        _curWeightPenalty = newWeightPenalty;
-        if((newWeightPenalty > 0) && !_dietMode) {
-          super.addSkill(SkillTable.getInstance().getInfo(4270, newWeightPenalty));
-        } else {
-          super.removeSkill(getKnownSkill(4270));
-        }
-
-        sendPacket(new EtcStatusUpdate(this));
-        Broadcast.toKnownPlayers(this, new CharInfo(this));
-      }
-    }
   }
 
   /**
@@ -2730,8 +2640,6 @@ public final class L2PcInstance extends L2PlayableInstance {
 
     giveAvailableSkills();
     sendSkillList();
-    // This function gets called on login, so not such a bad place to check weight
-    refreshOverloaded(); // Update the overloaded status of the L2PcInstance
     refreshExpertisePenalty(); // Update the expertise status of the L2PcInstance
   }
 
@@ -3335,11 +3243,6 @@ public final class L2PcInstance extends L2PlayableInstance {
         sendPacket(new ItemList(this, false));
       }
 
-      // Update current load as well
-      StatusUpdate su = new StatusUpdate(getObjectId());
-      su.addAttribute(StatusUpdate.CUR_LOAD, getCurrentLoad());
-      sendPacket(su);
-
       // Cursed Weapon
       if(CursedWeaponsManager.getInstance().isCursed(newitem.getItemId())) {
         CursedWeaponsManager.getInstance().activate(this, newitem);
@@ -3420,11 +3323,6 @@ public final class L2PcInstance extends L2PlayableInstance {
           sendPacket(new ItemList(this, false));
         }
 
-        // Update current load as well
-        StatusUpdate su = new StatusUpdate(getObjectId());
-        su.addAttribute(StatusUpdate.CUR_LOAD, getCurrentLoad());
-        sendPacket(su);
-
         // Cursed Weapon
         if(CursedWeaponsManager.getInstance().isCursed(item.getItemId())) {
           CursedWeaponsManager.getInstance().activate(this, item);
@@ -3468,11 +3366,6 @@ public final class L2PcInstance extends L2PlayableInstance {
       sendPacket(new ItemList(this, false));
     }
 
-    // Update current load as well
-    StatusUpdate su = new StatusUpdate(getObjectId());
-    su.addAttribute(StatusUpdate.CUR_LOAD, getCurrentLoad());
-    sendPacket(su);
-
     // Sends message to client if requested
     if(sendMessage) {
       SystemMessage sm = new SystemMessage(SystemMessageId.DISSAPEARED_ITEM);
@@ -3515,11 +3408,6 @@ public final class L2PcInstance extends L2PlayableInstance {
       sendPacket(new ItemList(this, false));
     }
 
-    // Update current load as well
-    StatusUpdate su = new StatusUpdate(getObjectId());
-    su.addAttribute(StatusUpdate.CUR_LOAD, getCurrentLoad());
-    sendPacket(su);
-
     // Sends message to client if requested
     if(sendMessage) {
       SystemMessage sm = new SystemMessage(SystemMessageId.DISSAPEARED_ITEM);
@@ -3561,7 +3449,6 @@ public final class L2PcInstance extends L2PlayableInstance {
         if((GameTimeController.getGameTicks() % 10) == 0) {
           item.updateDatabase();
         }
-        _inventory.refreshWeight();
       }
     } else {
       // Destroy entire item and save to database
@@ -3576,11 +3463,6 @@ public final class L2PcInstance extends L2PlayableInstance {
     } else {
       sendPacket(new ItemList(this, false));
     }
-
-    // Update current load as well
-    StatusUpdate su = new StatusUpdate(getObjectId());
-    su.addAttribute(StatusUpdate.CUR_LOAD, getCurrentLoad());
-    sendPacket(su);
 
     // Sends message to client if requested
     if(sendMessage) {
@@ -3624,11 +3506,6 @@ public final class L2PcInstance extends L2PlayableInstance {
       sendPacket(new ItemList(this, false));
     }
 
-    // Update current load as well
-    StatusUpdate su = new StatusUpdate(getObjectId());
-    su.addAttribute(StatusUpdate.CUR_LOAD, getCurrentLoad());
-    sendPacket(su);
-
     // Sends message to client if requested
     if(sendMessage) {
       SystemMessage sm = new SystemMessage(SystemMessageId.DISSAPEARED_ITEM);
@@ -3669,11 +3546,6 @@ public final class L2PcInstance extends L2PlayableInstance {
 
       }
     }
-
-    // Send the StatusUpdate Server->Client Packet to the player with new CUR_LOAD (0x0e) information
-    StatusUpdate su = new StatusUpdate(getObjectId());
-    su.addAttribute(StatusUpdate.CUR_LOAD, getCurrentLoad());
-    sendPacket(su);
 
     // Send the ItemList Server->Client Packet to the player in order to refresh its Inventory
     ItemList il = new ItemList(getInventory().getItems(), true);
@@ -3722,11 +3594,6 @@ public final class L2PcInstance extends L2PlayableInstance {
       sendPacket(new ItemList(this, false));
     }
 
-    // Update current load as well
-    StatusUpdate playerSU = new StatusUpdate(getObjectId());
-    playerSU.addAttribute(StatusUpdate.CUR_LOAD, getCurrentLoad());
-    sendPacket(playerSU);
-
     // Send target update packet
     if(target instanceof PcInventory) {
       L2PcInstance targetPlayer = ((PcInventory) target).getOwner();
@@ -3744,11 +3611,6 @@ public final class L2PcInstance extends L2PlayableInstance {
       } else {
         targetPlayer.sendPacket(new ItemList(targetPlayer, false));
       }
-
-      // Update current load as well
-      playerSU = new StatusUpdate(targetPlayer.getObjectId());
-      playerSU.addAttribute(StatusUpdate.CUR_LOAD, targetPlayer.getCurrentLoad());
-      targetPlayer.sendPacket(playerSU);
     } else if(target instanceof PetInventory) {
       PetInventoryUpdate petIU = new PetInventoryUpdate();
 
@@ -3810,11 +3672,6 @@ public final class L2PcInstance extends L2PlayableInstance {
       sendPacket(new ItemList(this, false));
     }
 
-    // Update current load as well
-    StatusUpdate su = new StatusUpdate(getObjectId());
-    su.addAttribute(StatusUpdate.CUR_LOAD, getCurrentLoad());
-    sendPacket(su);
-
     // Sends message to client if requested
     if(sendMessage) {
       SystemMessage sm = new SystemMessage(SystemMessageId.YOU_DROPPED_S1);
@@ -3825,19 +3682,6 @@ public final class L2PcInstance extends L2PlayableInstance {
     return true;
   }
 
-  /**
-   * Drop item from inventory by using its <B>objectID</B> and send a Server->Client InventoryUpdate packet to the L2PcInstance.
-   *
-   * @param process     : String Identifier of process triggering this action
-   * @param objectId    : int Item Instance identifier of the item to be dropped
-   * @param count       : int Quantity of items to be dropped
-   * @param x           : int coordinate for drop X
-   * @param y           : int coordinate for drop Y
-   * @param z           : int coordinate for drop Z
-   * @param reference   : L2Object Object referencing current action like NPC selling item or previous item in transformation
-   * @param sendMessage : boolean Specifies whether to send message to Client about this action
-   * @return L2ItemInstance corresponding to the new item or the updated item in inventory
-   */
   public L2ItemInstance dropItem(String process, int objectId, int count, int x, int y, int z, L2Object reference, boolean sendMessage) {
     L2ItemInstance invitem = _inventory.getItemByObjectId(objectId);
     L2ItemInstance item = _inventory.dropItem(process, objectId, count, this, reference);
@@ -3875,11 +3719,6 @@ public final class L2PcInstance extends L2PlayableInstance {
     } else {
       sendPacket(new ItemList(this, false));
     }
-
-    // Update current load as well
-    StatusUpdate su = new StatusUpdate(getObjectId());
-    su.addAttribute(StatusUpdate.CUR_LOAD, getCurrentLoad());
-    sendPacket(su);
 
     // Sends message to client if requested
     if(sendMessage) {
@@ -4143,14 +3982,6 @@ public final class L2PcInstance extends L2PlayableInstance {
     return false;
   }
 
-  /**
-   * Send packet StatusUpdate with current HP,MP and CP to the L2PcInstance and only current HP, MP and Level to all other L2PcInstance of the Party.<BR>
-   * <B><U> Actions</U> :</B><BR>
-   * <BR>
-   * <li>Send the Server->Client packet StatusUpdate with current HP, MP and CP to this L2PcInstance</li><BR>
-   * <li>Send the Server->Client packet PartySmallWindowUpdate with current HP, MP and Level to all other L2PcInstance of the Party</li><BR>
-   * <FONT COLOR=#FF0000><B> <U>Caution</U> : This method DOESN'T SEND current HP and MP to all L2PcInstance of the _statusListener</B></FONT><BR>
-   */
   @Override
   public void broadcastStatusUpdate() {
     // TODO We mustn't send these informations to other players
@@ -4324,16 +4155,6 @@ public final class L2PcInstance extends L2PlayableInstance {
     }
   }
 
-  /**
-   * Manage AutoLoot Task.<BR>
-   * <B><U> Actions</U> :</B><BR>
-   * <li>Send a System Message to the L2PcInstance : YOU_PICKED_UP_S1_ADENA or YOU_PICKED_UP_S1_S2</li> <li>Add the Item to the L2PcInstance inventory</li> <li>Send a Server->Client packet InventoryUpdate to this L2PcInstance with NewItem (use a new slot) or ModifiedItem (increase amount)</li> <li>
-   * Send a Server->Client packet StatusUpdate to this L2PcInstance with current weight</li><BR>
-   * <FONT COLOR=#FF0000><B> <U>Caution</U> : If a Party is in progress, distribute Items between party members</B></FONT><BR>
-   *
-   * @param target The L2ItemInstance dropped
-   * @param item   the item
-   */
   public void doAutoLoot(L2Attackable target, L2Attackable.RewardItem item) {
     if(isInParty()) {
       getParty().distributeItem(this, item, false, target);
@@ -4344,15 +4165,6 @@ public final class L2PcInstance extends L2PlayableInstance {
     }
   }
 
-  /**
-   * Manage Pickup Task.<BR>
-   * <B><U> Actions</U> :</B><BR>
-   * <li>Send a Server->Client packet StopMove to this L2PcInstance</li> <li>Remove the L2ItemInstance from the world and send server->client GetItem packets</li> <li>Send a System Message to the L2PcInstance : YOU_PICKED_UP_S1_ADENA or YOU_PICKED_UP_S1_S2</li> <li>Add the Item to the L2PcInstance
-   * inventory</li> <li>Send a Server->Client packet InventoryUpdate to this L2PcInstance with NewItem (use a new slot) or ModifiedItem (increase amount)</li> <li>Send a Server->Client packet StatusUpdate to this L2PcInstance with current weight</li><BR>
-   * <FONT COLOR=#FF0000><B> <U>Caution</U> : If a Party is in progress, distribute Items between party members</B></FONT><BR>
-   *
-   * @param object The L2ItemInstance to pick up
-   */
   protected void doPickupItem(L2Object object) {
     if(isAlikeDead() || isFakeDeath()) {
       return;
@@ -5833,7 +5645,6 @@ public final class L2PcInstance extends L2PlayableInstance {
    * @param broadcastType the broadcast type
    */
   public void updateAndBroadcastStatus(int broadcastType) {
-    refreshOverloaded();
     refreshExpertisePenalty();
     // Send a Server->Client packet UserInfo to this L2PcInstance and CharInfo to all L2PcInstance in its _KnownPlayers (broadcast)
     if(broadcastType == 1) {
@@ -5951,7 +5762,7 @@ public final class L2PcInstance extends L2PlayableInstance {
     try {
       con = L2DatabaseFactory.getInstance().getConnection();
       PreparedStatement statement;
-      statement = con.prepareStatement("INSERT INTO characters " + "(account_name,obj_Id,char_name,level,maxHp,curHp,maxCp,curCp,maxMp,curMp," + "acc,crit,evasion,mAtk,mDef,mSpd,pAtk,pDef,pSpd,runSpd,walkSpd," + "str,con,dex,_int,men,wit,face,hairStyle,hairColor,sex," + "movement_multiplier,attack_speed_multiplier,colRad,colHeight," + "exp,sp,karma,pvpkills,pkkills,clanid,maxload,race,classid,deletetime," + "cancraft,title,accesslevel,online,isin7sdungeon,clan_privs,wantspeace," + "base_class,nobless,power_grade,last_recom_date) " + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+      statement = con.prepareStatement("INSERT INTO characters " + "(account_name,obj_Id,char_name,level,maxHp,curHp,maxCp,curCp,maxMp,curMp," + "acc,crit,evasion,mAtk,mDef,mSpd,pAtk,pDef,pSpd,runSpd,walkSpd," + "str,con,dex,_int,men,wit,face,hairStyle,hairColor,sex," + "movement_multiplier,attack_speed_multiplier,colRad,colHeight," + "exp,sp,karma,pvpkills,pkkills,clanid,race,classid,deletetime," + "cancraft,title,accesslevel,online,isin7sdungeon,clan_privs,wantspeace," + "base_class,nobless,power_grade,last_recom_date) " + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
       statement.setString(1, _accountName);
       statement.setInt(2, getObjectId());
       statement.setString(3, getName());
@@ -5993,21 +5804,20 @@ public final class L2PcInstance extends L2PlayableInstance {
       statement.setInt(39, getPvpKills());
       statement.setInt(40, getPkKills());
       statement.setInt(41, getClanId());
-      statement.setInt(42, getMaxLoad());
-      statement.setInt(43, getRace().ordinal());
-      statement.setInt(44, getClassId().getId());
-      statement.setLong(45, getDeleteTimer());
-      statement.setInt(46, hasDwarvenCraft() ? 1 : 0);
-      statement.setString(47, getTitle());
-      statement.setInt(48, getAccessLevel());
-      statement.setInt(49, isOnline());
-      statement.setInt(50, isIn7sDungeon() ? 1 : 0);
-      statement.setInt(51, getClanPrivileges());
-      statement.setInt(52, getWantsPeace());
-      statement.setInt(53, getBaseClass());
-      statement.setInt(54, isNoble() ? 1 : 0);
-      statement.setLong(55, 0);
-      statement.setLong(56, System.currentTimeMillis());
+      statement.setInt(42, getRace().ordinal());
+      statement.setInt(43, getClassId().getId());
+      statement.setLong(44, getDeleteTimer());
+      statement.setInt(45, hasDwarvenCraft() ? 1 : 0);
+      statement.setString(46, getTitle());
+      statement.setInt(47, getAccessLevel());
+      statement.setInt(48, isOnline());
+      statement.setInt(49, isIn7sDungeon() ? 1 : 0);
+      statement.setInt(50, getClanPrivileges());
+      statement.setInt(51, getWantsPeace());
+      statement.setInt(52, getBaseClass());
+      statement.setInt(53, isNoble() ? 1 : 0);
+      statement.setLong(54, 0);
+      statement.setLong(55, System.currentTimeMillis());
       statement.executeUpdate();
       statement.close();
     } catch(Exception e) {
@@ -6022,14 +5832,6 @@ public final class L2PcInstance extends L2PlayableInstance {
     return true;
   }
 
-  /**
-   * Retrieve a L2PcInstance from the characters table of the database and add it in _allObjects of the L2world.<BR>
-   * <B><U> Actions</U> :</B><BR>
-   * <li>Retrieve the L2PcInstance from the characters table of the database</li> <li>Add the L2PcInstance object in _allObjects</li> <li>Set the x,y,z position of the L2PcInstance and make it invisible</li> <li>Update the overloaded status of the L2PcInstance</li><BR>
-   *
-   * @param objectId Identifier of the object to initialized
-   * @return The L2PcInstance loaded from the database
-   */
   private static L2PcInstance restore(int objectId) {
     L2PcInstance player = null;
     java.sql.Connection con = null;
@@ -6203,9 +6005,6 @@ public final class L2PcInstance extends L2PlayableInstance {
       if(player.getPet() != null) {
         player.getPet().setOwner(player);
       }
-
-      // Update the overloaded status of the L2PcInstance
-      player.refreshOverloaded();
     } catch(Exception e) {
       _log.severe("Could not restore char data: " + e);
     } finally {
@@ -6488,17 +6287,16 @@ public final class L2PcInstance extends L2PlayableInstance {
       statement.setInt(26, getRecomHave());
       statement.setInt(27, getRecomLeft());
       statement.setInt(28, getClanId());
-      statement.setInt(29, getMaxLoad());
-      statement.setInt(30, getRace().ordinal());
-      statement.setInt(31, getClassId().getId());
-      statement.setLong(32, getDeleteTimer());
-      statement.setString(33, getTitle());
-      statement.setInt(34, getAccessLevel());
-      statement.setInt(35, isOnline());
-      statement.setInt(36, isIn7sDungeon() ? 1 : 0);
-      statement.setInt(37, getClanPrivileges());
-      statement.setInt(38, getWantsPeace());
-      statement.setInt(39, getBaseClass());
+      statement.setInt(29, getRace().ordinal());
+      statement.setInt(30, getClassId().getId());
+      statement.setLong(31, getDeleteTimer());
+      statement.setString(32, getTitle());
+      statement.setInt(33, getAccessLevel());
+      statement.setInt(34, isOnline());
+      statement.setInt(35, isIn7sDungeon() ? 1 : 0);
+      statement.setInt(36, getClanPrivileges());
+      statement.setInt(37, getWantsPeace());
+      statement.setInt(38, getBaseClass());
 
       long totalOnlineTime = _onlineTime;
 
@@ -6506,21 +6304,21 @@ public final class L2PcInstance extends L2PlayableInstance {
         totalOnlineTime += (System.currentTimeMillis() - _onlineBeginTime) / 1000;
       }
 
-      statement.setLong(40, totalOnlineTime);
-      statement.setInt(41, isInJail() ? 1 : 0);
-      statement.setLong(42, getJailTimer());
-      statement.setInt(43, isNoble() ? 1 : 0);
-      statement.setLong(44, getPowerGrade());
-      statement.setInt(45, getPledgeType());
-      statement.setLong(46, getLastRecomUpdate());
-      statement.setInt(47, getLvlJoinedAcademy());
-      statement.setLong(48, getApprentice());
-      statement.setLong(49, getSponsor());
-      statement.setInt(50, getAllianceWithVarkaKetra());
-      statement.setLong(51, getClanJoinExpiryTime());
-      statement.setLong(52, getClanCreateExpiryTime());
-      statement.setString(53, getName());
-      statement.setInt(54, getObjectId());
+      statement.setLong(39, totalOnlineTime);
+      statement.setInt(40, isInJail() ? 1 : 0);
+      statement.setLong(41, getJailTimer());
+      statement.setInt(42, isNoble() ? 1 : 0);
+      statement.setLong(43, getPowerGrade());
+      statement.setInt(44, getPledgeType());
+      statement.setLong(45, getLastRecomUpdate());
+      statement.setInt(46, getLvlJoinedAcademy());
+      statement.setLong(47, getApprentice());
+      statement.setLong(48, getSponsor());
+      statement.setInt(49, getAllianceWithVarkaKetra());
+      statement.setLong(50, getClanJoinExpiryTime());
+      statement.setLong(51, getClanCreateExpiryTime());
+      statement.setString(52, getName());
+      statement.setInt(53, getObjectId());
 
       statement.execute();
       statement.close();
@@ -9390,7 +9188,6 @@ public final class L2PcInstance extends L2PlayableInstance {
       setCurrentCp(getMaxCp());
     }
     broadcastUserInfo();
-    refreshOverloaded();
     refreshExpertisePenalty();
 
     // _macroses.restore();

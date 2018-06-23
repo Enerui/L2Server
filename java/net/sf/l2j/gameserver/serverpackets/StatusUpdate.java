@@ -49,8 +49,6 @@ public class StatusUpdate extends L2GameServerPacket
 	public static final int MAX_MP = 0x0c;
 	
 	public static final int SP = 0x0d;
-	public static final int CUR_LOAD = 0x0e;
-	public static final int MAX_LOAD = 0x0f;
 	
 	public static final int P_ATK = 0x11;
 	public static final int ATK_SPD = 0x12;
