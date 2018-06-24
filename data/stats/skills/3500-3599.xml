@@ -217,9 +217,6 @@
   <set name="operateType" val="OP_PASSIVE"/>
   <set name="castRange" val="-1"/>
   <set name="effectRange" val="-1"/>
-  <for>
-    <add order="0x40" stat="maxLoad" val="5795"/> <!-- Point at which a weight penalty is applied +5795 -->
-  </for>
 </skill>
 <skill id="3513" levels="1" name="Demon's Set">
 <!--
@@ -369,7 +366,6 @@
   <set name="effectRange" val="-1"/>
   <for>
     <mul order="0x30" stat="mDef" val="1.0525"/> <!-- M. Def. +5.25% -->
-    <add order="0x40" stat="maxLoad" val="5795"/> <!-- Point at which a weight penalty is applied +5795 -->
   </for>
 </skill>
 <skill id="3522" levels="1" name="Tunic of Zubei Robe Set">
@@ -551,7 +547,6 @@
   <set name="effectRange" val="-1"/>
   <for>
     <mul order="0x30" stat="pAtkSpd" val="1.08"/> <!-- Atk. Spd. +8% -->
-    <add order="0x40" stat="maxLoad" val="5759"/> <!-- Weight increased plus the point at which a weight penalty is applied +5759 -->
     <mul order="0x30" stat="poisonVuln" val="0.2"/> <!-- Poison Resistance +80% -->
     <mul order="0x30" stat="bleedVuln" val="0.2"/> <!-- Bleed Resistance +80% -->
     <add order="0x40" stat="STR" val="2"/> <!-- STR +2 -->
@@ -722,7 +717,6 @@
       </and>
     </mul>
     <add order="0x40" stat="maxMp" val="240"/> <!-- MP +240 -->
-    <add order="0x40" stat="maxLoad" val="5759"/> <!-- Weight increased plus the point at which a weight penalty is applied +5759 -->
     <mul order="0x30" stat="stunVuln" val="0.5"/> <!-- Stun Resistance +50% -->
     <add order="0x40" stat="DEX" val="1"/> <!-- DEX +1 -->
     <sub order="0x40" stat="CON" val="1"/> <!-- CON -1 -->
@@ -992,7 +986,6 @@
     <mul order="0x30" stat="pAtkSpd" val="1.04"/> <!-- Attack Speed +4% -->
     <mul order="0x30" stat="pAtk" val="1.04"/> <!-- P. Atk +4% -->
     <add order="0x40" stat="maxMp" val="289"/> <!-- Maximum MP +289 -->
-    <add order="0x40" stat="maxLoad" val="5759"/> <!-- Weight Limit +5759 -->
     <add order="0x40" stat="DEX" val="1"/> <!-- DEX +1 -->
     <add order="0x40" stat="STR" val="1"/> <!-- STR +1 -->
     <sub order="0x40" stat="CON" val="2"/> <!-- CON -2 -->
@@ -1014,7 +1007,6 @@
     <mul order="0x30" stat="mAtk" val="1.17"/> <!-- M. Atk +17% -->
     <add order="0x40" stat="runSpd" val="7"/> <!-- Movement Speed +7 -->
     <sub order="0x40" stat="cancel" val="50"/> <!-- Casting Cancel Probability -50% -->
-    <add order="0x40" stat="maxLoad" val="5759"/> <!-- Weight Limit +5759 -->
     <add order="0x40" stat="WIT" val="1"/> <!-- WIT +1 -->
     <add order="0x40" stat="INT" val="1"/> <!-- INT +1 -->
     <sub order="0x40" stat="MEN" val="2"/> <!-- MEN -2 -->

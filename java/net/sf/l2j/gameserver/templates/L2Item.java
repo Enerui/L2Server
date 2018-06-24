@@ -156,15 +156,6 @@ public abstract class L2Item {
   private static final Func[] _emptyFunctionSet = new Func[0];
   protected static final L2Effect[] _emptyEffectSet = new L2Effect[0];
 
-  /**
-   * Constructor of the L2Item that fill class variables.<BR>
-   * <BR>
-   * <U><I>Variables filled :</I></U><BR>
-   * <LI>type</LI> <LI>_itemId</LI> <LI>_name</LI> <LI>_type1 & _type2</LI> <LI>_weight</LI> <LI>_crystallizable</LI> <LI>_stackable</LI> <LI>_materialType & _crystalType & _crystlaCount</LI> <LI>_duration</LI> <LI>_bodypart</LI> <LI>_referencePrice</LI> <LI>_sellable</LI>
-   *
-   * @param type : Enum designating the type of the item
-   * @param set  : StatsSet corresponding to a set of couples (key,value) for description of the item
-   */
   protected L2Item(Enum<?> type, StatsSet set) {
     _type = type;
     _itemId = set.getInteger("item_id");

@@ -360,9 +360,8 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> {
     L2PcInstance character = L2PcInstance.load(getObjectIdForSlot(charslot));
 
     if(character != null) {
-      character.setRunning(); // running is default
-      character.standUp(); // standing is default
-      character.refreshExpertisePenalty();
+      character.setRunning();
+      character.standUp();
       character.sendPacket(new UserInfo(character));
       character.broadcastKarma();
       character.setOnlineStatus(true);

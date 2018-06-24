@@ -173,8 +173,6 @@ public class PcStat extends PlayableStat {
     su.addAttribute(StatusUpdate.MAX_HP, getMaxHp());
     su.addAttribute(StatusUpdate.MAX_MP, getMaxMp());
     getActiveChar().sendPacket(su);
-    // Update the expertise status of the L2PcInstance
-    getActiveChar().refreshExpertisePenalty();
     // Send a Server->Client packet UserInfo to the L2PcInstance
     getActiveChar().sendPacket(new UserInfo(getActiveChar()));
 

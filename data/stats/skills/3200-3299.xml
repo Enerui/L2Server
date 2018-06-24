@@ -820,24 +820,6 @@
     <mul order="0x30" stat="mCritRate" val="#rate"/>
   </for>
 </skill>
-<skill id="3251" levels="10" name="Item Skill: Weight Limit">
-<!--
-  Needs to be finished.
-  Target is set to TARGET_NONE, skillType to NOTDONE for server compatability.
-  Description(s):
-      Lvl 1-10 - Passive: Increases the weapon weight limit by 2 times when equipped.
--->
-  <table name="#rate"> 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2 </table>
-  <set name="power" val="0.0"/>
-  <set name="target" val="TARGET_SELF"/>
-  <set name="skillType" val="BUFF"/>
-  <set name="operateType" val="OP_PASSIVE"/>
-  <set name="castRange" val="-1"/>
-  <set name="effectRange" val="-1"/>
-  <for>
-    <mul order="0x30" stat="maxLoad" val="#rate"/>
-  </for>
-</skill>
 <skill id="3252" levels="10" name="Item Skill: Kiss of Eva">
 <!--
   Needs to be finished.

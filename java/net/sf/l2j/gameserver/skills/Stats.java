@@ -143,8 +143,6 @@ public enum Stats {
   ABSORB_DAMAGE_PERCENT("absorbDam"),
   TRANSFER_DAMAGE_PERCENT("transDam"),
 
-  MAX_LOAD("maxLoad"),
-
   PATK_PLANTS("pAtk-plants"),
   PATK_INSECTS("pAtk-insects"),
   PATK_ANIMALS("pAtk-animals"),

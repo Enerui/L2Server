@@ -222,19 +222,6 @@ public final class L2PcInstance extends L2PlayableInstance {
   public static final int STORE_PRIVATE_MANUFACTURE = 5;
   public static final int STORE_PRIVATE_PACKAGE_SELL = 8;
 
-  /**
-   * The table containing all minimum level needed for each Expertise (None, D, C, B, A, S).
-   */
-  private static final int[] EXPERTISE_LEVELS =
-      {
-          SkillTreeTable.getInstance().getExpertiseLevel(0), // NONE
-          SkillTreeTable.getInstance().getExpertiseLevel(1), // D
-          SkillTreeTable.getInstance().getExpertiseLevel(2), // C
-          SkillTreeTable.getInstance().getExpertiseLevel(3), // B
-          SkillTreeTable.getInstance().getExpertiseLevel(4), // A
-          SkillTreeTable.getInstance().getExpertiseLevel(5), // S
-      };
-
   private static final int[] COMMON_CRAFT_LEVELS =
       {
           5,
@@ -889,18 +876,6 @@ public final class L2PcInstance extends L2PlayableInstance {
    * The _chars.
    */
   private final Map<Integer, String> _chars = new FastMap<>();
-
-  // private byte _updateKnownCounter = 0;
-
-  /**
-   * The current higher Expertise of the L2PcInstance (None=0, D=1, C=2, B=3, A=4, S=5).
-   */
-  private int _expertiseIndex; // index in EXPERTISE_LEVELS
-
-  /**
-   * The _expertise penalty.
-   */
-  private int _expertisePenalty = 0;
 
   /**
    * The _active enchant item.
@@ -1666,11 +1641,7 @@ public final class L2PcInstance extends L2PlayableInstance {
   public boolean hasRecipeList(int recipeId) {
     if(_dwarvenRecipeBook.containsKey(recipeId)) {
       return true;
-    } else if(_commonRecipeBook.containsKey(recipeId)) {
-      return true;
-    } else {
-      return false;
-    }
+    } else return _commonRecipeBook.containsKey(recipeId);
   }
 
   /**
@@ -2335,50 +2306,6 @@ public final class L2PcInstance extends L2PlayableInstance {
   }
 
   /**
-   * Gets the expertise penalty.
-   *
-   * @return the expertise penalty
-   */
-  public int getExpertisePenalty() {
-    return _expertisePenalty;
-  }
-
-  /**
-   * Refresh expertise penalty.
-   */
-  public void refreshExpertisePenalty() {
-    int newPenalty = 0;
-
-    for(L2ItemInstance item : getInventory().getItems()) {
-      if((item != null) && item.isEquipped()) {
-        int crystaltype = item.getItem().getCrystalType();
-
-        if(crystaltype > newPenalty) {
-          newPenalty = crystaltype;
-        }
-      }
-    }
-
-    newPenalty = newPenalty - getExpertiseIndex();
-
-    if(newPenalty <= 0) {
-      newPenalty = 0;
-    }
-
-    if(getExpertisePenalty() != newPenalty) {
-      _expertisePenalty = newPenalty;
-
-      if(newPenalty > 0) {
-        super.addSkill(SkillTable.getInstance().getInfo(4267, 1)); // level used to be newPenalty
-      } else {
-        super.removeSkill(getKnownSkill(4267));
-      }
-
-      sendPacket(new EtcStatusUpdate(this));
-    }
-  }
-
-  /**
    * Check if weapon is allowed.
    */
   public void checkIfWeaponIsAllowed() {
@@ -2420,7 +2347,7 @@ public final class L2PcInstance extends L2PlayableInstance {
       return;
     }
 
-    if((unequipped.getItem().getType2() == L2Item.TYPE2_WEAPON) && (equipped == null ? true : equipped.getItem().getCrystalType() != unequipped.getItem().getCrystalType())) {
+    if((unequipped.getItem().getType2() == L2Item.TYPE2_WEAPON) && (equipped == null || equipped.getItem().getCrystalType() != unequipped.getItem().getCrystalType())) {
       for(L2ItemInstance ss : getInventory().getItems()) {
         int _itemId = ss.getItemId();
 
@@ -2596,30 +2523,11 @@ public final class L2PcInstance extends L2PlayableInstance {
     // Get the Level of the L2PcInstance
     int lvl = getLevel();
 
-    // Calculate the current higher Expertise of the L2PcInstance
-    for(int i = 0; i < EXPERTISE_LEVELS.length; i++) {
-      if(lvl >= EXPERTISE_LEVELS[i]) {
-        setExpertiseIndex(i);
-      }
-    }
-
-    // Add the Expertise skill corresponding to its Expertise level
-    if(getExpertiseIndex() > 0) {
-      L2Skill skill = SkillTable.getInstance().getInfo(239, getExpertiseIndex());
-      addSkill(skill, true);
-
-      if(Config.DEBUG) {
-        _log.fine("awarded " + getName() + " with new expertise.");
-      }
-
-    } else {
-      if(Config.DEBUG) {
-        _log.fine("No skills awarded at lvl: " + lvl);
-      }
+    if(Config.DEBUG) {
+      _log.fine("No skills awarded at lvl: " + lvl);
     }
 
     // Active skill dwarven craft
-
     if((getSkillLevel(1321) < 1) && (getRace() == Race.dwarf)) {
       L2Skill skill = SkillTable.getInstance().getInfo(1321, 1);
       addSkill(skill, true);
@@ -2640,7 +2548,6 @@ public final class L2PcInstance extends L2PlayableInstance {
 
     giveAvailableSkills();
     sendSkillList();
-    refreshExpertisePenalty(); // Update the expertise status of the L2PcInstance
   }
 
   /**
@@ -2769,9 +2676,7 @@ public final class L2PcInstance extends L2PlayableInstance {
     if((clan != null) && (clan.getLeader().getPlayerInstance() == this)) {
       // if the clan has a castle and it is actually the queried castle, return true
       Castle castle = CastleManager.getInstance().getCastleByOwner(clan);
-      if((castle != null) && (castle == CastleManager.getInstance().getCastleById(castleId))) {
-        return true;
-      }
+      return (castle != null) && (castle == CastleManager.getInstance().getCastleById(castleId));
     }
 
     return false;
@@ -3649,7 +3554,7 @@ public final class L2PcInstance extends L2PlayableInstance {
     item.dropMe(this, (getClientX() + Rnd.get(50)) - 25, (getClientY() + Rnd.get(50)) - 25, getClientZ() + 20);
 
     if((Config.AUTODESTROY_ITEM_AFTER > 0) && Config.DESTROY_DROPPED_PLAYER_ITEM && !Config.LIST_PROTECTED_ITEMS.contains(item.getItemId())) {
-      if((item.isEquipable() && Config.DESTROY_EQUIPABLE_PLAYER_ITEM) || !item.isEquipable()) {
+      if(!item.isEquipable() || Config.DESTROY_EQUIPABLE_PLAYER_ITEM) {
         ItemsAutoDestroy.getInstance().addItem(item);
       }
     }
@@ -3697,7 +3602,7 @@ public final class L2PcInstance extends L2PlayableInstance {
     item.dropMe(this, x, y, z);
 
     if((Config.AUTODESTROY_ITEM_AFTER > 0) && Config.DESTROY_DROPPED_PLAYER_ITEM && !Config.LIST_PROTECTED_ITEMS.contains(item.getItemId())) {
-      if((item.isEquipable() && Config.DESTROY_EQUIPABLE_PLAYER_ITEM) || !item.isEquipable()) {
+      if(!item.isEquipable() || Config.DESTROY_EQUIPABLE_PLAYER_ITEM) {
         ItemsAutoDestroy.getInstance().addItem(item);
       }
     }
@@ -4200,7 +4105,7 @@ public final class L2PcInstance extends L2PlayableInstance {
         return;
       }
 
-      if(((isInParty() && (getParty().getLootDistribution() == L2Party.ITEM_LOOTER)) || !isInParty()) && !_inventory.validateCapacity(target)) {
+      if((!isInParty() || (getParty().getLootDistribution() == L2Party.ITEM_LOOTER)) && !_inventory.validateCapacity(target)) {
         sendPacket(new ActionFailed());
         sendPacket(new SystemMessage(SystemMessageId.SLOTS_FULL));
         return;
@@ -4389,11 +4294,8 @@ public final class L2PcInstance extends L2PlayableInstance {
   public boolean isWearingHeavyArmor() {
     L2ItemInstance armor = getChestArmorInstance();
 
-    if((L2ArmorType) armor.getItemType() == L2ArmorType.HEAVY) {
-      return true;
-    }
+    return armor.getItemType() == L2ArmorType.HEAVY;
 
-    return false;
   }
 
   /**
@@ -4404,11 +4306,8 @@ public final class L2PcInstance extends L2PlayableInstance {
   public boolean isWearingLightArmor() {
     L2ItemInstance armor = getChestArmorInstance();
 
-    if((L2ArmorType) armor.getItemType() == L2ArmorType.LIGHT) {
-      return true;
-    }
+    return armor.getItemType() == L2ArmorType.LIGHT;
 
-    return false;
   }
 
   /**
@@ -4419,11 +4318,8 @@ public final class L2PcInstance extends L2PlayableInstance {
   public boolean isWearingMagicArmor() {
     L2ItemInstance armor = getChestArmorInstance();
 
-    if((L2ArmorType) armor.getItemType() == L2ArmorType.MAGIC) {
-      return true;
-    }
+    return armor.getItemType() == L2ArmorType.MAGIC;
 
-    return false;
   }
 
   /**
@@ -5474,11 +5370,7 @@ public final class L2PcInstance extends L2PlayableInstance {
       return true;
     } else if(weaponItem.getItemId() == 248) {
       return true;
-    } else if(weaponItem.getItemId() == 252) {
-      return true;
-    } else {
-      return false;
-    }
+    } else return weaponItem.getItemId() == 252;
   }
 
   /**
@@ -5645,7 +5537,6 @@ public final class L2PcInstance extends L2PlayableInstance {
    * @param broadcastType the broadcast type
    */
   public void updateAndBroadcastStatus(int broadcastType) {
-    refreshExpertisePenalty();
     // Send a Server->Client packet UserInfo to this L2PcInstance and CharInfo to all L2PcInstance in its _KnownPlayers (broadcast)
     if(broadcastType == 1) {
       sendPacket(new UserInfo(this));
@@ -5952,8 +5843,8 @@ public final class L2PcInstance extends L2PlayableInstance {
         player.setApprentice(rset.getInt("apprentice"));
         player.setSponsor(rset.getInt("sponsor"));
         player.setLvlJoinedAcademy(rset.getInt("lvl_joined_academy"));
-        player.setIsIn7sDungeon((rset.getInt("isin7sdungeon") == 1) ? true : false);
-        player.setInJail((rset.getInt("in_jail") == 1) ? true : false);
+        player.setIsIn7sDungeon(rset.getInt("isin7sdungeon") == 1);
+        player.setInJail(rset.getInt("in_jail") == 1);
         if(player.isInJail()) {
           player.setJailTimer(rset.getLong("jail_timer"));
         } else {
@@ -7101,10 +6992,7 @@ public final class L2PcInstance extends L2PlayableInstance {
 
     // Check if the attacker is in olympia and olympia start
     if((attacker instanceof L2PcInstance) && ((L2PcInstance) attacker).isInOlympiadMode()) {
-      if(isInOlympiadMode() && isOlympiadStart() && (((L2PcInstance) attacker).getOlympiadGameId() == getOlympiadGameId())) {
-        return true;
-      }
-      return false;
+      return isInOlympiadMode() && isOlympiadStart() && (((L2PcInstance) attacker).getOlympiadGameId() == getOlympiadGameId());
     }
 
     // Check if the attacker is not in the same clan
@@ -7128,7 +7016,7 @@ public final class L2PcInstance extends L2PlayableInstance {
         return true;
       }
       // Check if the L2PcInstance is in an arena or a siege area
-      if(isInsideZone(ZONE_PVP) && ((L2PcInstance) attacker).isInsideZone(ZONE_PVP)) {
+      if(isInsideZone(ZONE_PVP) && attacker.isInsideZone(ZONE_PVP)) {
         return true;
       }
 
@@ -7147,9 +7035,7 @@ public final class L2PcInstance extends L2PlayableInstance {
         }
 
         // Check if clan is at war
-        if((getClan() != null) && (((L2PcInstance) attacker).getClan() != null) && (getClan().isAtWarWith(((L2PcInstance) attacker).getClanId()) && (getWantsPeace() == 0) && (((L2PcInstance) attacker).getWantsPeace() == 0) && !isAcademyMember())) {
-          return true;
-        }
+        return (getClan() != null) && (((L2PcInstance) attacker).getClan() != null) && (getClan().isAtWarWith(((L2PcInstance) attacker).getClanId()) && (getWantsPeace() == 0) && (((L2PcInstance) attacker).getWantsPeace() == 0) && !isAcademyMember());
       }
     } else if(attacker instanceof L2SiegeGuardInstance) {
       if(getClan() != null) {
@@ -7586,17 +7472,11 @@ public final class L2PcInstance extends L2PlayableInstance {
             return true; // in clan war player can attack whites even with sleep etc.
           }
         }
-        if((((L2PcInstance) target).getPvpFlag() == 0) && // target's pvp flag is not set and
-            (((L2PcInstance) target).getKarma() == 0 // target has no karma
-            )) {
-          return false;
-        }
+        return (((L2PcInstance) target).getPvpFlag() != 0) || // target's pvp flag is not set and
+            (((L2PcInstance) target).getKarma() != 0);
       } else if((getCurrentSkill() != null) && !getCurrentSkill().isCtrlPressed() && skill.isOffensive()) {
-        if((((L2PcInstance) target).getPvpFlag() == 0) && // target's pvp flag is not set and
-            (((L2PcInstance) target).getKarma() == 0 // target has no karma
-            )) {
-          return false;
-        }
+        return (((L2PcInstance) target).getPvpFlag() != 0) || // target's pvp flag is not set and
+            (((L2PcInstance) target).getKarma() != 0);
       }
     }
 
@@ -7647,11 +7527,8 @@ public final class L2PcInstance extends L2PlayableInstance {
       // if this is a castle that is currently being sieged, and the rider is NOT a castle owner
       // he cannot land.
       // castle owner is the leader of the clan that owns the castle where the pc is
-      if(isInsideZone(ZONE_SIEGE) && !((getClan() != null) && (CastleManager.getInstance().getCastle(this) == CastleManager.getInstance().getCastleByOwner(getClan())) && (this == getClan().getLeader().getPlayerInstance()))) {
-        return true;
-      }
+      return isInsideZone(ZONE_SIEGE) && !((getClan() != null) && (CastleManager.getInstance().getCastle(this) == CastleManager.getInstance().getCastleByOwner(getClan())) && (this == getClan().getLeader().getPlayerInstance()));
 
-    return false;
   }
 
   // returns false if the change of mount type fails.
@@ -9188,18 +9065,10 @@ public final class L2PcInstance extends L2PlayableInstance {
       setCurrentCp(getMaxCp());
     }
     broadcastUserInfo();
-    refreshExpertisePenalty();
-
-    // _macroses.restore();
-    // _macroses.sendUpdate();
     _shortCuts.restore();
     sendPacket(new ShortCutInit(this));
 
     broadcastPacket(new SocialAction(getObjectId(), 15));
-
-    // decayMe();
-    // spawnMe(getX(), getY(), getZ());
-
     return true;
   }
 
@@ -9260,11 +9129,8 @@ public final class L2PcInstance extends L2PlayableInstance {
    * @return true, if is rented pet
    */
   public boolean isRentedPet() {
-    if(_taskRentPet != null) {
-      return true;
-    }
+    return _taskRentPet != null;
 
-    return false;
   }
 
   /**
@@ -9297,11 +9163,8 @@ public final class L2PcInstance extends L2PlayableInstance {
    * @return true, if is in water
    */
   public boolean isInWater() {
-    if(_taskWater != null) {
-      return true;
-    }
+    return _taskWater != null;
 
-    return false;
   }
 
   /**
@@ -9535,24 +9398,6 @@ public final class L2PcInstance extends L2PlayableInstance {
    */
   public void onActionRequest() {
     setProtection(false);
-  }
-
-  /**
-   * Sets the expertise index.
-   *
-   * @param expertiseIndex The expertiseIndex to set.
-   */
-  public void setExpertiseIndex(int expertiseIndex) {
-    _expertiseIndex = expertiseIndex;
-  }
-
-  /**
-   * Gets the expertise index.
-   *
-   * @return Returns the expertiseIndex.
-   */
-  public int getExpertiseIndex() {
-    return _expertiseIndex;
   }
 
   @Override
@@ -9904,12 +9749,7 @@ public final class L2PcInstance extends L2PlayableInstance {
       return false;
     }
 
-    if(item.isWear()) {
-      // cannot drop/trade wear-items
-      return false;
-    }
-
-    return true;
+    return !item.isWear();
   }
 
   /**

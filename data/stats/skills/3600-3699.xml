@@ -265,7 +265,6 @@ Description(s):
   <set name="effectRange" val="-1"/>
   <for>
     <add order="0x40" stat="pDef" val="16"/>
-    <mul order="0x30" stat="maxLoad" val="1.3"/>
   </for>
 </skill>
 <skill id="3614" levels="1" name="Enchant Heavy Armor (Grade C)">
@@ -310,7 +309,6 @@ Description(s):
   <set name="effectRange" val="-1"/>
   <for>
     <add order="0x40" stat="pDef" val="24"/>
-    <mul order="0x30" stat="maxLoad" val="1.3"/>
   </for>
 </skill>
 <skill id="3617" levels="1" name="Enchant Heavy Armor (Grade B)">
@@ -355,7 +353,6 @@ Description(s):
   <set name="effectRange" val="-1"/>
   <for>
     <add order="0x40" stat="pDef" val="28"/>
-    <mul order="0x30" stat="maxLoad" val="1.3"/>
   </for>
 </skill>
 <skill id="3620" levels="1" name="Enchant Heavy Armor (Grade A)">
@@ -400,7 +397,6 @@ Description(s):
   <set name="effectRange" val="-1"/>
   <for>
     <add order="0x40" stat="pDef" val="32"/>
-    <mul order="0x30" stat="maxLoad" val="1.3"/>
   </for>
 </skill>
 <skill id="3623" levels="1" name="Enchant Heavy Armor (Grade S)">
@@ -445,7 +441,6 @@ Description(s):
   <set name="effectRange" val="-1"/>
   <for>
     <add order="0x40" stat="pDef" val="36"/>
-    <mul order="0x30" stat="maxLoad" val="1.3"/>
   </for>
 </skill>
 <skill id="3626" levels="1" name="Kabokula">

@@ -108,7 +108,7 @@ public class CharStat {
       return 0;
     }
 
-    return (int) (calcStat(Stats.ACCURACY_COMBAT, 0, null, null) / _activeChar.getWeaponExpertisePenalty());
+    return (int) (calcStat(Stats.ACCURACY_COMBAT, 0, null, null));
   }
 
   public L2Character getActiveChar() {
@@ -187,18 +187,12 @@ public class CharStat {
     return (int) calcStat(Stats.STAT_DEX, _activeChar.getTemplate().baseDEX, null, null);
   }
 
-  /**
-   * Return the Attack Evasion rate (base+modifier) of the L2Character.
-   *
-   * @param target
-   * @return
-   */
   public int getEvasionRate(L2Character target) {
     if(_activeChar == null) {
       return 1;
     }
 
-    return (int) (calcStat(Stats.EVASION_RATE, 0, target, null) / _activeChar.getArmourExpertisePenalty());
+    return (int) (calcStat(Stats.EVASION_RATE, 0, target, null));
   }
 
   public long getExp() {
@@ -360,9 +354,7 @@ public class CharStat {
       return 1;
     }
     float bonusSpdAtk = 1;
-    double val = calcStat(Stats.MAGIC_ATTACK_SPEED, _activeChar.getTemplate().baseMAtkSpd * bonusSpdAtk, null, null);
-    val /= _activeChar.getArmourExpertisePenalty();
-    return (int) val;
+    return (int) (calcStat(Stats.MAGIC_ATTACK_SPEED, _activeChar.getTemplate().baseMAtkSpd * bonusSpdAtk, null, null));
   }
 
   /**
@@ -530,7 +522,7 @@ public class CharStat {
       return 1;
     }
     float bonusAtk = 1;
-    return (int) (calcStat(Stats.POWER_ATTACK_SPEED, _activeChar.getTemplate().basePAtkSpd * bonusAtk, null, null) / _activeChar.getArmourExpertisePenalty());
+    return (int) (calcStat(Stats.POWER_ATTACK_SPEED, _activeChar.getTemplate().basePAtkSpd * bonusAtk, null, null));
   }
 
   /**
@@ -606,7 +598,6 @@ public class CharStat {
       val += Config.STRIDER_SPEED;
       return val;
     }
-    val /= _activeChar.getArmourExpertisePenalty();
     return val;
   }
 

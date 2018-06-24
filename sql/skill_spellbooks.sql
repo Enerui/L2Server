@@ -197,7 +197,6 @@ INSERT INTO `skill_spellbooks` VALUES
 (1253,3118), -- Amulet: Chant of Rage
 (1254,3941), -- Spellbook: Mass Resurrection
 (1256,3943), -- Amulet: Pa'agrio's Heart
-(1257,3944), -- Spellbook: Decrease Weight
 (1258,4200), -- Spellbook: Restore Life
 (1259,4201), -- Spellbook: Resist Shock
 (1260,4204), -- Amulet: Pa'agrio's Tact
