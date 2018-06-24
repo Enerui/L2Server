@@ -1565,7 +1565,6 @@ public class L2NpcInstance extends L2Character {
 
     int npcId = getTemplate().npcId;
 
-    /* For use with Seven Signs implementation */
     String filename = Olympiad.OLYMPIAD_HTML_FILE;
 
     switch(npcId) {

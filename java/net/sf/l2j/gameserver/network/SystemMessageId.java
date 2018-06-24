@@ -2335,28 +2335,7 @@ public enum SystemMessageId
 	 * Message: This is a quest event period.
 	 */
 	QUEST_EVENT_PERIOD(1176),
-	
-	/**
-	 * ID: 1177<br>
-	 * Message: This is the seal validation period.
-	 */
-	VALIDATION_PERIOD(1177),
-	
-	// /**
-	// * ID: 1178<br>
-	// */
-	// AVARICE_DESCRIPTION(1178),
-	
-	// /**
-	// * ID: 1179<br>
-	// */
-	// GNOSIS_DESCRIPTION(1179),
-	
-	// /**
-	// * ID: 1180<br>
-	// */
-	// STRIFE_DESCRIPTION(1180),
-	
+
 	/**
 	 * ID: 1183<br>
 	 * Message: This is the initial period.
@@ -2368,139 +2347,13 @@ public enum SystemMessageId
 	 * Message: This is a period of calculating statistics in the server.
 	 */
 	RESULTS_PERIOD(1184),
-	
-	/**
-	 * ID: 1210<br>
-	 * Message: Seven Signs: The quest event period has begun. Visit a Priest of Dawn or Priestess of Dusk to participate in the event.
-	 */
-	QUEST_EVENT_PERIOD_BEGUN(1210),
-	
-	/**
-	 * ID: 1211<br>
-	 * Message: Seven Signs: The quest event period has ended. The next quest event will start in one week.
-	 */
-	QUEST_EVENT_PERIOD_ENDED(1211),
-	
-	/**
-	 * ID: 1212<br>
-	 * Message: Seven Signs: The Lords of Dawn have obtained the Seal of Avarice.
-	 */
-	DAWN_OBTAINED_AVARICE(1212),
-	
-	/**
-	 * ID: 1213<br>
-	 * Message: Seven Signs: The Lords of Dawn have obtained the Seal of Gnosis.
-	 */
-	DAWN_OBTAINED_GNOSIS(1213),
-	
-	/**
-	 * ID: 1214<br>
-	 * Message: Seven Signs: The Lords of Dawn have obtained the Seal of Strife.
-	 */
-	DAWN_OBTAINED_STRIFE(1214),
-	
-	/**
-	 * ID: 1215<br>
-	 * Message: Seven Signs: The Revolutionaries of Dusk have obtained the Seal of Avarice.
-	 */
-	DUSK_OBTAINED_AVARICE(1215),
-	
-	/**
-	 * ID: 1216<br>
-	 * Message: Seven Signs: The Revolutionaries of Dusk have obtained the Seal of Gnosis.
-	 */
-	DUSK_OBTAINED_GNOSIS(1216),
-	
-	/**
-	 * ID: 1217<br>
-	 * Message: Seven Signs: The Revolutionaries of Dusk have obtained the Seal of Strife.
-	 */
-	DUSK_OBTAINED_STRIFE(1217),
-	
-	/**
-	 * ID: 1218<br>
-	 * Message: Seven Signs: The Seal Validation period has begun.
-	 */
-	SEAL_VALIDATION_PERIOD_BEGUN(1218),
-	
-	/**
-	 * ID: 1219<br>
-	 * Message: Seven Signs: The Seal Validation period has ended.
-	 */
-	SEAL_VALIDATION_PERIOD_ENDED(1219),
-	
-	/**
-	 * ID: 1241<br>
-	 * Message: Seven Signs: The Lords of Dawn have won.
-	 */
-	DAWN_WON(1241),
-	
-	/**
-	 * ID: 1240<br>
-	 * Message: Seven Signs: The Revolutionaries of Dusk have won.
-	 */
-	DUSK_WON(1240),
-	
-	/**
-	 * ID: 1260<br>
-	 * Message: Seven Signs: Preparations have begun for the next quest event.
-	 */
-	PREPARATIONS_PERIOD_BEGUN(1260),
-	
-	/**
-	 * ID: 1261<br>
-	 * Message: Seven Signs: The quest event period has begun. Speak with a Priest of Dawn or Dusk Priestess if you wish to participate in the event.
-	 */
-	COMPETITION_PERIOD_BEGUN(1261),
-	
-	/**
-	 * ID: 1262<br>
-	 * Message: Seven Signs: Quest event has ended. Results are being tallied.
-	 */
-	RESULTS_PERIOD_BEGUN(1262),
-	
-	/**
-	 * ID: 1263<br>
-	 * Message: Seven Signs: This is the seal validation period. A new quest event period begins next Monday.
-	 */
-	VALIDATION_PERIOD_BEGUN(1263),
-	
+
 	/**
 	 * ID: 1267<br>
 	 * Message: Your contribution score is increased by $s1.
 	 */
 	CONTRIB_SCORE_INCREASED(1267),
-	
-	/**
-	 * ID: 1273<br>
-	 * Message: You will participate in the Seven Signs as a member of the Lords of Dawn.
-	 */
-	SEVENSIGNS_PARTECIPATION_DAWN(1273),
-	
-	/**
-	 * ID: 1274<br>
-	 * Message: You will participate in the Seven Signs as a member of the Revolutionaries of Dusk.
-	 */
-	SEVENSIGNS_PARTECIPATION_DUSK(1274),
-	
-	/**
-	 * ID: 1275<br>
-	 * Message: You've chosen to fight for the Seal of Avarice during this quest event period.
-	 */
-	FIGHT_FOR_AVARICE(1275),
-	
-	/**
-	 * ID: 1276<br>
-	 * Message: You've chosen to fight for the Seal of Gnosis during this quest event period.
-	 */
-	FIGHT_FOR_GNOSIS(1276),
-	
-	/**
-	 * ID: 1277<br>
-	 * Message: You've chosen to fight for the Seal of Strife during this quest event period.
-	 */
-	FIGHT_FOR_STRIFE(1277),
-	
+
 	/**
 	 * ID: 1279<br>
 	 * Message: Contribution level has exceeded the limit. You may not continue.
@@ -3890,7 +3743,7 @@ public enum SystemMessageId
 	
 	/**
 	 * ID: 2020<br>
-	 * Message: $s1 cannot make a challenge to a duel because $s1 is currently in a duel-prohibited area (Peaceful Zone / Seven Signs Zone / Near Water / Restart Prohibited Area).
+	 * Message: $s1 cannot make a challenge to a duel because $s1 is currently in a duel-prohibited area (Peaceful Zone / Near Water / Restart Prohibited Area).
 	 */
 	S1_CANNOT_MAKE_A_CHALLANGE_TO_A_DUEL_BECAUSE_S1_IS_CURRENTLY_IN_A_DUEL_PROHIBITED_AREA(2020),
 	

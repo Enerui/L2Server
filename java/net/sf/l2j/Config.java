@@ -1456,8 +1456,6 @@ public final class Config {
   public static int MINIMUM_UPDATE_DISTANCE;
   public static int KNOWNLIST_FORGET_DELAY;
   public static int MINIMUN_UPDATE_TIME;
-
-  public static boolean ANNOUNCE_MAMMON_SPAWN;
   public static boolean LAZY_CACHE;
 
   /**
@@ -1951,9 +1949,6 @@ public final class Config {
         for(String id : NONDROPPABLE_ITEMS.split(",")) {
           LIST_NONDROPPABLE_ITEMS.add(Integer.parseInt(id));
         }
-
-        ANNOUNCE_MAMMON_SPAWN = Boolean.parseBoolean(otherSettings.getProperty("AnnounceMammonSpawn", "True"));
-
         ALT_PRIVILEGES_ADMIN = Boolean.parseBoolean(otherSettings.getProperty("AltPrivilegesAdmin", "False"));
         ALT_PRIVILEGES_SECURE_CHECK = Boolean.parseBoolean(otherSettings.getProperty("AltPrivilegesSecureCheck", "True"));
         ALT_PRIVILEGES_DEFAULT_LEVEL = Integer.parseInt(otherSettings.getProperty("AltPrivilegesDefaultLevel", "100"));
@@ -2567,8 +2562,6 @@ public final class Config {
       MAX_PVTSTORE_SLOTS_OTHER = Integer.parseInt(pValue);
     } else if(pName.equalsIgnoreCase("StoreSkillCooltime")) {
       STORE_SKILL_COOLTIME = Boolean.valueOf(pValue);
-    } else if(pName.equalsIgnoreCase("AnnounceMammonSpawn")) {
-      ANNOUNCE_MAMMON_SPAWN = Boolean.valueOf(pValue);
     } else if(pName.equalsIgnoreCase("AltGameTiredness")) {
       ALT_GAME_TIREDNESS = Boolean.valueOf(pValue);
     } else if(pName.equalsIgnoreCase("AltGameCreation")) {
