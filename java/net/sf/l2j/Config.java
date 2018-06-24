@@ -882,10 +882,6 @@ public final class Config {
    */
   public static boolean ALLOW_RENTPET;
   /**
-   * Allow boat ?
-   */
-  public static boolean ALLOW_BOAT;
-  /**
    * Allow cursed weapons ?
    */
   public static boolean ALLOW_CURSED_WEAPONS;
@@ -1699,7 +1695,6 @@ public final class Config {
         ALLOW_DISCARDITEM = Boolean.valueOf(optionsSettings.getProperty("AllowDiscardItem", "True"));
         ALLOWFISHING = Boolean.valueOf(optionsSettings.getProperty("AllowFishing", "False"));
         ALLOW_MANOR = Boolean.parseBoolean(optionsSettings.getProperty("AllowManor", "False"));
-        ALLOW_BOAT = Boolean.valueOf(optionsSettings.getProperty("AllowBoat", "False"));
         ALLOW_CURSED_WEAPONS = Boolean.valueOf(optionsSettings.getProperty("AllowCursedWeapons", "False"));
 
         ALLOW_L2WALKER_CLIENT = L2WalkerAllowed.valueOf(optionsSettings.getProperty("AllowL2Walker", "False"));
@@ -2398,8 +2393,6 @@ public final class Config {
       ALLOW_WATER = Boolean.valueOf(pValue);
     } else if(pName.equalsIgnoreCase("AllowRentPet")) {
       ALLOW_RENTPET = Boolean.valueOf(pValue);
-    } else if(pName.equalsIgnoreCase("AllowBoat")) {
-      ALLOW_BOAT = Boolean.valueOf(pValue);
     } else if(pName.equalsIgnoreCase("AllowCursedWeapons")) {
       ALLOW_CURSED_WEAPONS = Boolean.valueOf(pValue);
     } else if(pName.equalsIgnoreCase("AllowManor")) {

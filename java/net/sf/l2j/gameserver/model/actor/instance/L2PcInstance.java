@@ -434,21 +434,6 @@ public final class L2PcInstance extends L2PlayableInstance {
   private SystemMessageId _noDuelReason = SystemMessageId.THERE_IS_NO_OPPONENT_TO_RECEIVE_YOUR_CHALLENGE_FOR_A_DUEL;
 
   /**
-   * Boat.
-   */
-  private boolean _inBoat;
-
-  /**
-   * The _boat.
-   */
-  private L2BoatInstance _boat;
-
-  /**
-   * The _in boat position.
-   */
-  private Point3D _inBoatPosition;
-
-  /**
    * The _mount type.
    */
   private int _mountType;
@@ -8376,10 +8361,6 @@ public final class L2PcInstance extends L2PlayableInstance {
       _noDuelReason = SystemMessageId.S1_CANNOT_DUEL_BECAUSE_S1_IS_CURRENTLY_ENGAGED_IN_A_PRIVATE_STORE_OR_MANUFACTURE;
       return false;
     }
-    if(isMounted() || isInBoat()) {
-      _noDuelReason = SystemMessageId.S1_CANNOT_DUEL_BECAUSE_S1_IS_CURRENTLY_RIDING_A_BOAT_WYVERN_OR_STRIDER;
-      return false;
-    }
     if(isFishing()) {
       _noDuelReason = SystemMessageId.S1_CANNOT_DUEL_BECAUSE_S1_IS_CURRENTLY_FISHING;
       return false;
@@ -9577,42 +9558,6 @@ public final class L2PcInstance extends L2PlayableInstance {
   }
 
   /**
-   * Checks if is in boat.
-   *
-   * @return Returns the inBoat.
-   */
-  public boolean isInBoat() {
-    return _inBoat;
-  }
-
-  /**
-   * Sets the in boat.
-   *
-   * @param inBoat The inBoat to set.
-   */
-  public void setInBoat(boolean inBoat) {
-    _inBoat = inBoat;
-  }
-
-  /**
-   * Gets the boat.
-   *
-   * @return the boat
-   */
-  public L2BoatInstance getBoat() {
-    return _boat;
-  }
-
-  /**
-   * Sets the boat.
-   *
-   * @param boat the new boat
-   */
-  public void setBoat(L2BoatInstance boat) {
-    _boat = boat;
-  }
-
-  /**
    * Sets the in crystallize.
    *
    * @param inCrystallize the new in crystallize
@@ -9630,31 +9575,6 @@ public final class L2PcInstance extends L2PlayableInstance {
     return _inCrystallize;
   }
 
-  /**
-   * Gets the in boat position.
-   *
-   * @return the in boat position
-   */
-  public Point3D getInBoatPosition() {
-    return _inBoatPosition;
-  }
-
-  /**
-   * Sets the in boat position.
-   *
-   * @param pt the new in boat position
-   */
-  public void setInBoatPosition(Point3D pt) {
-    _inBoatPosition = pt;
-  }
-
-  /**
-   * Manage the delete task of a L2PcInstance (Leave Party, Unsummon pet, Save its inventory in the database, Remove it from the world...).<BR>
-   * <B><U> Actions</U> :</B><BR>
-   * <li>If the L2PcInstance is in observer mode, set its position to its position before entering in observer mode</li> <li>Set the online Flag to True or False and update the characters table of the database with online status and lastAccess</li> <li>Stop the HP/MP/CP Regeneration task</li> <li>
-   * Cancel Crafting, Attak or Cast</li> <li>Remove the L2PcInstance from the world</li> <li>Stop Party and Unsummon Pet</li> <li>Update database with items in its inventory and remove them from the world</li> <li>Remove all L2Object from _knownObjects and _knownPlayer of the L2Character then
-   * cancel Attak or Cast and notify AI</li> <li>Close the connection with the client</li><BR>
-   */
   public void deleteMe() {
     // Check if the L2PcInstance is in observer mode to set its position to its position before entering in observer mode
     if(inObserverMode()) {

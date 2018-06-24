@@ -47,7 +47,6 @@ import net.sf.l2j.gameserver.instancemanager.TownManager;
 import net.sf.l2j.gameserver.model.L2Skill.SkillTargetType;
 import net.sf.l2j.gameserver.model.L2Skill.SkillType;
 import net.sf.l2j.gameserver.model.actor.instance.L2ArtefactInstance;
-import net.sf.l2j.gameserver.model.actor.instance.L2BoatInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2DoorInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2MonsterInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2NpcInstance;
@@ -4598,30 +4597,15 @@ public abstract class L2Character extends L2Object {
     if(elapsed >= m._ticksToMove) {
       // Set the timer of last position update to now
       m._moveTimestamp = gameTicks;
-
-      // Set the position of the L2Character to the destination
-      if(this instanceof L2BoatInstance) {
-        super.getPosition().setXYZ(m._xDestination, m._yDestination, m._zDestination);
-        ((L2BoatInstance) this).updatePeopleInTheBoat(m._xDestination, m._yDestination, m._zDestination);
-      } else {
-        super.getPosition().setXYZ(m._xDestination, m._yDestination, m._zDestination);
-      }
-
+      super.getPosition().setXYZ(m._xDestination, m._yDestination, m._zDestination);
       return true;
     }
 
-    // Estimate the position of the L2Character dureing the movement according to its _xSpeedTicks and _ySpeedTicks
-    // The Z position is obtained from the client
-    if(this instanceof L2BoatInstance) {
-      super.getPosition().setXYZ(m._xMoveFrom + (int) (elapsed * m._xSpeedTicks), m._yMoveFrom + (int) (elapsed * m._ySpeedTicks), super.getZ());
-      ((L2BoatInstance) this).updatePeopleInTheBoat(m._xMoveFrom + (int) (elapsed * m._xSpeedTicks), m._yMoveFrom + (int) (elapsed * m._ySpeedTicks), super.getZ());
+    super.getPosition().setXYZ(m._xMoveFrom + (int) (elapsed * m._xSpeedTicks), m._yMoveFrom + (int) (elapsed * m._ySpeedTicks), super.getZ());
+    if(this instanceof L2PcInstance) {
+      ((L2PcInstance) this).revalidateZone(false);
     } else {
-      super.getPosition().setXYZ(m._xMoveFrom + (int) (elapsed * m._xSpeedTicks), m._yMoveFrom + (int) (elapsed * m._ySpeedTicks), super.getZ());
-      if(this instanceof L2PcInstance) {
-        ((L2PcInstance) this).revalidateZone(false);
-      } else {
-        revalidateZone();
-      }
+      revalidateZone();
     }
 
     // Set the timer of last position update to now

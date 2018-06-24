@@ -228,15 +228,6 @@ public final class L2GamePacketHandler implements IPacketHandler<L2GameClient>, 
           case 0x3f:
             msg = new RequestSkillList();
             break;
-          // case 0x41:
-          // // MoveWithDelta ... unused ?? or only on ship ??
-          // break;
-          case 0x42:
-            msg = new RequestGetOnVehicle();
-            break;
-          case 0x43:
-            msg = new RequestGetOffVehicle();
-            break;
           case 0x44:
             msg = new AnswerTradeRequest();
             break;
@@ -297,12 +288,6 @@ public final class L2GamePacketHandler implements IPacketHandler<L2GameClient>, 
             break;
           case 0x5b:
             msg = new SendBypassBuildCmd();
-            break;
-          case 0x5c:
-            msg = new RequestMoveToLocationInVehicle();
-            break;
-          case 0x5d:
-            msg = new CannotMoveAnymoreInVehicle();
             break;
           case 0x5e:
             msg = new RequestFriendInvite();

@@ -195,7 +195,6 @@ import net.sf.l2j.gameserver.handler.usercommandhandlers.Time;
 import net.sf.l2j.gameserver.handler.voicedcommandhandlers.stats;
 import net.sf.l2j.gameserver.idfactory.IdFactory;
 import net.sf.l2j.gameserver.instancemanager.AuctionManager;
-import net.sf.l2j.gameserver.instancemanager.BoatManager;
 import net.sf.l2j.gameserver.instancemanager.CastleManager;
 import net.sf.l2j.gameserver.instancemanager.CastleManorManager;
 import net.sf.l2j.gameserver.instancemanager.ClanHallManager;
@@ -360,7 +359,6 @@ public class GameServer {
 
     /** Load Manager */
     AuctionManager.getInstance();
-    BoatManager.getInstance();
     CastleManorManager.getInstance();
     MercTicketManager.getInstance();
     // PartyCommandManager.getInstance();

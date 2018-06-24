@@ -3752,13 +3752,7 @@ public enum SystemMessageId
 	 * Message: $s1 cannot duel because $s1 is participating in a siege war.
 	 */
 	S1_CANNOT_DUEL_BECAUSE_S1_IS_PARTICIPATING_IN_A_SIEGE_WAR(2026),
-	
-	/**
-	 * ID: 2027<br>
-	 * Message: $s1 cannot duel because $s1 is currently riding a boat, wyvern, or strider.
-	 */
-	S1_CANNOT_DUEL_BECAUSE_S1_IS_CURRENTLY_RIDING_A_BOAT_WYVERN_OR_STRIDER(2027),
-	
+
 	/**
 	 * ID: 2028<br>
 	 * Message: $s1 cannot receive a duel challenge because $s1 is too far away.
@@ -4022,13 +4016,7 @@ public enum SystemMessageId
 	 * Message: You cannot fish while under water.
 	 */
 	CANNOT_FISH_UNDER_WATER(1455),
-	
-	/**
-	 * ID: 1456<br>
-	 * Message: You cannot fish while riding as a passenger of a boat - it's against the rules.
-	 */
-	CANNOT_FISH_ON_BOAT(1456),
-	
+
 	/**
 	 * ID: 1457<br>
 	 * Message: You can't fish here.

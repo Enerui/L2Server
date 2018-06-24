@@ -44,6 +44,4 @@ public enum CtrlIntention
 	AI_INTENTION_PICK_UP,
 	/** Move to target, then interact */
 	AI_INTENTION_INTERACT,
-	/** Move to another location in a boat */
-	AI_INTENTION_MOVE_TO_IN_A_BOAT;
 }
