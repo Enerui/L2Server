@@ -41,8 +41,6 @@ import net.sf.l2j.gameserver.ItemsAutoDestroy;
 import net.sf.l2j.gameserver.LoginServerThread;
 import net.sf.l2j.gameserver.Olympiad;
 import net.sf.l2j.gameserver.RecipeController;
-import net.sf.l2j.gameserver.SevenSigns;
-import net.sf.l2j.gameserver.SevenSignsFestival;
 import net.sf.l2j.gameserver.ThreadPoolManager;
 import net.sf.l2j.gameserver.Universe;
 import net.sf.l2j.gameserver.ai.CtrlIntention;
@@ -200,8 +198,8 @@ public final class L2PcInstance extends L2PlayableInstance {
   private static final String ADD_SKILL_SAVE = "INSERT INTO character_skills_save (char_obj_id,skill_id,skill_level,effect_count,effect_cur_time,reuse_delay,restore_type,class_index,buff_index) VALUES (?,?,?,?,?,?,?,?,?)";
   private static final String RESTORE_SKILL_SAVE = "SELECT skill_id,skill_level,effect_count,effect_cur_time, reuse_delay FROM character_skills_save WHERE char_obj_id=? AND class_index=? AND restore_type=? ORDER BY buff_index ASC";
   private static final String DELETE_SKILL_SAVE = "DELETE FROM character_skills_save WHERE char_obj_id=? AND class_index=?";
-  private static final String UPDATE_CHARACTER = "UPDATE characters SET level=?,maxHp=?,curHp=?,maxCp=?,curCp=?,maxMp=?,curMp=?,str=?,con=?,dex=?,_int=?,men=?,wit=?,face=?,hairStyle=?,hairColor=?,heading=?,x=?,y=?,z=?,exp=?,sp=?,karma=?,pvpkills=?,pkkills=?,rec_have=?,rec_left=?,clanid=?,race=?,classid=?,deletetime=?,title=?,accesslevel=?,online=?,isin7sdungeon=?,clan_privs=?,wantspeace=?,base_class=?,onlinetime=?,in_jail=?,jail_timer=?,nobless=?,power_grade=?,subpledge=?,last_recom_date=?,lvl_joined_academy=?,apprentice=?,sponsor=?,varka_ketra_ally=?,clan_join_expiry_time=?,clan_create_expiry_time=?,char_name=? WHERE obj_id=?";
-  private static final String RESTORE_CHARACTER = "SELECT account_name, obj_Id, char_name, level, maxHp, curHp, maxCp, curCp, maxMp, curMp, acc, crit, evasion, mAtk, mDef, mSpd, pAtk, pDef, pSpd, runSpd, walkSpd, str, con, dex, _int, men, wit, face, hairStyle, hairColor, sex, heading, x, y, z, movement_multiplier, attack_speed_multiplier, colRad, colHeight, exp, sp, karma, pvpkills, pkkills, clanid, race, classid, deletetime, cancraft, title, rec_have, rec_left, accesslevel, online, char_slot, lastAccess, clan_privs, wantspeace, base_class, onlinetime, isin7sdungeon, in_jail, jail_timer, nobless, power_grade, subpledge, last_recom_date, lvl_joined_academy, apprentice, sponsor, varka_ketra_ally,clan_join_expiry_time,clan_create_expiry_time FROM characters WHERE obj_id=?";
+  private static final String UPDATE_CHARACTER = "UPDATE characters SET level=?,maxHp=?,curHp=?,maxCp=?,curCp=?,maxMp=?,curMp=?,str=?,con=?,dex=?,_int=?,men=?,wit=?,face=?,hairStyle=?,hairColor=?,heading=?,x=?,y=?,z=?,exp=?,sp=?,karma=?,pvpkills=?,pkkills=?,rec_have=?,rec_left=?,clanid=?,race=?,classid=?,deletetime=?,title=?,accesslevel=?,online=?,clan_privs=?,wantspeace=?,base_class=?,onlinetime=?,in_jail=?,jail_timer=?,nobless=?,power_grade=?,subpledge=?,last_recom_date=?,lvl_joined_academy=?,apprentice=?,sponsor=?,varka_ketra_ally=?,clan_join_expiry_time=?,clan_create_expiry_time=?,char_name=? WHERE obj_id=?";
+  private static final String RESTORE_CHARACTER = "SELECT account_name, obj_Id, char_name, level, maxHp, curHp, maxCp, curCp, maxMp, curMp, acc, crit, evasion, mAtk, mDef, mSpd, pAtk, pDef, pSpd, runSpd, walkSpd, str, con, dex, _int, men, wit, face, hairStyle, hairColor, sex, heading, x, y, z, movement_multiplier, attack_speed_multiplier, colRad, colHeight, exp, sp, karma, pvpkills, pkkills, clanid, race, classid, deletetime, cancraft, title, rec_have, rec_left, accesslevel, online, char_slot, lastAccess, clan_privs, wantspeace, base_class, onlinetime, in_jail, jail_timer, nobless, power_grade, subpledge, last_recom_date, lvl_joined_academy, apprentice, sponsor, varka_ketra_ally,clan_join_expiry_time,clan_create_expiry_time FROM characters WHERE obj_id=?";
   private static final String RESTORE_CHAR_SUBCLASSES = "SELECT class_id,exp,sp,level,class_index FROM character_subclasses WHERE char_obj_id=? ORDER BY class_index ASC";
   private static final String ADD_CHAR_SUBCLASS = "INSERT INTO character_subclasses (char_obj_id,class_id,exp,sp,level,class_index) VALUES (?,?,?,?,?,?)";
   private static final String UPDATE_CHAR_SUBCLASS = "UPDATE character_subclasses SET exp=?,sp=?,level=?,class_id=? WHERE char_obj_id=? AND class_index =?";
@@ -379,11 +377,6 @@ public final class L2PcInstance extends L2PlayableInstance {
    * The _zone validate counter.
    */
   private byte _zoneValidateCounter = 4;
-
-  /**
-   * The _is in7s dungeon.
-   */
-  private boolean _isIn7sDungeon = false;
 
   /**
    * The _in jail.
@@ -1641,7 +1634,9 @@ public final class L2PcInstance extends L2PlayableInstance {
   public boolean hasRecipeList(int recipeId) {
     if(_dwarvenRecipeBook.containsKey(recipeId)) {
       return true;
-    } else return _commonRecipeBook.containsKey(recipeId);
+    } else {
+      return _commonRecipeBook.containsKey(recipeId);
+    }
   }
 
   /**
@@ -2063,14 +2058,7 @@ public final class L2PcInstance extends L2PlayableInstance {
       _lastCompassZone = ExSetCompassZoneCode.PVPZONE;
       ExSetCompassZoneCode cz = new ExSetCompassZoneCode(ExSetCompassZoneCode.PVPZONE);
       sendPacket(cz);
-    } else if(isIn7sDungeon()) {
-      if(_lastCompassZone == ExSetCompassZoneCode.SEVENSIGNSZONE) {
-        return;
-      }
-      _lastCompassZone = ExSetCompassZoneCode.SEVENSIGNSZONE;
-      ExSetCompassZoneCode cz = new ExSetCompassZoneCode(ExSetCompassZoneCode.SEVENSIGNSZONE);
-      sendPacket(cz);
-    } else if(isInsideZone(ZONE_PEACE)) {
+    } if(isInsideZone(ZONE_PEACE)) {
       if(_lastCompassZone == ExSetCompassZoneCode.PEACEZONE) {
         return;
       }
@@ -4205,12 +4193,6 @@ public final class L2PcInstance extends L2PlayableInstance {
       newTarget = null;
     }
 
-    // Can't target and attack festival monsters if not participant
-    if((newTarget instanceof L2FestivalMonsterInstance) && !isFestivalParticipant()) {
-      newTarget = null;
-
-    }
-
     // Get the current target
     L2Object oldTarget = getTarget();
 
@@ -4453,7 +4435,7 @@ public final class L2PcInstance extends L2PlayableInstance {
         dropEquipWeapon = Config.KARMA_RATE_DROP_EQUIP_WEAPON;
         dropItem = Config.KARMA_RATE_DROP_ITEM;
         dropLimit = Config.KARMA_DROP_LIMIT;
-      } else if(isKillerNpc && (getLevel() > 4) && !isFestivalParticipant()) {
+      } else if(isKillerNpc && (getLevel() > 4)) {
         dropPercent = Config.PLAYER_RATE_DROP;
         dropEquip = Config.PLAYER_RATE_DROP_EQUIP;
         dropEquipWeapon = Config.PLAYER_RATE_DROP_EQUIP_WEAPON;
@@ -5370,7 +5352,9 @@ public final class L2PcInstance extends L2PlayableInstance {
       return true;
     } else if(weaponItem.getItemId() == 248) {
       return true;
-    } else return weaponItem.getItemId() == 252;
+    } else {
+      return weaponItem.getItemId() == 252;
+    }
   }
 
   /**
@@ -5582,22 +5566,6 @@ public final class L2PcInstance extends L2PlayableInstance {
     updateOnlineStatus();
   }
 
-  /**
-   * Sets the checks if is in7s dungeon.
-   *
-   * @param isIn7sDungeon the new checks if is in7s dungeon
-   */
-  public void setIsIn7sDungeon(boolean isIn7sDungeon) {
-    if(_isIn7sDungeon != isIn7sDungeon) {
-      _isIn7sDungeon = isIn7sDungeon;
-    }
-
-    updateIsIn7sDungeonStatus();
-  }
-
-  /**
-   * Update the characters table of the database with online status and lastAccess of this L2PcInstance (called when login and logout).
-   */
   public void updateOnlineStatus() {
     java.sql.Connection con = null;
 
@@ -5619,41 +5587,12 @@ public final class L2PcInstance extends L2PlayableInstance {
     }
   }
 
-  /**
-   * Update is in7s dungeon status.
-   */
-  public void updateIsIn7sDungeonStatus() {
-    java.sql.Connection con = null;
-
-    try {
-      con = L2DatabaseFactory.getInstance().getConnection();
-      PreparedStatement statement = con.prepareStatement("UPDATE characters SET isIn7sDungeon=?, lastAccess=? WHERE obj_id=?");
-      statement.setInt(1, isIn7sDungeon() ? 1 : 0);
-      statement.setLong(2, System.currentTimeMillis());
-      statement.setInt(3, getObjectId());
-      statement.execute();
-      statement.close();
-    } catch(Exception e) {
-      _log.warning("could not set char isIn7sDungeon status:" + e);
-    } finally {
-      try {
-        con.close();
-      } catch(Exception e) {
-      }
-    }
-  }
-
-  /**
-   * Create a new player in the characters table of the database.
-   *
-   * @return true, if successful
-   */
   private boolean createDb() {
     java.sql.Connection con = null;
     try {
       con = L2DatabaseFactory.getInstance().getConnection();
       PreparedStatement statement;
-      statement = con.prepareStatement("INSERT INTO characters " + "(account_name,obj_Id,char_name,level,maxHp,curHp,maxCp,curCp,maxMp,curMp," + "acc,crit,evasion,mAtk,mDef,mSpd,pAtk,pDef,pSpd,runSpd,walkSpd," + "str,con,dex,_int,men,wit,face,hairStyle,hairColor,sex," + "movement_multiplier,attack_speed_multiplier,colRad,colHeight," + "exp,sp,karma,pvpkills,pkkills,clanid,race,classid,deletetime," + "cancraft,title,accesslevel,online,isin7sdungeon,clan_privs,wantspeace," + "base_class,nobless,power_grade,last_recom_date) " + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+      statement = con.prepareStatement("INSERT INTO characters " + "(account_name,obj_Id,char_name,level,maxHp,curHp,maxCp,curCp,maxMp,curMp," + "acc,crit,evasion,mAtk,mDef,mSpd,pAtk,pDef,pSpd,runSpd,walkSpd," + "str,con,dex,_int,men,wit,face,hairStyle,hairColor,sex," + "movement_multiplier,attack_speed_multiplier,colRad,colHeight," + "exp,sp,karma,pvpkills,pkkills,clanid,race,classid,deletetime," + "cancraft,title,accesslevel,online,clan_privs,wantspeace," + "base_class,nobless,power_grade,last_recom_date) " + "values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
       statement.setString(1, _accountName);
       statement.setInt(2, getObjectId());
       statement.setString(3, getName());
@@ -5702,13 +5641,12 @@ public final class L2PcInstance extends L2PlayableInstance {
       statement.setString(46, getTitle());
       statement.setInt(47, getAccessLevel());
       statement.setInt(48, isOnline());
-      statement.setInt(49, isIn7sDungeon() ? 1 : 0);
-      statement.setInt(50, getClanPrivileges());
-      statement.setInt(51, getWantsPeace());
-      statement.setInt(52, getBaseClass());
-      statement.setInt(53, isNoble() ? 1 : 0);
-      statement.setLong(54, 0);
-      statement.setLong(55, System.currentTimeMillis());
+      statement.setInt(49, getClanPrivileges());
+      statement.setInt(50, getWantsPeace());
+      statement.setInt(51, getBaseClass());
+      statement.setInt(52, isNoble() ? 1 : 0);
+      statement.setLong(53, 0);
+      statement.setLong(54, System.currentTimeMillis());
       statement.executeUpdate();
       statement.close();
     } catch(Exception e) {
@@ -5843,7 +5781,6 @@ public final class L2PcInstance extends L2PlayableInstance {
         player.setApprentice(rset.getInt("apprentice"));
         player.setSponsor(rset.getInt("sponsor"));
         player.setLvlJoinedAcademy(rset.getInt("lvl_joined_academy"));
-        player.setIsIn7sDungeon(rset.getInt("isin7sdungeon") == 1);
         player.setInJail(rset.getInt("in_jail") == 1);
         if(player.isInJail()) {
           player.setJailTimer(rset.getLong("jail_timer"));
@@ -6184,10 +6121,9 @@ public final class L2PcInstance extends L2PlayableInstance {
       statement.setString(32, getTitle());
       statement.setInt(33, getAccessLevel());
       statement.setInt(34, isOnline());
-      statement.setInt(35, isIn7sDungeon() ? 1 : 0);
-      statement.setInt(36, getClanPrivileges());
-      statement.setInt(37, getWantsPeace());
-      statement.setInt(38, getBaseClass());
+      statement.setInt(35, getClanPrivileges());
+      statement.setInt(36, getWantsPeace());
+      statement.setInt(37, getBaseClass());
 
       long totalOnlineTime = _onlineTime;
 
@@ -6195,21 +6131,21 @@ public final class L2PcInstance extends L2PlayableInstance {
         totalOnlineTime += (System.currentTimeMillis() - _onlineBeginTime) / 1000;
       }
 
-      statement.setLong(39, totalOnlineTime);
-      statement.setInt(40, isInJail() ? 1 : 0);
-      statement.setLong(41, getJailTimer());
-      statement.setInt(42, isNoble() ? 1 : 0);
-      statement.setLong(43, getPowerGrade());
-      statement.setInt(44, getPledgeType());
-      statement.setLong(45, getLastRecomUpdate());
-      statement.setInt(46, getLvlJoinedAcademy());
-      statement.setLong(47, getApprentice());
-      statement.setLong(48, getSponsor());
-      statement.setInt(49, getAllianceWithVarkaKetra());
-      statement.setLong(50, getClanJoinExpiryTime());
-      statement.setLong(51, getClanCreateExpiryTime());
-      statement.setString(52, getName());
-      statement.setInt(53, getObjectId());
+      statement.setLong(38, totalOnlineTime);
+      statement.setInt(39, isInJail() ? 1 : 0);
+      statement.setLong(40, getJailTimer());
+      statement.setInt(41, isNoble() ? 1 : 0);
+      statement.setLong(42, getPowerGrade());
+      statement.setInt(43, getPledgeType());
+      statement.setLong(44, getLastRecomUpdate());
+      statement.setInt(45, getLvlJoinedAcademy());
+      statement.setLong(46, getApprentice());
+      statement.setLong(47, getSponsor());
+      statement.setInt(48, getAllianceWithVarkaKetra());
+      statement.setLong(49, getClanJoinExpiryTime());
+      statement.setLong(50, getClanCreateExpiryTime());
+      statement.setString(51, getName());
+      statement.setInt(52, getObjectId());
 
       statement.execute();
       statement.close();
@@ -6347,26 +6283,6 @@ public final class L2PcInstance extends L2PlayableInstance {
     return (_isOnline ? 1 : 0);
   }
 
-  /**
-   * Checks if is in7s dungeon.
-   *
-   * @return true, if is in7s dungeon
-   */
-  public boolean isIn7sDungeon() {
-    return _isIn7sDungeon;
-  }
-
-  /**
-   * Add a skill to the L2PcInstance _skills and its Func objects to the calculator set of the L2PcInstance and save update in the character_skills table of the database. <BR>
-   * <B><U> Concept</U> :</B><BR>
-   * All skills own by a L2PcInstance are identified in <B>_skills</B><BR>
-   * <B><U> Actions</U> :</B><BR>
-   * <li>Replace oldSkill by newSkill or Add the newSkill</li> <li>If an old skill has been replaced, remove all its Func objects of L2Character calculator set</li> <li>Add Func objects of newSkill to the calculator set of the L2Character</li><BR>
-   *
-   * @param newSkill The L2Skill to add to the L2Character
-   * @param store    the store
-   * @return The L2Skill replaced or null if just added a new L2Skill
-   */
   public L2Skill addSkill(L2Skill newSkill, boolean store) {
     // Add a skill to the L2PcInstance _skills and its Func objects to the calculator set of the L2PcInstance
     L2Skill oldSkill = super.addSkill(newSkill);
@@ -7524,10 +7440,12 @@ public final class L2PcInstance extends L2PlayableInstance {
     if(isInsideZone(ZONE_NOLANDING)) {
       return true;
     } else
-      // if this is a castle that is currently being sieged, and the rider is NOT a castle owner
-      // he cannot land.
-      // castle owner is the leader of the clan that owns the castle where the pc is
+    // if this is a castle that is currently being sieged, and the rider is NOT a castle owner
+    // he cannot land.
+    // castle owner is the leader of the clan that owns the castle where the pc is
+    {
       return isInsideZone(ZONE_SIEGE) && !((getClan() != null) && (CastleManager.getInstance().getCastle(this) == CastleManager.getInstance().getCastleByOwner(getClan())) && (this == getClan().getLeader().getPlayerInstance()));
+    }
 
   }
 
@@ -7712,15 +7630,6 @@ public final class L2PcInstance extends L2PlayableInstance {
    */
   public boolean isSilentMoving() {
     return _isSilentMoving;
-  }
-
-  /**
-   * Return True if L2PcInstance is a participant in the Festival of Darkness.
-   *
-   * @return true, if is festival participant
-   */
-  public boolean isFestivalParticipant() {
-    return SevenSignsFestival.getInstance().isParticipant(this);
   }
 
   /**
@@ -9187,20 +9096,6 @@ public final class L2PcInstance extends L2PlayableInstance {
    */
   public void onPlayerEnter() {
     startWarnUserTakeBreak();
-
-    if(SevenSigns.getInstance().isSealValidationPeriod() || SevenSigns.getInstance().isCompResultsPeriod()) {
-      if(!isGM() && isIn7sDungeon() && (SevenSigns.getInstance().getPlayerCabal(this) != SevenSigns.getInstance().getCabalHighestScore())) {
-        teleToLocation(MapRegionTable.TeleportWhereType.Town);
-        setIsIn7sDungeon(false);
-        sendMessage("You have been teleported to the nearest town due to the beginning of the Seal Validation period.");
-      }
-    } else {
-      if(!isGM() && isIn7sDungeon() && (SevenSigns.getInstance().getPlayerCabal(this) == SevenSigns.CABAL_NULL)) {
-        teleToLocation(MapRegionTable.TeleportWhereType.Town);
-        setIsIn7sDungeon(false);
-        sendMessage("You have been teleported to the nearest town because you have not signed for any cabal.");
-      }
-    }
 
     // jail task
     updateJailState();

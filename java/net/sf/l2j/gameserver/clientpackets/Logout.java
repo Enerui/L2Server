@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 import net.sf.l2j.Config;
 import net.sf.l2j.L2DatabaseFactory;
 import net.sf.l2j.gameserver.Olympiad;
-import net.sf.l2j.gameserver.SevenSignsFestival;
 import net.sf.l2j.gameserver.communitybbs.Manager.RegionBBSManager;
 import net.sf.l2j.gameserver.datatables.SkillTable;
 import net.sf.l2j.gameserver.model.L2Party;
@@ -75,21 +74,6 @@ public final class Logout extends L2GameClientPacket {
     if(player.isInOlympiadMode() || Olympiad.getInstance().isRegistered(player)) {
       player.sendMessage("You cant logout in olympiad mode");
       return;
-    }
-
-    // Prevent player from logging out if they are a festival participant
-    // and it is in progress, otherwise notify party members that the player
-    // is not longer a participant.
-    if(player.isFestivalParticipant()) {
-      if(SevenSignsFestival.getInstance().isFestivalInitialized()) {
-        player.sendMessage("You cannot log out while you are a participant in a festival.");
-        return;
-      }
-      L2Party playerParty = player.getParty();
-
-      if(playerParty != null) {
-        player.getParty().broadcastToPartyMembers(SystemMessage.sendString(player.getName() + " has been removed from the upcoming festival."));
-      }
     }
     if(player.isFlying()) {
       player.removeSkill(SkillTable.getInstance().getInfo(4289, 1));

@@ -1267,13 +1267,7 @@ public enum SystemMessageId
 	 * Message: Your clan's newly acquired contested clan hall has added $s1 points to your clan's reputation score.
 	 */
 	CLAN_ACQUIRED_CONTESTED_CLAN_HALL_AND_S1_REPUTATION_POINTS(1774),
-	
-	/**
-	 * ID: 1775<br>
-	 * Message: Clan member $s1 was an active member of the highest-ranked party in the Festival of Darkness. $s2 points have been added to your clan's reputation score.
-	 */
-	CLAN_MEMBER_S1_WAS_IN_HIGHEST_RANKED_PARTY_IN_FESTIVAL_OF_DARKNESS_AND_GAINED_S2_REPUTATION(1775),
-	
+
 	/**
 	 * ID: 1776<br>
 	 * Message: Clan member $s1 was named a hero. $2s points have been added to your clan's reputation score.

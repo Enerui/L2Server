@@ -28,9 +28,7 @@ import net.sf.l2j.Config;
 import net.sf.l2j.L2DatabaseFactory;
 import net.sf.l2j.gameserver.Announcements;
 import net.sf.l2j.gameserver.GmListTable;
-import net.sf.l2j.gameserver.LoginServerThread;
 import net.sf.l2j.gameserver.Olympiad;
-import net.sf.l2j.gameserver.SevenSigns;
 import net.sf.l2j.gameserver.TaskPriority;
 import net.sf.l2j.gameserver.cache.HtmCache;
 import net.sf.l2j.gameserver.communitybbs.Manager.RegionBBSManager;
@@ -64,7 +62,6 @@ import net.sf.l2j.gameserver.serverpackets.PledgeSkillList;
 import net.sf.l2j.gameserver.serverpackets.PledgeStatusChanged;
 import net.sf.l2j.gameserver.serverpackets.QuestList;
 import net.sf.l2j.gameserver.serverpackets.ShortCutInit;
-import net.sf.l2j.gameserver.serverpackets.SignsSky;
 import net.sf.l2j.gameserver.serverpackets.SystemMessage;
 import net.sf.l2j.gameserver.serverpackets.UserInfo;
 import net.sf.l2j.gameserver.util.FloodProtector;
@@ -142,10 +139,6 @@ public class EnterWorld extends L2GameClientPacket {
       L2Event.restoreAndTeleChar(activeChar);
     }
 
-    if(SevenSigns.getInstance().isSealValidationPeriod()) {
-      sendPacket(new SignsSky());
-    }
-
     // buff and status icons
     if(Config.STORE_SKILL_COOLTIME) {
       activeChar.restoreEffects();
@@ -193,24 +186,6 @@ public class EnterWorld extends L2GameClientPacket {
     SystemMessage sm = new SystemMessage(SystemMessageId.WELCOME_TO_LINEAGE);
     sendPacket(sm);
 
-    sm = new SystemMessage(SystemMessageId.S1_S2);
-    sm.addString(getText("V2VsY29tZSB0byBhIEwySiBTZXJ2ZXIsIGZvdW5kZWQgYnkgTDJDaGVmLg=="));
-
-    sendPacket(sm);
-    sm = new SystemMessage(SystemMessageId.S1_S2);
-    sm.addString(getText("RGV2ZWxvcGVkIGJ5IHRoZSBMMkogRGV2IFRlYW0gYXQgbDJqc2VydmVyLmNvbS4="));
-
-    sendPacket(sm);
-
-    sm = new SystemMessage(SystemMessageId.S1_S2);
-    sm.addString(getText("Q29weXJpZ2h0IDIwMDQtMjAwNw=="));
-    sendPacket(sm);
-    sm = new SystemMessage(SystemMessageId.S1_S2);
-    sm.addString(getText("V2VsY29tZSB0byA="));
-    sm.addString(LoginServerThread.getInstance().getServerName());
-    sendPacket(sm);
-
-    SevenSigns.getInstance().sendCurrentPeriodMsg(activeChar);
     Announcements.getInstance().showAnnouncements(activeChar);
 
     Quest.playerEnter(activeChar);

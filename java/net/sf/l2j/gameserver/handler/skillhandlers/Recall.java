@@ -57,12 +57,6 @@ public class Recall implements ISkillHandler {
         if(target instanceof L2PcInstance) {
           L2PcInstance targetChar = (L2PcInstance) target;
 
-          // Check to see if the current player target is in a festival.
-          if(targetChar.isFestivalParticipant()) {
-            targetChar.sendPacket(SystemMessage.sendString("You may not use an escape skill in a festival."));
-            continue;
-          }
-
           // Check to see if player is in jail
           if(targetChar.isInJail()) {
             targetChar.sendPacket(SystemMessage.sendString("You can not escape from jail."));

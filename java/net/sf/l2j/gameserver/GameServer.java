@@ -94,7 +94,6 @@ import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminKick;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminKill;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminLevel;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminLogin;
-import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminMammon;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminManor;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminMenu;
 import net.sf.l2j.gameserver.handler.admincommandhandlers.AdminMobGroup;
@@ -144,7 +143,6 @@ import net.sf.l2j.gameserver.handler.itemhandlers.ScrollOfEscape;
 import net.sf.l2j.gameserver.handler.itemhandlers.ScrollOfResurrection;
 import net.sf.l2j.gameserver.handler.itemhandlers.Scrolls;
 import net.sf.l2j.gameserver.handler.itemhandlers.Seed;
-import net.sf.l2j.gameserver.handler.itemhandlers.SevenSignsRecord;
 import net.sf.l2j.gameserver.handler.itemhandlers.SoulCrystals;
 import net.sf.l2j.gameserver.handler.itemhandlers.SoulShots;
 import net.sf.l2j.gameserver.handler.itemhandlers.SpecialXMas;
@@ -244,7 +242,6 @@ public class GameServer {
   private final UserCommandHandler _userCommandHandler;
   private final VoicedCommandHandler _voicedCommandHandler;
   private final DoorTable _doorTable;
-  private final SevenSigns _sevenSignsEngine;
   private final AutoChatHandler _autoChatHandler;
   private final AutoSpawnHandler _autoSpawnHandler;
   private final LoginServerThread _loginThread;
@@ -383,14 +380,8 @@ public class GameServer {
     _doorTable = DoorTable.getInstance();
     _doorTable.parseData();
     StaticObjects.getInstance();
-
-    _sevenSignsEngine = SevenSigns.getInstance();
-    SevenSignsFestival.getInstance();
     _autoSpawnHandler = AutoSpawnHandler.getInstance();
     _autoChatHandler = AutoChatHandler.getInstance();
-
-    // Spawn the Orators/Preachers if in the Seal Validation period.
-    _sevenSignsEngine.spawnSevenSignsNPC();
 
     Olympiad.getInstance();
     Hero.getInstance();
@@ -423,7 +414,6 @@ public class GameServer {
     _itemHandler.registerItemHandler(new Scrolls());
     _itemHandler.registerItemHandler(new CrystalCarol());
     _itemHandler.registerItemHandler(new SoulCrystals());
-    _itemHandler.registerItemHandler(new SevenSignsRecord());
     _itemHandler.registerItemHandler(new CharChangePotions());
     _itemHandler.registerItemHandler(new Firework());
     _itemHandler.registerItemHandler(new Seed());
@@ -512,7 +502,6 @@ public class GameServer {
     _adminCommandHandler.registerAdminCommandHandler(new AdminEnchant());
     _adminCommandHandler.registerAdminCommandHandler(new AdminMobGroup());
     _adminCommandHandler.registerAdminCommandHandler(new AdminRes());
-    _adminCommandHandler.registerAdminCommandHandler(new AdminMammon());
     _adminCommandHandler.registerAdminCommandHandler(new AdminUnblockIp());
     _adminCommandHandler.registerAdminCommandHandler(new AdminPledge());
     _adminCommandHandler.registerAdminCommandHandler(new AdminRideWyvern());

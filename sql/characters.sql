@@ -63,7 +63,6 @@ CREATE TABLE IF NOT EXISTS characters (
   lastAccess decimal(20,0) default NULL,
   clan_privs INT DEFAULT 0,
   wantspeace decimal(1,0) DEFAULT 0,
-  isin7sdungeon decimal(1,0) NOT NULL default 0,
   in_jail decimal(1,0) DEFAULT 0,
   jail_timer decimal(20,0) DEFAULT 0,
   power_grade decimal(11,0) DEFAULT NULL,

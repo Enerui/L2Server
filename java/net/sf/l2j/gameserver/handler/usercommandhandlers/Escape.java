@@ -51,12 +51,6 @@ public class Escape implements IUserCommandHandler {
 
     int unstuckTimer = (activeChar.getAccessLevel() >= REQUIRED_LEVEL ? 5000 : Config.UNSTUCK_INTERVAL * 1000);
 
-    // Check to see if the player is in a festival.
-    if(activeChar.isFestivalParticipant()) {
-      activeChar.sendMessage("You may not use an escape command in a festival.");
-      return false;
-    }
-
     // Check to see if player is in jail
     if(activeChar.isInJail()) {
       activeChar.sendMessage("You can not escape from jail.");
@@ -97,9 +91,6 @@ public class Escape implements IUserCommandHandler {
       if(_activeChar.isDead()) {
         return;
       }
-
-      _activeChar.setIsIn7sDungeon(false);
-
       _activeChar.enableAllSkills();
 
       try {
@@ -112,10 +103,6 @@ public class Escape implements IUserCommandHandler {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * @see net.sf.l2j.gameserver.handler.IUserCommandHandler#getUserCommandList()
-   */
   @Override
   public int[] getUserCommandList() {
     return COMMAND_IDS;

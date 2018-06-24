@@ -101,12 +101,6 @@ public class ScrollOfEscape implements IItemHandler {
       return;
     }
 
-    // Check to see if the player is in a festival.
-    if(activeChar.isFestivalParticipant()) {
-      activeChar.sendPacket(SystemMessage.sendString("You may not use an escape skill in a festival."));
-      return;
-    }
-
     // Check to see if player is in jail
     if(activeChar.isInJail()) {
       activeChar.sendPacket(SystemMessage.sendString("You can not escape from jail."));
@@ -166,8 +160,6 @@ public class ScrollOfEscape implements IItemHandler {
         return;
       }
       _activeChar.enableAllSkills();
-
-      _activeChar.setIsIn7sDungeon(false);
 
       try {
         if(((_itemId == 1830) || (_itemId == 5859)) && (CastleManager.getInstance().getCastleByOwner(_activeChar.getClan()) != null)) // escape to castle if own's one

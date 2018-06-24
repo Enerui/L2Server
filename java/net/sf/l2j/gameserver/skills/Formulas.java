@@ -20,8 +20,6 @@ package net.sf.l2j.gameserver.skills;
 
 import java.util.logging.Logger;
 import net.sf.l2j.Config;
-import net.sf.l2j.gameserver.SevenSigns;
-import net.sf.l2j.gameserver.SevenSignsFestival;
 import net.sf.l2j.gameserver.instancemanager.ClanHallManager;
 import net.sf.l2j.gameserver.instancemanager.SiegeManager;
 import net.sf.l2j.gameserver.model.Inventory;
@@ -834,14 +832,9 @@ public final class Formulas {
       // Calculate correct baseHpReg value for certain level of PC
       init += (player.getLevel() > 10) ? ((player.getLevel() - 1) / 10.0) : 0.5;
 
-      // SevenSigns Festival modifier
-      if(SevenSignsFestival.getInstance().isFestivalInProgress() && player.isFestivalParticipant()) {
-        hpRegenMultiplier *= calcFestivalRegenModifier(player);
-      } else {
-        double siegeModifier = calcSiegeRegenModifer(player);
-        if(siegeModifier > 0) {
-          hpRegenMultiplier *= siegeModifier;
-        }
+      double siegeModifier = calcSiegeRegenModifer(player);
+      if(siegeModifier > 0) {
+        hpRegenMultiplier *= siegeModifier;
       }
 
       if(player.isInsideZone(L2Character.ZONE_CLANHALL) && (player.getClan() != null)) {
@@ -898,11 +891,6 @@ public final class Formulas {
 
       // Calculate correct baseMpReg value for certain level of PC
       init += 0.3 * ((player.getLevel() - 1) / 10.0);
-
-      // SevenSigns Festival modifier
-      if(SevenSignsFestival.getInstance().isFestivalInProgress() && player.isFestivalParticipant()) {
-        mpRegenMultiplier *= calcFestivalRegenModifier(player);
-      }
 
       // Mother Tree effect is calculated at last
       if(player.isInsideZone(L2Character.ZONE_MOTHERTREE)) {
@@ -983,35 +971,6 @@ public final class Formulas {
     }
 
     return (cha.calcStat(Stats.REGENERATE_CP_RATE, init, null, null) * cpRegenMultiplier) + cpRegenBonus;
-  }
-
-  @SuppressWarnings("deprecation")
-  public final double calcFestivalRegenModifier(L2PcInstance activeChar) {
-    final int[] festivalInfo = SevenSignsFestival.getInstance().getFestivalForPlayer(activeChar);
-    final int oracle = festivalInfo[0];
-    final int festivalId = festivalInfo[1];
-    int[] festivalCenter;
-
-    // If the player isn't found in the festival, leave the regen rate as it is.
-    if(festivalId < 0) {
-      return 0;
-    }
-
-    // Retrieve the X and Y coords for the center of the festival arena the player is in.
-    if(oracle == SevenSigns.CABAL_DAWN) {
-      festivalCenter = SevenSignsFestival.FESTIVAL_DAWN_PLAYER_SPAWNS[festivalId];
-    } else {
-      festivalCenter = SevenSignsFestival.FESTIVAL_DUSK_PLAYER_SPAWNS[festivalId];
-    }
-
-    // Check the distance between the player and the player spawn point, in the center of the arena.
-    double distToCenter = activeChar.getDistance(festivalCenter[0], festivalCenter[1]);
-
-    if(Config.DEBUG) {
-      _log.info("Distance: " + distToCenter + ", RegenMulti: " + ((distToCenter * 2.5) / 50));
-    }
-
-    return 1.0 - (distToCenter * 0.0005); // Maximum Decreased Regen of ~ -65%;
   }
 
   public final double calcSiegeRegenModifer(L2PcInstance activeChar) {

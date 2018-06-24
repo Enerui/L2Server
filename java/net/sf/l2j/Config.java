@@ -273,56 +273,6 @@ public final class Config {
   public static boolean ALT_GAME_VIEWNPC;
 
   /**
-   * Minimum number of player to participate in SevenSigns Festival
-   */
-  public static int ALT_FESTIVAL_MIN_PLAYER;
-
-  /**
-   * Maximum of player contrib during Festival
-   */
-  public static int ALT_MAXIMUM_PLAYER_CONTRIB;
-
-  /**
-   * Festival Manager start time.
-   */
-  public static long ALT_FESTIVAL_MANAGER_START;
-
-  /**
-   * Festival Length
-   */
-  public static long ALT_FESTIVAL_LENGTH;
-
-  /**
-   * Festival Cycle Length
-   */
-  public static long ALT_FESTIVAL_CYCLE_LENGTH;
-
-  /**
-   * Festival First Spawn
-   */
-  public static long ALT_FESTIVAL_FIRST_SPAWN;
-
-  /**
-   * Festival First Swarm
-   */
-  public static long ALT_FESTIVAL_FIRST_SWARM;
-
-  /**
-   * Festival Second Spawn
-   */
-  public static long ALT_FESTIVAL_SECOND_SPAWN;
-
-  /**
-   * Festival Second Swarm
-   */
-  public static long ALT_FESTIVAL_SECOND_SWARM;
-
-  /**
-   * Festival Chest Spawn
-   */
-  public static long ALT_FESTIVAL_CHEST_SPAWN;
-
-  /**
    * Number of members needed to request a clan war
    */
   public static int ALT_CLAN_MEMBERS_FOR_WAR;
@@ -1055,76 +1005,20 @@ public final class Config {
    */
   public static int NAME_PER_ROW_COMMUNITYBOARD;
 
-  // Configuration files
-  /**
-   * Properties file that allows selection of new Classes for storage of World Objects. <br>
-   * This may help servers with large amounts of players recieving error messages related to the <i>L2ObjectHashMap</i> and <i>L2ObejctHashSet</i> classes.
-   */
-  /**
-   * Properties file for game server (connection and ingame) configurations
-   */
   public static final String CONFIGURATION_FILE = "./config/server.properties";
-  /**
-   * Properties file for game server options
-   */
   public static final String OPTIONS_FILE = "./config/options.properties";
-  /**
-   * Properties file for login server configurations
-   */
   public static final String LOGIN_CONFIGURATION_FILE = "./config/loginserver.properties";
-  /**
-   * Properties file for the ID factory
-   */
   public static final String ID_CONFIG_FILE = "./config/idfactory.properties";
-  /**
-   * Properties file for other configurations
-   */
   public static final String OTHER_CONFIG_FILE = "./config/other.properties";
-  /**
-   * Properties file for rates configurations
-   */
   public static final String RATES_CONFIG_FILE = "./config/rates.properties";
-  /**
-   * Properties file for alternative configuration
-   */
   public static final String ALT_SETTINGS_FILE = "./config/altsettings.properties";
-  /**
-   * Properties file for PVP configurations
-   */
   public static final String PVP_CONFIG_FILE = "./config/pvp.properties";
-  /**
-   * Properties file for GM access configurations
-   */
   public static final String GM_ACCESS_FILE = "./config/GMAccess.properties";
-  /**
-   * Properties file for telnet configuration
-   */
   public static final String TELNET_FILE = "./config/telnet.properties";
-  /**
-   * Properties file for siege configuration
-   */
   public static final String SIEGE_CONFIGURATION_FILE = "./config/siege.properties";
-  /**
-   * XML file for banned IP
-   */
   public static final String BANNED_IP_XML = "./config/banned.xml";
-  /**
-   * Text file containing hexadecimal value of server ID
-   */
   public static final String HEXID_FILE = "./config/hexid.txt";
-  /**
-   * Properties file for alternative configure GM commands access level.<br>
-   * Note that this file only read if "AltPrivilegesAdmin = True"
-   */
   public static final String COMMAND_PRIVILEGES_FILE = "./config/command-privileges.properties";
-  /**
-   * Properties file for AI configurations
-   */
-  public static final String AI_FILE = "./config/ai.properties";
-  /**
-   * Properties file for 7 Signs Festival
-   */
-  public static final String SEVENSIGNS_FILE = "./config/sevensigns.properties";
   public static final String CLANHALL_CONFIG_FILE = "./config/clanhall.properties";
   public static int MAX_ITEM_IN_PACKET;
 
@@ -2218,30 +2112,6 @@ public final class Config {
       } catch(Exception e) {
         e.printStackTrace();
         throw new Error("Failed to Load " + ALT_SETTINGS_FILE + " File.");
-      }
-
-      // Seven Signs Config
-      try {
-        Properties SevenSettings = new Properties();
-        InputStream is = new FileInputStream(new File(SEVENSIGNS_FILE));
-        SevenSettings.load(is);
-        is.close();
-
-        ALT_GAME_REQUIRE_CASTLE_DAWN = Boolean.parseBoolean(SevenSettings.getProperty("AltRequireCastleForDawn", "False"));
-        ALT_GAME_REQUIRE_CLAN_CASTLE = Boolean.parseBoolean(SevenSettings.getProperty("AltRequireClanCastle", "False"));
-        ALT_FESTIVAL_MIN_PLAYER = Integer.parseInt(SevenSettings.getProperty("AltFestivalMinPlayer", "5"));
-        ALT_MAXIMUM_PLAYER_CONTRIB = Integer.parseInt(SevenSettings.getProperty("AltMaxPlayerContrib", "1000000"));
-        ALT_FESTIVAL_MANAGER_START = Long.parseLong(SevenSettings.getProperty("AltFestivalManagerStart", "120000"));
-        ALT_FESTIVAL_LENGTH = Long.parseLong(SevenSettings.getProperty("AltFestivalLength", "1080000"));
-        ALT_FESTIVAL_CYCLE_LENGTH = Long.parseLong(SevenSettings.getProperty("AltFestivalCycleLength", "2280000"));
-        ALT_FESTIVAL_FIRST_SPAWN = Long.parseLong(SevenSettings.getProperty("AltFestivalFirstSpawn", "120000"));
-        ALT_FESTIVAL_FIRST_SWARM = Long.parseLong(SevenSettings.getProperty("AltFestivalFirstSwarm", "300000"));
-        ALT_FESTIVAL_SECOND_SPAWN = Long.parseLong(SevenSettings.getProperty("AltFestivalSecondSpawn", "540000"));
-        ALT_FESTIVAL_SECOND_SWARM = Long.parseLong(SevenSettings.getProperty("AltFestivalSecondSwarm", "720000"));
-        ALT_FESTIVAL_CHEST_SPAWN = Long.parseLong(SevenSettings.getProperty("AltFestivalChestSpawn", "900000"));
-      } catch(Exception e) {
-        e.printStackTrace();
-        throw new Error("Failed to Load " + SEVENSIGNS_FILE + " File.");
       }
 
       // clanhall settings

@@ -32,7 +32,6 @@ import net.sf.l2j.gameserver.model.L2Object;
 import net.sf.l2j.gameserver.model.L2Skill;
 import net.sf.l2j.gameserver.model.L2Summon;
 import net.sf.l2j.gameserver.model.actor.instance.L2DoorInstance;
-import net.sf.l2j.gameserver.model.actor.instance.L2FestivalMonsterInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2FolkInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2FriendlyMobInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2GuardInstance;
@@ -49,9 +48,6 @@ import static net.sf.l2j.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
 import static net.sf.l2j.gameserver.ai.CtrlIntention.AI_INTENTION_ATTACK;
 import static net.sf.l2j.gameserver.ai.CtrlIntention.AI_INTENTION_IDLE;
 
-/**
- * This class manages AI of L2Attackable.
- */
 public class L2AttackableAI extends L2CharacterAI implements Runnable {
   // protected static final Logger _log = Logger.getLogger(L2AttackableAI.class.getName());
 
@@ -341,17 +337,6 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
         }
         L2Character target = (L2Character) obj;
 
-        /*
-         * Check to see if this is a festival mob spawn. If it is, then check to see if the aggro trigger is a festival participant...if so, move to attack it.
-         */
-        if((_actor instanceof L2FestivalMonsterInstance) && (obj instanceof L2PcInstance)) {
-          L2PcInstance targetPlayer = (L2PcInstance) obj;
-
-          if(!(targetPlayer.isFestivalParticipant())) {
-            continue;
-          }
-        }
-
         // For each L2Character check if the target is autoattackable
         if(autoAttackCondition(target)) // check aggression
         {
@@ -397,11 +382,6 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable {
     if(_actor instanceof L2GuardInstance) {
       // Order to the L2GuardInstance to return to its home location because there's no target to attack
       ((L2GuardInstance) _actor).returnHome();
-    }
-
-    // If this is a festival monster, then it remains in the same location.
-    if(_actor instanceof L2FestivalMonsterInstance) {
-      return;
     }
 
     // Minions following leader

@@ -59,8 +59,6 @@ public final class RequestRestartPoint extends L2GameClientPacket {
 
         if(activeChar.isInJail()) {
           _requestedPointType = 27;
-        } else if(activeChar.isFestivalParticipant()) {
-          _requestedPointType = 4;
         }
 
         switch(_requestedPointType) {
@@ -110,8 +108,8 @@ public final class RequestRestartPoint extends L2GameClientPacket {
             loc = MapRegionTable.getInstance().getTeleToLocation(activeChar, MapRegionTable.TeleportWhereType.SiegeFlag);
             break;
 
-          case 4: // Fixed or Player is a festival participant
-            if(!activeChar.isGM() && !activeChar.isFestivalParticipant()) {
+          case 4:
+            if(!activeChar.isGM()) {
               // cheater
               activeChar.sendMessage("You may not use this respawn point!");
               Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " used respawn cheat.", IllegalPlayerAction.PUNISH_KICK);

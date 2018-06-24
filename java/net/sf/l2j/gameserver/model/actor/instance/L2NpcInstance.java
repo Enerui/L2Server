@@ -24,8 +24,6 @@ import javolution.text.TextBuilder;
 import javolution.util.FastList;
 import net.sf.l2j.Config;
 import net.sf.l2j.gameserver.Olympiad;
-import net.sf.l2j.gameserver.SevenSigns;
-import net.sf.l2j.gameserver.SevenSignsFestival;
 import net.sf.l2j.gameserver.ThreadPoolManager;
 import net.sf.l2j.gameserver.ai.CtrlIntention;
 import net.sf.l2j.gameserver.cache.HtmCache;
@@ -397,26 +395,7 @@ public class L2NpcInstance extends L2Character {
     }
   }
 
-  /**
-   * Return the distance under which the object must be add to _knownObject in function of the object type.<BR>
-   * <BR>
-   * <B><U> Values </U> :</B><BR>
-   * <BR>
-   * <li>object is a L2FolkInstance : 0 (don't remember it)</li> <li>object is a L2Character : 0 (don't remember it)</li> <li>object is a L2PlayableInstance : 1500</li> <li>others : 500</li><BR>
-   * <BR>
-   * <B><U> Overridden in </U> :</B><BR>
-   * <BR>
-   * <li>L2Attackable</li><BR>
-   * <BR>
-   *
-   * @param object The Object to add to _knownObject
-   * @return
-   */
   public int getDistanceToWatchObject(L2Object object) {
-    if(object instanceof L2FestivalGuideInstance) {
-      return 10000;
-    }
-
     if((object instanceof L2FolkInstance) || !(object instanceof L2Character)) {
       return 0;
     }
@@ -1587,257 +1566,9 @@ public class L2NpcInstance extends L2Character {
     int npcId = getTemplate().npcId;
 
     /* For use with Seven Signs implementation */
-    String filename = SevenSigns.SEVEN_SIGNS_HTML_PATH;
-    int sealAvariceOwner = SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_AVARICE);
-    int sealGnosisOwner = SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_GNOSIS);
-    int playerCabal = SevenSigns.getInstance().getPlayerCabal(player);
-    boolean isSealValidationPeriod = SevenSigns.getInstance().isSealValidationPeriod();
-    int compWinner = SevenSigns.getInstance().getCabalHighestScore();
+    String filename = Olympiad.OLYMPIAD_HTML_FILE;
 
     switch(npcId) {
-      case 31078:
-      case 31079:
-      case 31080:
-      case 31081:
-      case 31082: // Dawn Priests
-      case 31083:
-      case 31084:
-      case 31168:
-      case 31692:
-      case 31694:
-      case 31997:
-        switch(playerCabal) {
-          case SevenSigns.CABAL_DAWN:
-            if(isSealValidationPeriod) {
-              if(compWinner == SevenSigns.CABAL_DAWN) {
-                if(compWinner != sealGnosisOwner) {
-                  filename += "dawn_priest_2c.htm";
-                } else {
-                  filename += "dawn_priest_2a.htm";
-                }
-              } else {
-                filename += "dawn_priest_2b.htm";
-              }
-            } else {
-              filename += "dawn_priest_1b.htm";
-            }
-            break;
-          case SevenSigns.CABAL_DUSK:
-            if(isSealValidationPeriod) {
-              filename += "dawn_priest_3b.htm";
-            } else {
-              filename += "dawn_priest_3a.htm";
-            }
-            break;
-          default:
-            if(isSealValidationPeriod) {
-              if(compWinner == SevenSigns.CABAL_DAWN) {
-                filename += "dawn_priest_4.htm";
-              } else {
-                filename += "dawn_priest_2b.htm";
-              }
-            } else {
-              filename += "dawn_priest_1a.htm";
-            }
-            break;
-        }
-        break;
-      case 31085:
-      case 31086:
-      case 31087:
-      case 31088: // Dusk Priest
-      case 31089:
-      case 31090:
-      case 31091:
-      case 31169:
-      case 31693:
-      case 31695:
-      case 31998:
-        switch(playerCabal) {
-          case SevenSigns.CABAL_DUSK:
-            if(isSealValidationPeriod) {
-              if(compWinner == SevenSigns.CABAL_DUSK) {
-                if(compWinner != sealGnosisOwner) {
-                  filename += "dusk_priest_2c.htm";
-                } else {
-                  filename += "dusk_priest_2a.htm";
-                }
-              } else {
-                filename += "dusk_priest_2b.htm";
-              }
-            } else {
-              filename += "dusk_priest_1b.htm";
-            }
-            break;
-          case SevenSigns.CABAL_DAWN:
-            if(isSealValidationPeriod) {
-              filename += "dusk_priest_3b.htm";
-            } else {
-              filename += "dusk_priest_3a.htm";
-            }
-            break;
-          default:
-            if(isSealValidationPeriod) {
-              if(compWinner == SevenSigns.CABAL_DUSK) {
-                filename += "dusk_priest_4.htm";
-              } else {
-                filename += "dusk_priest_2b.htm";
-              }
-            } else {
-              filename += "dusk_priest_1a.htm";
-            }
-            break;
-        }
-        break;
-      case 31095: //
-      case 31096: //
-      case 31097: //
-      case 31098: // Enter Necropolises
-      case 31099: //
-      case 31100: //
-      case 31101: //
-      case 31102: //
-        if(isSealValidationPeriod) {
-          if((playerCabal != compWinner) || (sealAvariceOwner != compWinner)) {
-            switch(compWinner) {
-              case SevenSigns.CABAL_DAWN:
-                player.sendPacket(new SystemMessage(SystemMessageId.CAN_BE_USED_BY_DAWN));
-                filename += "necro_no.htm";
-                break;
-              case SevenSigns.CABAL_DUSK:
-                player.sendPacket(new SystemMessage(SystemMessageId.CAN_BE_USED_BY_DUSK));
-                filename += "necro_no.htm";
-                break;
-              case SevenSigns.CABAL_NULL:
-                filename = (getHtmlPath(npcId, val)); // do the default!
-                break;
-            }
-          } else {
-            filename = (getHtmlPath(npcId, val)); // do the default!
-          }
-        } else {
-          if(playerCabal == SevenSigns.CABAL_NULL) {
-            filename += "necro_no.htm";
-          } else {
-            filename = (getHtmlPath(npcId, val)); // do the default!
-          }
-        }
-        break;
-      case 31114: //
-      case 31115: //
-      case 31116: // Enter Catacombs
-      case 31117: //
-      case 31118: //
-      case 31119: //
-        if(isSealValidationPeriod) {
-          if((playerCabal != compWinner) || (sealGnosisOwner != compWinner)) {
-            switch(compWinner) {
-              case SevenSigns.CABAL_DAWN:
-                player.sendPacket(new SystemMessage(SystemMessageId.CAN_BE_USED_BY_DAWN));
-                filename += "cata_no.htm";
-                break;
-              case SevenSigns.CABAL_DUSK:
-                player.sendPacket(new SystemMessage(SystemMessageId.CAN_BE_USED_BY_DUSK));
-                filename += "cata_no.htm";
-                break;
-              case SevenSigns.CABAL_NULL:
-                filename = (getHtmlPath(npcId, val)); // do the default!
-                break;
-            }
-          } else {
-            filename = (getHtmlPath(npcId, val)); // do the default!
-          }
-        } else {
-          if(playerCabal == SevenSigns.CABAL_NULL) {
-            filename += "cata_no.htm";
-          } else {
-            filename = (getHtmlPath(npcId, val)); // do the default!
-          }
-        }
-        break;
-      case 31111: // Gatekeeper Spirit (Disciples)
-        if((playerCabal == sealAvariceOwner) && (playerCabal == compWinner)) {
-          switch(sealAvariceOwner) {
-            case SevenSigns.CABAL_DAWN:
-              filename += "spirit_dawn.htm";
-              break;
-            case SevenSigns.CABAL_DUSK:
-              filename += "spirit_dusk.htm";
-              break;
-            case SevenSigns.CABAL_NULL:
-              filename += "spirit_null.htm";
-              break;
-          }
-        } else {
-          filename += "spirit_null.htm";
-        }
-        break;
-      case 31112: // Gatekeeper Spirit (Disciples)
-        filename += "spirit_exit.htm";
-        break;
-      case 31127: //
-      case 31128: //
-      case 31129: // Dawn Festival Guides
-      case 31130: //
-      case 31131: //
-        filename += "festival/dawn_guide.htm";
-        break;
-      case 31137: //
-      case 31138: //
-      case 31139: // Dusk Festival Guides
-      case 31140: //
-      case 31141: //
-        filename += "festival/dusk_guide.htm";
-        break;
-      case 31092: // Black Marketeer of Mammon
-        filename += "blkmrkt_1.htm";
-        break;
-      case 31113: // Merchant of Mammon
-        switch(compWinner) {
-          case SevenSigns.CABAL_DAWN:
-            if((playerCabal != compWinner) || (playerCabal != sealAvariceOwner)) {
-              player.sendPacket(new SystemMessage(SystemMessageId.CAN_BE_USED_BY_DAWN));
-              return;
-            }
-            break;
-          case SevenSigns.CABAL_DUSK:
-            if((playerCabal != compWinner) || (playerCabal != sealAvariceOwner)) {
-              player.sendPacket(new SystemMessage(SystemMessageId.CAN_BE_USED_BY_DUSK));
-              return;
-            }
-            break;
-        }
-        filename += "mammmerch_1.htm";
-        break;
-      case 31126: // Blacksmith of Mammon
-        switch(compWinner) {
-          case SevenSigns.CABAL_DAWN:
-            if((playerCabal != compWinner) || (playerCabal != sealGnosisOwner)) {
-              player.sendPacket(new SystemMessage(SystemMessageId.CAN_BE_USED_BY_DAWN));
-              return;
-            }
-            break;
-          case SevenSigns.CABAL_DUSK:
-            if((playerCabal != compWinner) || (playerCabal != sealGnosisOwner)) {
-              player.sendPacket(new SystemMessage(SystemMessageId.CAN_BE_USED_BY_DUSK));
-              return;
-            }
-            break;
-        }
-        filename += "mammblack_1.htm";
-        break;
-      case 31132:
-      case 31133:
-      case 31134:
-      case 31135:
-      case 31136: // Festival Witches
-      case 31142:
-      case 31143:
-      case 31144:
-      case 31145:
-      case 31146:
-        filename += "festival/festival_witch.htm";
-        break;
       case 31688:
         if(player.isNoble()) {
           filename = Olympiad.OLYMPIAD_HTML_FILE + "noble_main.htm";
@@ -1851,7 +1582,7 @@ public class L2NpcInstance extends L2Character {
       case 31771:
       case 31772:
         if(player.isHero()) {
-          filename = Olympiad.OLYMPIAD_HTML_FILE + "hero_main.htm";
+          filename += "hero_main.htm";
         } else {
           filename = (getHtmlPath(npcId, val));
         }
@@ -1878,7 +1609,6 @@ public class L2NpcInstance extends L2Character {
     }
 
     html.replace("%objectId%", String.valueOf(getObjectId()));
-    html.replace("%festivalMins%", SevenSignsFestival.getInstance().getTimeToNextFestivalStr());
     player.sendPacket(html);
 
     // Send a Server->Client ActionFailed to the L2PcInstance in order to avoid that the client wait another packet

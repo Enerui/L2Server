@@ -21,7 +21,6 @@ package net.sf.l2j.gameserver.model;
 import java.util.List;
 import javolution.util.FastList;
 import net.sf.l2j.Config;
-import net.sf.l2j.gameserver.SevenSignsFestival;
 import net.sf.l2j.gameserver.datatables.ItemTable;
 import net.sf.l2j.gameserver.instancemanager.DuelManager;
 import net.sf.l2j.gameserver.model.actor.instance.L2PcInstance;
@@ -284,10 +283,6 @@ public class L2Party {
     if(getPartyMembers().contains(player)) {
       getPartyMembers().remove(player);
       recalculatePartyLevel();
-
-      if(player.isFestivalParticipant()) {
-        SevenSignsFestival.getInstance().updateParticipants(player, this);
-      }
 
       if(player.isInDuel()) {
         DuelManager.getInstance().onRemoveFromParty(player);

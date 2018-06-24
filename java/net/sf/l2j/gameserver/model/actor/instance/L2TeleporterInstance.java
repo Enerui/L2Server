@@ -82,9 +82,6 @@ public final class L2TeleporterInstance extends L2FolkInstance
 				case 31116: // Enter Catacombs
 				case 31117: //
 				case 31118: //
-				case 31119: //
-					player.setIsIn7sDungeon(true);
-					break;
 				case 31103: //
 				case 31104: //
 				case 31105: //
@@ -100,8 +97,6 @@ public final class L2TeleporterInstance extends L2FolkInstance
 				case 31123: //
 				case 31124: //
 				case 31125: //
-					player.setIsIn7sDungeon(false);
-					break;
 			}
 			
 			if (st.countTokens() <= 0)
