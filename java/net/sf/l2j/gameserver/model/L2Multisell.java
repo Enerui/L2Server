@@ -87,9 +87,9 @@ public class L2Multisell {
 
       L2ItemInstance[] items;
       if(listTemplate.getMaintainEnchantment()) {
-        items = player.getInventory().getUniqueItemsByEnchantLevel(false, false, false);
+        items = player.getInventory().getUniqueItemsByEnchantLevel(false, false);
       } else {
-        items = player.getInventory().getUniqueItems(false, false, false);
+        items = player.getInventory().getUniqueItems(false, false);
       }
 
       int enchantLevel;

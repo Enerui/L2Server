@@ -2948,15 +2948,6 @@ public final class L2PcInstance extends L2PlayableInstance {
   }
 
   /**
-   * Return the Ancient Adena amount of the L2PcInstance.
-   *
-   * @return the ancient adena
-   */
-  public int getAncientAdena() {
-    return _inventory.getAncientAdena();
-  }
-
-  /**
    * Add adena to Inventory of the L2PcInstance and send a Server->Client InventoryUpdate packet to the L2PcInstance.
    *
    * @param process     : String Identifier of process triggering this action
@@ -3018,76 +3009,6 @@ public final class L2PcInstance extends L2PlayableInstance {
       if(sendMessage) {
         SystemMessage sm = new SystemMessage(SystemMessageId.DISSAPEARED_ADENA);
         sm.addNumber(count);
-        sendPacket(sm);
-      }
-    }
-
-    return true;
-  }
-
-  /**
-   * Add ancient adena to Inventory of the L2PcInstance and send a Server->Client InventoryUpdate packet to the L2PcInstance.
-   *
-   * @param process     : String Identifier of process triggering this action
-   * @param count       : int Quantity of ancient adena to be added
-   * @param reference   : L2Object Object referencing current action like NPC selling item or previous item in transformation
-   * @param sendMessage : boolean Specifies whether to send message to Client about this action
-   */
-  public void addAncientAdena(String process, int count, L2Object reference, boolean sendMessage) {
-    if(sendMessage) {
-      SystemMessage sm = new SystemMessage(SystemMessageId.EARNED_S2_S1_S);
-      sm.addItemName(PcInventory.ANCIENT_ADENA_ID);
-      sm.addNumber(count);
-      sendPacket(sm);
-    }
-
-    if(count > 0) {
-      _inventory.addAncientAdena(process, count, this, reference);
-
-      if(!Config.FORCE_INVENTORY_UPDATE) {
-        InventoryUpdate iu = new InventoryUpdate();
-        iu.addItem(_inventory.getAncientAdenaInstance());
-        sendPacket(iu);
-      } else {
-        sendPacket(new ItemList(this, false));
-      }
-    }
-  }
-
-  /**
-   * Reduce ancient adena in Inventory of the L2PcInstance and send a Server->Client InventoryUpdate packet to the L2PcInstance.
-   *
-   * @param process     : String Identifier of process triggering this action
-   * @param count       : int Quantity of ancient adena to be reduced
-   * @param reference   : L2Object Object referencing current action like NPC selling item or previous item in transformation
-   * @param sendMessage : boolean Specifies whether to send message to Client about this action
-   * @return boolean informing if the action was successfull
-   */
-  public boolean reduceAncientAdena(String process, int count, L2Object reference, boolean sendMessage) {
-    if(count > getAncientAdena()) {
-      if(sendMessage) {
-        sendPacket(new SystemMessage(SystemMessageId.YOU_NOT_ENOUGH_ADENA));
-      }
-
-      return false;
-    }
-
-    if(count > 0) {
-      L2ItemInstance ancientAdenaItem = _inventory.getAncientAdenaInstance();
-      _inventory.reduceAncientAdena(process, count, this, reference);
-
-      if(!Config.FORCE_INVENTORY_UPDATE) {
-        InventoryUpdate iu = new InventoryUpdate();
-        iu.addItem(ancientAdenaItem);
-        sendPacket(iu);
-      } else {
-        sendPacket(new ItemList(this, false));
-      }
-
-      if(sendMessage) {
-        SystemMessage sm = new SystemMessage(SystemMessageId.DISSAPEARED_ITEM);
-        sm.addNumber(count);
-        sm.addItemName(PcInventory.ANCIENT_ADENA_ID);
         sendPacket(sm);
       }
     }
