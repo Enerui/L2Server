@@ -424,38 +424,6 @@ public final class Config {
   public static int ALT_MANOR_SAVE_PERIOD_RATE;
 
   /**
-   * Initial Lottery prize
-   */
-  public static int ALT_LOTTERY_PRIZE;
-
-  /**
-   * Lottery Ticket Price
-   */
-  public static int ALT_LOTTERY_TICKET_PRICE;
-
-  /**
-   * What part of jackpot amount should receive characters who pick 5 wining numbers
-   */
-  public static float ALT_LOTTERY_5_NUMBER_RATE;
-
-  /**
-   * What part of jackpot amount should receive characters who pick 4 wining numbers
-   */
-  public static float ALT_LOTTERY_4_NUMBER_RATE;
-
-  /**
-   * What part of jackpot amount should receive characters who pick 3 wining numbers
-   */
-  public static float ALT_LOTTERY_3_NUMBER_RATE;
-
-  /**
-   * How much adena receive characters who pick two or less of the winning number
-   */
-  public static int ALT_LOTTERY_2_AND_1_NUMBER_PRIZE;
-  /* **************************************************************************
-   * GM CONFIG General GM AccessLevel *************************************************************************
-   */
-  /**
    * General GM access level
    */
   public static int GM_ACCESSLEVEL;
@@ -901,10 +869,6 @@ public final class Config {
    * Price of the try on of one item
    */
   public static int WEAR_PRICE;
-  /**
-   * Allow lottery ?
-   */
-  public static boolean ALLOW_LOTTERY;
   /**
    * Allow race ?
    */
@@ -1728,7 +1692,6 @@ public final class Config {
         ALLOW_WEAR = Boolean.valueOf(optionsSettings.getProperty("AllowWear", "False"));
         WEAR_DELAY = Integer.parseInt(optionsSettings.getProperty("WearDelay", "5"));
         WEAR_PRICE = Integer.parseInt(optionsSettings.getProperty("WearPrice", "10"));
-        ALLOW_LOTTERY = Boolean.valueOf(optionsSettings.getProperty("AllowLottery", "False"));
         ALLOW_RACE = Boolean.valueOf(optionsSettings.getProperty("AllowRace", "False"));
         ALLOW_WATER = Boolean.valueOf(optionsSettings.getProperty("AllowWater", "False"));
         ALLOW_RENTPET = Boolean.valueOf(optionsSettings.getProperty("AllowRentPet", "False"));
@@ -2093,13 +2056,6 @@ public final class Config {
         ALT_MANOR_MAINTENANCE_PERIOD = Integer.parseInt(altSettings.getProperty("AltManorMaintenancePeriod", "360000"));
         ALT_MANOR_SAVE_ALL_ACTIONS = Boolean.parseBoolean(altSettings.getProperty("AltManorSaveAllActions", "false"));
         ALT_MANOR_SAVE_PERIOD_RATE = Integer.parseInt(altSettings.getProperty("AltManorSavePeriodRate", "2"));
-
-        ALT_LOTTERY_PRIZE = Integer.parseInt(altSettings.getProperty("AltLotteryPrize", "50000"));
-        ALT_LOTTERY_TICKET_PRICE = Integer.parseInt(altSettings.getProperty("AltLotteryTicketPrice", "2000"));
-        ALT_LOTTERY_5_NUMBER_RATE = Float.parseFloat(altSettings.getProperty("AltLottery5NumberRate", "0.6"));
-        ALT_LOTTERY_4_NUMBER_RATE = Float.parseFloat(altSettings.getProperty("AltLottery4NumberRate", "0.2"));
-        ALT_LOTTERY_3_NUMBER_RATE = Float.parseFloat(altSettings.getProperty("AltLottery3NumberRate", "0.2"));
-        ALT_LOTTERY_2_AND_1_NUMBER_PRIZE = Integer.parseInt(altSettings.getProperty("AltLottery2and1NumberPrize", "200"));
         BUFFS_MAX_AMOUNT = Byte.parseByte(altSettings.getProperty("maxbuffamount", "24"));
 
         ALT_DEV_NO_QUESTS = Boolean.parseBoolean(altSettings.getProperty("AltDevNoQuests", "False"));

@@ -3086,31 +3086,7 @@ public enum SystemMessageId
 	 * Message: Your lethal strike was successful!
 	 */
 	LETHAL_STRIKE_SUCCESSFUL(1668),
-	
-	/**
-	 * ID: 1112<br>
-	 * Message: The prize amount for the winner of Lottery #$s1 is $s2 adena. We have $s3 first prize winners.
-	 */
-	AMOUNT_FOR_WINNER_S1_IS_S2_ADENA_WE_HAVE_S3_PRIZE_WINNER(1112),
-	
-	/**
-	 * ID: 1113<br>
-	 * Message: The prize amount for Lucky Lottery #$s1 is $s2 adena. There was no first prize winner in this drawing, therefore the jackpot will be added to the next drawing.
-	 */
-	AMOUNT_FOR_LOTTERY_S1_IS_S2_ADENA_NO_WINNER(1113),
 
-	/**
-	 * ID: 930<br>
-	 * Message: Lottery tickets are not currently being sold.
-	 */
-	NO_LOTTERY_TICKETS_CURRENT_SOLD(930),
-	
-	/**
-	 * ID: 784<br>
-	 * Message: Tickets for the current lottery are no longer available.
-	 */
-	NO_LOTTERY_TICKETS_AVAILABLE(784),
-	
 	/**
 	 * ID: 283<br>
 	 * Message: You have entered a combat zone.
@@ -3188,13 +3164,7 @@ public enum SystemMessageId
 	 * Message: Macro descriptions may contain up to 32 characters.
 	 */
 	MACRO_DESCRIPTION_MAX_32_CHARS(837),
-	
-	/**
-	 * ID: 783<br>
-	 * Message: Lottery ticket sales have been temporarily suspended.
-	 */
-	LOTTERY_TICKET_SALES_TEMP_SUSPENDED(783),
-	
+
 	/**
 	 * ID: 827<br>
 	 * Message: You may not impose a block on a GM.
