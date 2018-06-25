@@ -37,9 +37,6 @@ public class UserInfo extends L2GameServerPacket {
   private int _relation;
   private final float _moveMultiplier;
 
-  /**
-   * @param character
-   */
   public UserInfo(L2PcInstance character) {
     _activeChar = character;
 
@@ -265,11 +262,6 @@ public class UserInfo extends L2GameServerPacket {
     writeD(_activeChar.getClanCrestLargeId());
     writeC(_activeChar.isNoble() ? 1 : 0); // 0x01: symbol on char menu ctrl+I
     writeC((_activeChar.isHero() || (_activeChar.isGM() && Config.GM_HERO_AURA)) ? 1 : 0); // 0x01: Hero Aura
-
-    writeC(_activeChar.isFishing() ? 1 : 0); // Fishing Mode
-    writeD(_activeChar.GetFishx()); // fishing x
-    writeD(_activeChar.GetFishy()); // fishing y
-    writeD(_activeChar.GetFishz()); // fishing z
     writeD(_activeChar.getAppearance().getNameColor());
 
     // new c5

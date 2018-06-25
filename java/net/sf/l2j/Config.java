@@ -795,11 +795,6 @@ public final class Config {
   public static int MAX_DRIFT_RANGE;
 
   /**
-   * Allow fishing ?
-   */
-  public static boolean ALLOWFISHING;
-
-  /**
    * Allow Manor system
    */
   public static boolean ALLOW_MANOR;
@@ -1693,7 +1688,6 @@ public final class Config {
         ALLOW_RENTPET = Boolean.valueOf(optionsSettings.getProperty("AllowRentPet", "False"));
         FLOODPROTECTOR_INITIALSIZE = Integer.parseInt(optionsSettings.getProperty("FloodProtectorInitialSize", "50"));
         ALLOW_DISCARDITEM = Boolean.valueOf(optionsSettings.getProperty("AllowDiscardItem", "True"));
-        ALLOWFISHING = Boolean.valueOf(optionsSettings.getProperty("AllowFishing", "False"));
         ALLOW_MANOR = Boolean.parseBoolean(optionsSettings.getProperty("AllowManor", "False"));
         ALLOW_CURSED_WEAPONS = Boolean.valueOf(optionsSettings.getProperty("AllowCursedWeapons", "False"));
 

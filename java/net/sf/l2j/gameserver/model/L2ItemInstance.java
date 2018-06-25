@@ -157,8 +157,6 @@ public final class L2ItemInstance extends L2Object {
    */
   private int _chargedSpiritshot = CHARGED_NONE;
 
-  private boolean _chargedFishtshot = false;
-
   private boolean _protected;
 
   public static final int UNCHANGED = 0;
@@ -803,7 +801,7 @@ public final class L2ItemInstance extends L2Object {
         if(isEquipped()) {
           L2ItemInstance[] unequiped = player.getInventory().unEquipItemInSlotAndRecord(getEquipSlot());
           InventoryUpdate iu = new InventoryUpdate();
-          for(L2ItemInstance element : unequiped) {
+          for(L2ItemInstance element: unequiped) {
             player.checkSSMatch(null, element);
             iu.addModifiedItem(element);
           }
@@ -871,10 +869,6 @@ public final class L2ItemInstance extends L2Object {
     return _chargedSpiritshot;
   }
 
-  public boolean getChargedFishshot() {
-    return _chargedFishtshot;
-  }
-
   /**
    * Sets the type of charge with SoulShot of the item
    *
@@ -891,10 +885,6 @@ public final class L2ItemInstance extends L2Object {
    */
   public void setChargedSpiritshot(int type) {
     _chargedSpiritshot = type;
-  }
-
-  public void setChargedFishshot(boolean type) {
-    _chargedFishtshot = type;
   }
 
   /**

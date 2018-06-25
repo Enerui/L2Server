@@ -553,8 +553,6 @@ cursed_weapons.sql
 droplist.sql
 enchant_skill_trees.sql
 etcitem.sql
-fish.sql
-fishing_skill_trees.sql
 forums.sql
 games.sql
 global_tasks.sql

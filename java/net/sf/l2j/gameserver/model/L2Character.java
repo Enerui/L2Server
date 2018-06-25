@@ -753,16 +753,6 @@ public abstract class L2Character extends L2Object {
     // Get the active weapon item corresponding to the active weapon instance (always equiped in the right hand)
     L2Weapon weaponItem = getActiveWeaponItem();
 
-    if((weaponItem != null) && (weaponItem.getItemType() == L2WeaponType.ROD)) {
-      // You can't make an attack with a fishing pole.
-      ((L2PcInstance) this).sendPacket(new SystemMessage(SystemMessageId.CANNOT_ATTACK_WITH_FISHING_POLE));
-      getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
-
-      ActionFailed af = new ActionFailed();
-      sendPacket(af);
-      return;
-    }
-
     // GeoData Los Check here (or dz > 1000)
     if(!GeoData.getInstance().canSeeTarget(this, target)) {
       sendPacket(new SystemMessage(SystemMessageId.CANT_SEE_TARGET));

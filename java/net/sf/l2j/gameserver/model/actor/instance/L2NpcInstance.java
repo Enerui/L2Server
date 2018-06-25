@@ -1307,10 +1307,6 @@ public class L2NpcInstance extends L2Character {
         if(showPkDenyChatWindow(player, "warehouse")) {
           return;
         }
-      } else if(!Config.ALT_GAME_KARMA_PLAYER_CAN_SHOP && (this instanceof L2FishermanInstance)) {
-        if(showPkDenyChatWindow(player, "fisherman")) {
-          return;
-        }
       }
     }
 

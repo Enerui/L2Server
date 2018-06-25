@@ -703,9 +703,6 @@ public final class L2GamePacketHandler implements IPacketHandler<L2GameClient>, 
               case 0x1e:
                 msg = new RequestPledgeWarList();
                 break;
-              case 0x1f:
-                msg = new RequestExFishRanking();
-                break;
               case 0x20:
                 msg = new RequestPCCafeCouponUse();
                 break;

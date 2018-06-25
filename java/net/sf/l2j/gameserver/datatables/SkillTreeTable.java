@@ -40,7 +40,6 @@ public class SkillTreeTable {
   private static SkillTreeTable _instance;
 
   private Map<ClassId, Map<Integer, L2SkillLearn>> _skillTrees;
-  private List<L2SkillLearn> _fishingSkillTrees; // all common skills (teached by Fisherman)
   private List<L2SkillLearn> _expandDwarfCraftSkillTrees; // list of special skill for dwarf (expand dwarf craft) learned by class teacher
   private List<L2PledgeSkillLearn> _pledgeSkillTrees; // pledge skill list
   private List<L2EnchantSkillLearn> _enchantSkillTrees; // enchant skill list
@@ -147,51 +146,6 @@ public class SkillTreeTable {
 
     _log.config("SkillTreeTable: Loaded " + count + " skills.");
 
-    // Skill tree for fishing skill (from Fisherman)
-    int count2 = 0;
-    int count3 = 0;
-
-    try {
-      _fishingSkillTrees = new FastList<>();
-      _expandDwarfCraftSkillTrees = new FastList<>();
-
-      PreparedStatement statement = con.prepareStatement("SELECT skill_id, level, name, sp, min_level, costid, cost, isfordwarf FROM fishing_skill_trees ORDER BY skill_id, level");
-      ResultSet skilltree2 = statement.executeQuery();
-
-      int prevSkillId = -1;
-
-      while(skilltree2.next()) {
-        int id = skilltree2.getInt("skill_id");
-        int lvl = skilltree2.getInt("level");
-        String name = skilltree2.getString("name");
-        int minLvl = skilltree2.getInt("min_level");
-        int cost = skilltree2.getInt("sp");
-        int costId = skilltree2.getInt("costid");
-        int costCount = skilltree2.getInt("cost");
-        int isDwarven = skilltree2.getInt("isfordwarf");
-
-        if(prevSkillId != id) {
-          prevSkillId = id;
-        }
-
-        L2SkillLearn skill = new L2SkillLearn(id, lvl, minLvl, name, cost, costId, costCount);
-
-        if(isDwarven == 0) {
-          _fishingSkillTrees.add(skill);
-        } else {
-          _expandDwarfCraftSkillTrees.add(skill);
-        }
-      }
-
-      skilltree2.close();
-      statement.close();
-
-      count2 = _fishingSkillTrees.size();
-      count3 = _expandDwarfCraftSkillTrees.size();
-    } catch(Exception e) {
-      _log.severe("Error while creating fishing skill table: " + e);
-    }
-
     int count4 = 0;
     try {
       _enchantSkillTrees = new FastList<>();
@@ -260,17 +214,13 @@ public class SkillTreeTable {
       statement.close();
 
       count5 = _pledgeSkillTrees.size();
-    } catch(Exception e) {
-      _log.severe("Error while creating fishing skill table: " + e);
+    } catch(Exception ignored) {
     } finally {
       try {
         con.close();
       } catch(Exception e) {
       }
     }
-
-    _log.config("FishingSkillTreeTable: Loaded " + count2 + " general skills.");
-    _log.config("FishingSkillTreeTable: Loaded " + count3 + " dwarven skills.");
     _log.config("EnchantSkillTreeTable: Loaded " + count4 + " enchant skills.");
     _log.config("PledgeSkillTreeTable: Loaded " + count5 + " pledge skills");
   }
@@ -324,11 +274,7 @@ public class SkillTreeTable {
     List<L2SkillLearn> result = new FastList<>();
     List<L2SkillLearn> skills = new FastList<>();
 
-    skills.addAll(_fishingSkillTrees);
-
     if(skills.isEmpty()) {
-      // the skilltree for this class is undefined, so we give an empty list
-      _log.warning("Skilltree for fishing is not defined !");
       return new L2SkillLearn[0];
     }
 
@@ -470,14 +416,6 @@ public class SkillTreeTable {
   public int getMinLevelForNewSkill(L2PcInstance cha) {
     int minLevel = 0;
     List<L2SkillLearn> skills = new FastList<>();
-
-    skills.addAll(_fishingSkillTrees);
-
-    if(skills.isEmpty()) {
-      // the skilltree for this class is undefined, so we give an empty list
-      _log.warning("SkillTree for fishing is not defined !");
-      return minLevel;
-    }
 
     if(cha.hasDwarvenCraft() && (_expandDwarfCraftSkillTrees != null)) {
       skills.addAll(_expandDwarfCraftSkillTrees);

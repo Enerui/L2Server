@@ -22,7 +22,6 @@ import net.sf.l2j.Config;
 import net.sf.l2j.gameserver.cache.HtmCache;
 import net.sf.l2j.gameserver.model.L2ItemInstance;
 import net.sf.l2j.gameserver.model.L2Object;
-import net.sf.l2j.gameserver.model.actor.instance.L2FishermanInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2MercManagerInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2MerchantInstance;
 import net.sf.l2j.gameserver.model.actor.instance.L2NpcInstance;
@@ -95,8 +94,6 @@ public final class RequestSellItem extends L2GameClientPacket {
     if(target != null) {
       if(target instanceof L2MerchantInstance) {
         htmlFolder = "merchant";
-      } else if(target instanceof L2FishermanInstance) {
-        htmlFolder = "fisherman";
       } else {
         ok = false;
       }

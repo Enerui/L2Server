@@ -160,11 +160,6 @@ public abstract class L2Skill {
     AGGREDUCE_CHAR,
     AGGDEBUFF,
 
-    // Fishing
-    FISHING,
-    PUMPING,
-    REELING,
-
     // MISC
     UNLOCK,
     ENCHANT_ARMOR,
@@ -904,10 +899,6 @@ public abstract class L2Skill {
 
   public final boolean useSpiritShot() {
     return isMagic();
-  }
-
-  public final boolean useFishShot() {
-    return ((getSkillType() == SkillType.PUMPING) || (getSkillType() == SkillType.REELING));
   }
 
   public final int getWeaponsAllowed() {

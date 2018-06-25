@@ -100,14 +100,6 @@ public final class UseItem extends L2GameClientPacket {
       return;
     }
 
-    if(activeChar.isFishing() && ((itemId < 6535) || (itemId > 6540))) {
-      // You cannot do anything else while fishing
-      SystemMessage sm = new SystemMessage(SystemMessageId.CANNOT_DO_WHILE_FISHING_3);
-      getClient().getActiveChar().sendPacket(sm);
-      sm = null;
-      return;
-    }
-
     // Char cannot use item when dead
     if(activeChar.isDead()) {
       SystemMessage sm = new SystemMessage(SystemMessageId.S1_CANNOT_BE_USED);

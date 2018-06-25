@@ -52,7 +52,6 @@ import net.sf.l2j.gameserver.communitybbs.BB.Forum;
 import net.sf.l2j.gameserver.communitybbs.Manager.ForumsBBSManager;
 import net.sf.l2j.gameserver.datatables.CharTemplateTable;
 import net.sf.l2j.gameserver.datatables.ClanTable;
-import net.sf.l2j.gameserver.datatables.FishTable;
 import net.sf.l2j.gameserver.datatables.HennaTable;
 import net.sf.l2j.gameserver.datatables.HeroSkillTable;
 import net.sf.l2j.gameserver.datatables.ItemTable;
@@ -75,7 +74,6 @@ import net.sf.l2j.gameserver.instancemanager.ItemsOnGroundManager;
 import net.sf.l2j.gameserver.instancemanager.QuestManager;
 import net.sf.l2j.gameserver.instancemanager.SiegeManager;
 import net.sf.l2j.gameserver.model.BlockList;
-import net.sf.l2j.gameserver.model.FishData;
 import net.sf.l2j.gameserver.model.ForceBuff;
 import net.sf.l2j.gameserver.model.Inventory;
 import net.sf.l2j.gameserver.model.ItemContainer;
@@ -85,7 +83,6 @@ import net.sf.l2j.gameserver.model.L2Character;
 import net.sf.l2j.gameserver.model.L2Clan;
 import net.sf.l2j.gameserver.model.L2ClanMember;
 import net.sf.l2j.gameserver.model.L2Effect;
-import net.sf.l2j.gameserver.model.L2Fishing;
 import net.sf.l2j.gameserver.model.L2HennaInstance;
 import net.sf.l2j.gameserver.model.L2ItemInstance;
 import net.sf.l2j.gameserver.model.L2Macro;
@@ -133,8 +130,6 @@ import net.sf.l2j.gameserver.serverpackets.ConfirmDlg;
 import net.sf.l2j.gameserver.serverpackets.EtcStatusUpdate;
 import net.sf.l2j.gameserver.serverpackets.ExAutoSoulShot;
 import net.sf.l2j.gameserver.serverpackets.ExDuelUpdateUserInfo;
-import net.sf.l2j.gameserver.serverpackets.ExFishingEnd;
-import net.sf.l2j.gameserver.serverpackets.ExFishingStart;
 import net.sf.l2j.gameserver.serverpackets.ExOlympiadMode;
 import net.sf.l2j.gameserver.serverpackets.ExOlympiadUserInfo;
 import net.sf.l2j.gameserver.serverpackets.ExOlympiadUserInfoSpectator;
@@ -954,31 +949,6 @@ public final class L2PcInstance extends L2PlayableInstance {
    * lvl of alliance with ketra orcs or varka silenos, used in quests and aggro checks [-5,-1] varka, 0 neutral, [1,5] ketra.
    */
   private int _alliedVarkaKetra = 0;
-
-  /**
-   * The _fish combat.
-   */
-  private L2Fishing _fishCombat;
-
-  /**
-   * The _fishing.
-   */
-  private boolean _fishing = false;
-
-  /**
-   * The _fishx.
-   */
-  private int _fishx = 0;
-
-  /**
-   * The _fishy.
-   */
-  private int _fishy = 0;
-
-  /**
-   * The _fishz.
-   */
-  private int _fishz = 0;
 
   /**
    * The _task rent pet.
@@ -2043,7 +2013,8 @@ public final class L2PcInstance extends L2PlayableInstance {
       _lastCompassZone = ExSetCompassZoneCode.PVPZONE;
       ExSetCompassZoneCode cz = new ExSetCompassZoneCode(ExSetCompassZoneCode.PVPZONE);
       sendPacket(cz);
-    } if(isInsideZone(ZONE_PEACE)) {
+    }
+    if(isInsideZone(ZONE_PEACE)) {
       if(_lastCompassZone == ExSetCompassZoneCode.PEACEZONE) {
         return;
       }
@@ -7090,15 +7061,6 @@ public final class L2PcInstance extends L2PlayableInstance {
       return;
     }
 
-    if(isFishing() && ((sklType != SkillType.PUMPING) && (sklType != SkillType.REELING) && (sklType != SkillType.FISHING))) {
-      // Only fishing skills are available
-      sendPacket(new SystemMessage(SystemMessageId.ONLY_FISHING_SKILLS_NOW));
-      return;
-    }
-
-    // ************************************* Check Skill Type *******************************************
-
-    // Check if this is offensive magic skill
     if(skill.isOffensive()) {
       if((isInsidePeaceZone(this, target)) && (getAccessLevel() < Config.GM_PEACEATTACK)) {
         // If L2Character or target is in a peace zone, send a system message TARGET_IN_PEACEZONE a Server->Client packet ActionFailed
@@ -7662,11 +7624,6 @@ public final class L2PcInstance extends L2PlayableInstance {
   }
 
   /**
-   * The _taskforfish.
-   */
-  public ScheduledFuture<?> _taskforfish;
-
-  /**
    * The Class WaterTask.
    */
   class WaterTask implements Runnable {
@@ -7682,59 +7639,6 @@ public final class L2PcInstance extends L2PlayableInstance {
       SystemMessage sm = new SystemMessage(SystemMessageId.DROWN_DAMAGE_S1);
       sm.addNumber((int) reduceHp);
       sendPacket(sm);
-    }
-  }
-
-  /**
-   * The Class LookingForFishTask.
-   */
-  class LookingForFishTask implements Runnable {
-    /**
-     * The _is upper grade.
-     */
-    boolean _isNoob, _isUpperGrade;
-
-    /**
-     * The _guts check time.
-     */
-    int _fishType, _fishGutsCheck, _gutsCheckTime;
-
-    /**
-     * The _end task time.
-     */
-    long _endTaskTime;
-
-    /**
-     * Instantiates a new looking for fish task.
-     *
-     * @param fishWaitTime  the fish wait time
-     * @param fishGutsCheck the fish guts check
-     * @param fishType      the fish type
-     * @param isNoob        the is noob
-     * @param isUpperGrade  the is upper grade
-     */
-    protected LookingForFishTask(int fishWaitTime, int fishGutsCheck, int fishType, boolean isNoob, boolean isUpperGrade) {
-      _fishGutsCheck = fishGutsCheck;
-      _endTaskTime = System.currentTimeMillis() + fishWaitTime + 10000;
-      _fishType = fishType;
-      _isNoob = isNoob;
-      _isUpperGrade = isUpperGrade;
-    }
-
-    @Override
-    public void run() {
-      if(System.currentTimeMillis() >= _endTaskTime) {
-        EndFishing(false);
-        return;
-      }
-      if(_fishType == -1) {
-        return;
-      }
-      int check = Rnd.get(1000);
-      if(_fishGutsCheck > check) {
-        stopLookingForFishTask();
-        StartFishCombat(_isNoob, _isUpperGrade);
-      }
     }
   }
 
@@ -8361,10 +8265,6 @@ public final class L2PcInstance extends L2PlayableInstance {
       _noDuelReason = SystemMessageId.S1_CANNOT_DUEL_BECAUSE_S1_IS_CURRENTLY_ENGAGED_IN_A_PRIVATE_STORE_OR_MANUFACTURE;
       return false;
     }
-    if(isFishing()) {
-      _noDuelReason = SystemMessageId.S1_CANNOT_DUEL_BECAUSE_S1_IS_CURRENTLY_FISHING;
-      return false;
-    }
     if(isInsideZone(ZONE_PVP) || isInsideZone(ZONE_PEACE) || isInsideZone(ZONE_SIEGE)) {
       _noDuelReason = SystemMessageId.S1_CANNOT_MAKE_A_CHALLANGE_TO_A_DUEL_BECAUSE_S1_IS_CURRENTLY_IN_A_DUEL_PROHIBITED_AREA;
       return false;
@@ -8462,24 +8362,6 @@ public final class L2PcInstance extends L2PlayableInstance {
    */
   public int getWantsPeace() {
     return _wantsPeace;
-  }
-
-  /**
-   * Checks if is fishing.
-   *
-   * @return true, if is fishing
-   */
-  public boolean isFishing() {
-    return _fishing;
-  }
-
-  /**
-   * Sets the fishing.
-   *
-   * @param fishing the new fishing
-   */
-  public void setFishing(boolean fishing) {
-    _fishing = fishing;
   }
 
   /**
@@ -9732,396 +9614,6 @@ public final class L2PcInstance extends L2PlayableInstance {
 
     // Remove L2Object object from _allObjects of L2World
     L2World.getInstance().removeObject(this);
-  }
-
-  /**
-   * The _fish.
-   */
-  private FishData _fish;
-
-  /*
-   * startFishing() was stripped of any pre-fishing related checks, namely the fishing zone check. Also worthy of note is the fact the code to find the hook landing position was also striped. The stripped code was moved into fishing.java. In my opinion it makes more sense for it to be there since
-   * all other skill related checks were also there. Last but not least, moving the zone check there, fixed a bug where baits would always be consumed no matter if fishing actualy took place. startFishing() now takes up 3 arguments, wich are acurately described as being the hook landing
-   * coordinates.
-   */
-
-  /**
-   * Start fishing.
-   *
-   * @param _x the _x
-   * @param _y the _y
-   * @param _z the _z
-   */
-  public void startFishing(int _x, int _y, int _z) {
-    stopMove(null);
-    setIsImobilised(true);
-    _fishing = true;
-    _fishx = _x;
-    _fishy = _y;
-    _fishz = _z;
-    broadcastUserInfo();
-    // Starts fishing
-    int lvl = GetRandomFishLvl();
-    int group = GetRandomGroup();
-    int type = GetRandomFishType(group);
-    List<FishData> fishs = FishTable.getInstance().getfish(lvl, type, group);
-    if((fishs == null) || (fishs.size() == 0)) {
-      sendMessage("Error - Fishes are not definied");
-      EndFishing(false);
-      return;
-    }
-    int check = Rnd.get(fishs.size());
-    // Use a copy constructor else the fish data may be over-written below
-    _fish = new FishData(fishs.get(check));
-    fishs.clear();
-    fishs = null;
-    sendPacket(new SystemMessage(SystemMessageId.CAST_LINE_AND_START_FISHING));
-    ExFishingStart efs = null;
-    if(!GameTimeController.getInstance().isNowNight() && _lure.isNightLure()) {
-      _fish.setType(-1);
-    }
-    // sendMessage("Hook x,y: " + _x + "," + _y + " - Water Z, Player Z:" + _z + ", " + getZ()); //debug line, uncoment to show coordinates used in fishing.
-    efs = new ExFishingStart(this, _fish.getType(), _x, _y, _z, _lure.isNightLure());
-    broadcastPacket(efs);
-    StartLookingForFishTask();
-  }
-
-  /**
-   * Stop looking for fish task.
-   */
-  public void stopLookingForFishTask() {
-    if(_taskforfish != null) {
-      _taskforfish.cancel(false);
-      _taskforfish = null;
-    }
-  }
-
-  /**
-   * Start looking for fish task.
-   */
-  public void StartLookingForFishTask() {
-    if(!isDead() && (_taskforfish == null)) {
-      int checkDelay = 0;
-      boolean isNoob = false;
-      boolean isUpperGrade = false;
-
-      if(_lure != null) {
-        int lureid = _lure.getItemId();
-        isNoob = _fish.getGroup() == 0;
-        isUpperGrade = _fish.getGroup() == 2;
-        if((lureid == 6519) || (lureid == 6522) || (lureid == 6525) || (lureid == 8505) || (lureid == 8508) || (lureid == 8511)) {
-          checkDelay = Math.round((float) (_fish.getGutsCheckTime() * (1.33)));
-        } else if((lureid == 6520) || (lureid == 6523) || (lureid == 6526) || ((lureid >= 8505) && (lureid <= 8513)) || ((lureid >= 7610) && (lureid <= 7613)) || ((lureid >= 7807) && (lureid <= 7809)) || ((lureid >= 8484) && (lureid <= 8486))) {
-          checkDelay = Math.round((float) (_fish.getGutsCheckTime() * (1.00)));
-        } else if((lureid == 6521) || (lureid == 6524) || (lureid == 6527) || (lureid == 8507) || (lureid == 8510) || (lureid == 8513)) {
-          checkDelay = Math.round((float) (_fish.getGutsCheckTime() * (0.66)));
-        }
-      }
-      _taskforfish = ThreadPoolManager.getInstance().scheduleEffectAtFixedRate(new LookingForFishTask(_fish.getWaitTime(), _fish.getFishGuts(), _fish.getType(), isNoob, isUpperGrade), 10000, checkDelay);
-    }
-  }
-
-  /**
-   * Gets the random group.
-   *
-   * @return the int
-   */
-  private int GetRandomGroup() {
-    switch(_lure.getItemId()) {
-      case 7807: // green for beginners
-      case 7808: // purple for beginners
-      case 7809: // yellow for beginners
-      case 8486: // prize-winning for beginners
-        return 0;
-      case 8485: // prize-winning luminous
-      case 8506: // green luminous
-      case 8509: // purple luminous
-      case 8512: // yellow luminous
-        return 2;
-      default:
-        return 1;
-    }
-  }
-
-  /**
-   * Gets the random fish type.
-   *
-   * @param group the group
-   * @return the int
-   */
-  private int GetRandomFishType(int group) {
-    int check = Rnd.get(100);
-    int type = 1;
-    switch(group) {
-      case 0: // fish for novices
-        switch(_lure.getItemId()) {
-          case 7807: // green lure, preferred by fast-moving (nimble) fish (type 5)
-            if(check <= 54) {
-              type = 5;
-            } else if(check <= 77) {
-              type = 4;
-            } else {
-              type = 6;
-            }
-            break;
-          case 7808: // purple lure, preferred by fat fish (type 4)
-            if(check <= 54) {
-              type = 4;
-            } else if(check <= 77) {
-              type = 6;
-            } else {
-              type = 5;
-            }
-            break;
-          case 7809: // yellow lure, preferred by ugly fish (type 6)
-            if(check <= 54) {
-              type = 6;
-            } else if(check <= 77) {
-              type = 5;
-            } else {
-              type = 4;
-            }
-            break;
-          case 8486: // prize-winning fishing lure for beginners
-            if(check <= 33) {
-              type = 4;
-            } else if(check <= 66) {
-              type = 5;
-            } else {
-              type = 6;
-            }
-            break;
-        }
-        break;
-      case 1: // normal fish
-        switch(_lure.getItemId()) {
-          case 7610:
-          case 7611:
-          case 7612:
-          case 7613:
-            type = 3;
-            break;
-          case 6519: // all theese lures (green) are prefered by fast-moving (nimble) fish (type 1)
-          case 8505:
-          case 6520:
-          case 6521:
-          case 8507:
-            if(check <= 54) {
-              type = 1;
-            } else if(check <= 74) {
-              type = 0;
-            } else if(check <= 94) {
-              type = 2;
-            } else {
-              type = 3;
-            }
-            break;
-          case 6522: // all theese lures (purple) are prefered by fat fish (type 0)
-          case 8508:
-          case 6523:
-          case 6524:
-          case 8510:
-            if(check <= 54) {
-              type = 0;
-            } else if(check <= 74) {
-              type = 1;
-            } else if(check <= 94) {
-              type = 2;
-            } else {
-              type = 3;
-            }
-            break;
-          case 6525: // all theese lures (yellow) are prefered by ugly fish (type 2)
-          case 8511:
-          case 6526:
-          case 6527:
-          case 8513:
-            if(check <= 55) {
-              type = 2;
-            } else if(check <= 74) {
-              type = 1;
-            } else if(check <= 94) {
-              type = 0;
-            } else {
-              type = 3;
-            }
-            break;
-          case 8484: // prize-winning fishing lure
-            if(check <= 33) {
-              type = 0;
-            } else if(check <= 66) {
-              type = 1;
-            } else {
-              type = 2;
-            }
-            break;
-        }
-        break;
-      case 2: // upper grade fish, luminous lure
-        switch(_lure.getItemId()) {
-          case 8506: // green lure, preferred by fast-moving (nimble) fish (type 8)
-            if(check <= 54) {
-              type = 8;
-            } else if(check <= 77) {
-              type = 7;
-            } else {
-              type = 9;
-            }
-            break;
-          case 8509: // purple lure, preferred by fat fish (type 7)
-            if(check <= 54) {
-              type = 7;
-            } else if(check <= 77) {
-              type = 9;
-            } else {
-              type = 8;
-            }
-            break;
-          case 8512: // yellow lure, preferred by ugly fish (type 9)
-            if(check <= 54) {
-              type = 9;
-            } else if(check <= 77) {
-              type = 8;
-            } else {
-              type = 7;
-            }
-            break;
-          case 8485: // prize-winning fishing lure
-            if(check <= 33) {
-              type = 7;
-            } else if(check <= 66) {
-              type = 8;
-            } else {
-              type = 9;
-            }
-            break;
-        }
-    }
-    return type;
-  }
-
-  /**
-   * Gets the random fish lvl.
-   *
-   * @return the int
-   */
-  private int GetRandomFishLvl() {
-    L2Effect[] effects = getAllEffects();
-    int skilllvl = getSkillLevel(1315);
-    for(L2Effect e : effects) {
-      if(e.getSkill().getId() == 2274) {
-        skilllvl = (int) e.getSkill().getPower(this);
-      }
-    }
-    if(skilllvl <= 0) {
-      return 1;
-    }
-    int randomlvl;
-    int check = Rnd.get(100);
-
-    if(check <= 50) {
-      randomlvl = skilllvl;
-    } else if(check <= 85) {
-      randomlvl = skilllvl - 1;
-      if(randomlvl <= 0) {
-        randomlvl = 1;
-      }
-    } else {
-      randomlvl = skilllvl + 1;
-      if(randomlvl > 27) {
-        randomlvl = 27;
-      }
-    }
-
-    return randomlvl;
-  }
-
-  /**
-   * Start fish combat.
-   *
-   * @param isNoob       the is noob
-   * @param isUpperGrade the is upper grade
-   */
-  public void StartFishCombat(boolean isNoob, boolean isUpperGrade) {
-    _fishCombat = new L2Fishing(this, _fish, isNoob, isUpperGrade);
-  }
-
-  /**
-   * End fishing.
-   *
-   * @param win the win
-   */
-  public void EndFishing(boolean win) {
-    ExFishingEnd efe = new ExFishingEnd(win, this);
-    broadcastPacket(efe);
-    _fishing = false;
-    _fishx = 0;
-    _fishy = 0;
-    _fishz = 0;
-    broadcastUserInfo();
-    if(_fishCombat == null) {
-      sendPacket(new SystemMessage(SystemMessageId.BAIT_LOST_FISH_GOT_AWAY));
-    }
-    _fishCombat = null;
-    _lure = null;
-    // Ends fishing
-    sendPacket(new SystemMessage(SystemMessageId.REEL_LINE_AND_STOP_FISHING));
-    setIsImobilised(false);
-    stopLookingForFishTask();
-  }
-
-  /**
-   * Gets the fish combat.
-   *
-   * @return the l2 fishing
-   */
-  public L2Fishing GetFishCombat() {
-    return _fishCombat;
-  }
-
-  /**
-   * Gets the fishx.
-   *
-   * @return the int
-   */
-  public int GetFishx() {
-    return _fishx;
-  }
-
-  /**
-   * Gets the fishy.
-   *
-   * @return the int
-   */
-  public int GetFishy() {
-    return _fishy;
-  }
-
-  /**
-   * Gets the fishz.
-   *
-   * @return the int
-   */
-  public int GetFishz() {
-    return _fishz;
-  }
-
-  /**
-   * Sets the lure.
-   *
-   * @param lure the lure
-   */
-  public void SetLure(L2ItemInstance lure) {
-    _lure = lure;
-  }
-
-  /**
-   * Gets the lure.
-   *
-   * @return the l2 item instance
-   */
-  public L2ItemInstance GetLure() {
-    return _lure;
   }
 
   /**
